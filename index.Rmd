@@ -1,6 +1,6 @@
 --- 
-title: "YOUR TITLE HERE"
-author: "YOUR NAMES HERE"
+title: "2020 U.S. Election Visulizations"
+author: "EDAV GROUP 10"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 ---
