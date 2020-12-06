@@ -34,10 +34,9 @@ library(png)
 library(grid)
 library(lubridate)
 library(tidytext)
-library(devtools)
+#library(devtools)
 #devtools::install_github("lchiffon/wordcloud2")
 library(wordcloud2)
-library(highcharter)
 ```
 
 ## Election Vote Results Visualizations
