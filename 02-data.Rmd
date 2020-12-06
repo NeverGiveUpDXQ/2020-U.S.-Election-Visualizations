@@ -12,8 +12,8 @@ FEC gathers and processes campaign finance data and discloses information about 
 
 ```{r,include=FALSE}
 knitr::opts_chunk$set(opts.label="kill_prefix")
-DataDescription<- readr::read_csv(here("./data/DatasetDescription.csv"))
-DataDescription_add<- readr::read_csv(here("./data/DatasetDescription_add.csv"))
+DataDescription<- readr::read_csv(here::here("./data/DatasetDescription.csv"))
+DataDescription_add<- readr::read_csv(here::here("./data/DatasetDescription_add.csv"))
 ```
 
 **Dataset: 2020_US_State_Level_Presidential_Results.csv**
