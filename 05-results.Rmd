@@ -167,7 +167,329 @@ animate(p, fps = 3)
 
 From this plot, we can see: Excluding year ftom 1875-1900, the votes percentage difference is relatively huge.
 
+## Contribution Receipts Data Analysis
+### Contributions Overview
+```{r, echo=FALSE}
+# Read the datasets
+  # Contribution summary by state
+contrib_zip <- readr::read_csv(here("data", "clean", "Contributions_by_3Zip.csv"))
 
+  # Population and registered Voters in 2020 by state
+voters_state <- readr::read_csv(here("data", "clean", "RegisteredVotersByState.csv"))
+
+# All candidates
+df_all <- contrib_zip[contrib_zip$CANDIDATE_ID=="P00000001" & 
+              contrib_zip$ZIP_3=="STATE TOTAL",] %>%
+  dplyr::rename(ALL_RECEIPT_AMOUNT = CONTRIB_RECEIPT_AMOUNT)
+	
+# Biden = P80000722
+df_biden <- contrib_zip[contrib_zip$CANDIDATE_ID=="P80000722" & 
+              contrib_zip$ZIP_3=="STATE TOTAL",]%>%
+  dplyr::rename(BIDEN_RECEIPT_AMOUNT = CONTRIB_RECEIPT_AMOUNT)
+# Trump = P80001571
+df_trump <- contrib_zip[contrib_zip$CANDIDATE_ID=="P80001571" & 
+              contrib_zip$ZIP_3=="STATE TOTAL",] %>%
+  dplyr::rename(TRUMP_RECEIPT_AMOUNT = CONTRIB_RECEIPT_AMOUNT)
+
+# Join with state populations
+data("statepop")
+statepop1 <- statepop[,c(1:3)] %>%
+  left_join(voters_state[,c(1:4)],by = c("full" = "State" )) %>%
+  left_join(df_all[,c(3,6)], by = c("abbr" = "CONTRIB_STATE")) %>%
+  left_join(df_biden[,c(3,6)], by = c("abbr" = "CONTRIB_STATE")) %>%
+  left_join(df_trump[,c(3,6)], by = c("abbr" = "CONTRIB_STATE")) 
+
+
+# Calculate contribution amounts per registered voter of each state
+statepop1 <- statepop1 %>%
+  mutate(ALL_CONTRIB_PP = round(ALL_RECEIPT_AMOUNT/totalRegistered, 2))%>%
+  mutate(BIDEN_CONTRIB_PP = round(BIDEN_RECEIPT_AMOUNT/totalRegistered, 2))%>%
+  mutate(TRUMP_CONTRIB_PP = round(TRUMP_RECEIPT_AMOUNT/totalRegistered, 2))
+
+#remove(voters_state, statepop, df_trump, df_biden, df_all)
+```
+
+#### Total Contributions by State
+```{r, echo=FALSE}
+# All states
+data("usgeojson", package = "highcharter")
+highchart() %>%
+hc_title(text = "Total Contributions to All Presidential Candidates 2020 By State") %>%
+  hc_subtitle(text = "Double click the state area to zoom in") %>%
+  hc_add_series_map(usgeojson, statepop1,
+    name = "Total Contributions",
+    value = "ALL_RECEIPT_AMOUNT", joinBy = c("postalcode", "abbr"),
+    dataLabels = list(
+       enabled = TRUE,
+       format = "{point.properties.postalcode}"
+     ),
+    tooltip = list(
+      valueDecimals = 0,
+      valuePrefix = "$",
+      valueSuffix = " USD"
+     )
+   ) %>%
+   hc_colorAxis(minColor = "white", maxColor = "orange") %>%
+   hc_legend(valueDecimals = 0, valueSuffix = "%") %>%
+   hc_mapNavigation(enabled = TRUE) 
+```
+
+As shown in the above map, California has contributed the most to all presidential candidates in 2020 US Election, which exceeded 260 million US dollars. New York, Texas, and Florida also made significant contributions. However, some states like Wyoming and West Virginia only contributed less than 30 million US dollars.
+
+```{r, echo=FALSE}
+# Biden
+p1<- statepop1 %>% arrange(desc(BIDEN_RECEIPT_AMOUNT)) %>% head(5) %>% 
+  mutate(BIDEN_RECEIPT_AMOUNT = round(BIDEN_RECEIPT_AMOUNT/1000000,3)) %>%
+  ggplot(aes(x=reorder(abbr, BIDEN_RECEIPT_AMOUNT, median), y=BIDEN_RECEIPT_AMOUNT)) +
+    geom_bar(stat="identity", fill="dodgerblue3") +
+    geom_text(aes(label=BIDEN_RECEIPT_AMOUNT), hjust=1.2, color="white", size=3.5) +
+    coord_flip() +
+    # formatting
+    ggtitle("Joe Biden") +
+    labs(y = "Contribution Amount (Million $)", x = "State",caption = " ") +
+    theme_minimal() +
+    theme(plot.title = element_text(size = 11,face = "bold", color = "grey35"),
+        plot.caption = element_text(color = "grey68"))
+
+# Trump
+p2<- statepop1 %>% arrange(desc(TRUMP_RECEIPT_AMOUNT)) %>% head(5) %>% 
+  mutate(TRUMP_RECEIPT_AMOUNT = round(TRUMP_RECEIPT_AMOUNT/1000000,3)) %>%
+  ggplot(aes(x=reorder(abbr, TRUMP_RECEIPT_AMOUNT, median), y=TRUMP_RECEIPT_AMOUNT)) +
+    geom_bar(stat="identity", fill="firebrick2") +
+    geom_text(aes(label=TRUMP_RECEIPT_AMOUNT), hjust=1.2, color="white",size=3.5) +
+    coord_flip() +
+    # formatting
+    ggtitle("Donald Trump") +
+    labs(y = "Contribution Amount (Million $)", x = " ",caption = "Source: fec.gov") +
+    theme_minimal() +
+    theme(plot.title = element_text(size = 11, face = "bold", color = "grey35"),
+        plot.caption = element_text(color = "grey68"))
+
+# Plot in a grid
+grid.arrange(p1, p2, ncol=2, nrow=1,
+     top = textGrob("Contributions to Presidential Candidates of 2020 US Election\nTotal Contributions Ranked by State",gp=gpar(fontsize=13, fontface = "bold")))
+
+```
+
+The bar chart above focuses on the total amounts raised by the final presidential candidates Joe Biden and Donald Trump, and it displays top 5 states that contributed the most to each candidate. Joe Biden received  solid support from California and New York which contributed 127M dollars and 63M dollars respectively, more than twice as contributed to Donald Trump. Donald Trump raised significant amounts from Texas and Florida, and these are consistent with the final voting results.
+
+#### Contributions Per Registered Voter by State
+```{r, echo=FALSE}
+# Biden
+p3<- statepop1 %>% arrange(desc(BIDEN_CONTRIB_PP)) %>% head(5) %>% 
+  ggplot(aes(x=reorder(abbr, BIDEN_CONTRIB_PP, median), y=BIDEN_CONTRIB_PP)) +
+    geom_bar(stat="identity", fill="dodgerblue3") +
+    geom_text(aes(label=BIDEN_CONTRIB_PP), hjust=1.2, color="white", size=3.5) +
+    coord_flip() +
+    # formatting
+    ggtitle("Joe Biden") +
+    labs(y = "Contribution Amount (US Dollar)", x = "State",caption = " ") +
+    theme_minimal() +
+    theme(plot.title = element_text(size = 11,face = "bold", color = "grey35"),
+        plot.caption = element_text(color = "grey68"))
+
+# Trump
+p4<- statepop1 %>% arrange(desc(TRUMP_CONTRIB_PP)) %>% head(5) %>% 
+  ggplot(aes(x=reorder(abbr, TRUMP_CONTRIB_PP, median), y=TRUMP_CONTRIB_PP)) +
+    geom_bar(stat="identity", fill="firebrick2") +
+    geom_text(aes(label=TRUMP_CONTRIB_PP), hjust=1.2, color="white", size=3.5) +
+    coord_flip() +
+    # formatting
+    ggtitle("Donald Trump") +
+    labs(y = "Contribution Amount (US Dollar)", x = " ",caption = "Source: fec.gov") +
+    theme_minimal() +
+    theme(plot.title = element_text(size = 11, face = "bold", color = "grey35"),
+        plot.caption = element_text(color = "grey68"))
+
+# Plot in a grid
+grid.arrange(p3, p4, ncol=2, nrow=1,
+     top = textGrob("Contributions to Presidential Candidates of 2020 US Election\nContributions Per Registered Voter Ranked by State",gp=gpar(fontsize=13, fontface = "bold")))
+
+```
+
+If we instead take into account the registered voters in each state and calculate contributions per registered voter, we found that District of Columbia has the highest average contribution to Biden, which is 37 dollars per registered voter, way more than other states. This is likely due to a smaller population thereby fewer registered voters in DC. In addition, Wyoming surprisingly has contributed the most to Trump on an average level, and a possible reason is that the percentage of registered voters is the lowest in Wyoming, and only 47.4% of Wyoming's population registered to vote.
+
+
+### Contributions Distribution and Details
+```{r, echo=FALSE}
+# Read data
+contributions1 <- readr::read_csv(here("data", "clean", "contribution_processed.csv"))
+
+#head(contributions1)
+
+#summary(contributions1)
+
+# Factorize categorical variables
+contributions1$committee_name <- as.factor(contributions1$committee_name)
+```
+```{r, message=FALSE, warning=FALSE, echo = FALSE, results = "asis"}
+# Calculate the summary statistics of contributions by candidate
+contr_sum <- contributions1 %>%
+  select(committee_name,contribution_receipt_amount) %>%
+  dplyr::group_by(committee_name) %>% 
+  dplyr::summarise(number_of_contributions = n(),
+                   total_raised_amount = sum(contribution_receipt_amount),
+            mean_contribution = mean(contribution_receipt_amount, na.rm = T),
+            median_contribution = median(contribution_receipt_amount, na.rm = T))
+
+# Display in a table
+knitr::kable(contr_sum, caption = "Contributions Summary by Candidate",
+             col.names = c('Candidate name','Number of contributions',
+                           'Total raised amount (US Dollars)',
+                           'Mean contribution (US Dollars)','Median contribution (US Dollars)'),
+             format.args = list(big.mark = ",", scientific = FALSE),
+             digits = 2,align = "l",full_width = T)
+```
+
+```{r, fig.cap="Domestic Individual Contribution Distribution",echo=FALSE}
+# Generate the boxplot
+ggplot(contributions1, aes(x=contribution_receipt_amount, fill = committee_name), alpha=0.8) + 
+  geom_boxplot() + 
+  stat_boxplot(geom ='errorbar') +
+  scale_x_log10(breaks = trans_breaks("log10", function(x) 10^x),
+              labels = trans_format("log10", math_format(10^.x)))+
+  scale_fill_manual(name = "Committee name", values = c("dodgerblue3", "firebrick2"), 
+                    labels = c("Joe Biden","Donald Trump")) +
+  # formatting
+  ggtitle("Contributions to Presidential Candidates of 2020 US Election",
+          subtitle = "Domestic Individual Contribution Amounts Received in 2020 (log10 scaled)") +
+  labs(y = "Candidate", x = "Contribution Amount ($)",caption = "Source: fec.gov") +
+  theme_bw() +
+  theme(plot.title = element_text(face = "bold"),
+        plot.subtitle = element_text(face = "bold", color = "grey35"),
+        plot.caption = element_text(color = "grey68"),
+        legend.position="bottom",
+        axis.text.y = element_blank())
+
+```
+
+To see more contribution details, we selected from the original data the domestic individual contributions with amounts higher than 200 dollars received by two presidential candidates. As shown in the contributions summary table, Biden received double the number of contributions and the total amounts of funds as Trump did, but the mean and median contributions to Trump are higher than to Biden. The log10 scaled boxplot above also demonstrates the difference in median contributions, and in addition, it shows that the contributions distributions for both candidates are largely right skewed with a good number of outliers. This makes sense as the majority of individuals contributed less than 500 dollars. 
+
+
+### Contributions by Date: Time Series
+```{r, echo=FALSE}
+# Read the dataset
+contribution_by_date <- readr::read_csv(here("data", "clean", "contribution_by_date.csv"))
+
+# Convert format
+contribution_by_date$contribution_receipt_date <-
+  as_date(contribution_by_date$contribution_receipt_date)
+contribution_by_date$committee_name <-
+  as.factor(contribution_by_date$committee_name)
+
+ts <- contribution_by_date[order(contribution_by_date$contribution_receipt_date, 
+                                 decreasing= F),]
+
+# Interactive time series plot with highcharter
+ts %>%
+  hchart("area",hcaes(x = contribution_receipt_date, y = Total, 
+                      group = committee_name)) %>%
+  hc_chart(zoomType = "x") %>%
+  hc_colors(c("#0015BC", "#FF0000")) %>%
+  hc_legend(align = "center", verticalAlign = "bottom",layout = "horizontal") %>%
+  hc_xAxis(title = list(text = "Contribution Receipt Date"),
+           labels = list(format = '{value:%b %d}')) %>%
+  hc_yAxis(title = list(text = "Contribution Amount (US Dollars)"),
+           tickInterval = 2000000,
+           max = 14000000) %>%
+  hc_title(text = "<b>Individual Contributions to Presidential Candidates 2020</b>") %>%
+  hc_subtitle(text = "Click and drag in the plot area to zoom in") %>%
+  hc_plotOptions(area = list(lineWidth = 0.5))
+```
+
+We also grouped data points by receipt date and calculated the daily raisings of each candidate from January 1, 2020 to October 15, 2020, which are shown the plot above. It is clear that Joe Biden generally raised more funds than Donald Trump. There was a small peak in raisings for Biden in the early March that paralleled Biden's win in the South Carolina Democratic presidential primary, which we learned from the [news](https://edition.cnn.com/2020/03/01/politics/joe-biden-south-carolina-fundraising-february-cnntv/index.html) of the time. 
+More notably, Biden achieved success in fundraising from mid-August, and Biden's daily raisings hit the 13.6M dollars on August 20, 2020 by the time he [officially accepted the Democratic nomination](https://www.nytimes.com/2020/08/20/us/politics/Joe-Biden-accepts-democratic-nomination.html).
+Although Donald Trump also received more funds in the second half year, the contributions to Trump did not significantly increase as the election season approached. 
+
+
+### Contributor Occupations
+
+To obtain more information about individual contributors, we extracted keywords in each contributor's occupation and divide by candidate, so that we were able to draw word clouds for each candidate.
+
+```{r,echo=FALSE}
+# To save time, read the saved .csv datasets
+oc_biden_count <- readr::read_csv(here("data", "clean", "occupation_BIDEN_count.csv"))
+
+oc_trump_count <- readr::read_csv(here("data", "clean", "occupation_TRUMP_count.csv")
+
+  
+# Wordcloud Biden
+# Reference: https://www.r-graph-gallery.com/196-the-wordcloud2-library.html
+pal_blue <- c("blue","#1F45FC","#2B60DE","#0000A0","#6698FF","#1589FF") #blue color palette
+df_biden <- oc_biden_count
+df_biden$freq <- (df_biden$freq)^(1/3) #scale the frequencies
+```
+
+#### *50 most popular occupations of contributors who supported Joe Biden*
+```{r, echo=FALSE, message=FALSE, warning=FALSE, results="asis"}
+w1<- wordcloud2(df_biden, size = 0.4,
+         maxRotation = 0, minRotation = 0,
+         color=rep_len(pal_blue, nrow(df_biden)))
+w1
+library(htmlwidgets)
+library(webshot)
+saveWidget(w1,"w1.html",selfcontained = F)
+#knitr::include_graphics("./w1.PNG")
+```
+
+To display words properly, the word size of the word cloud was scaled by extracting a cube root of the word frequency count. The above word cloud for Joe Biden clearly shows that a great proportion of contributors are not employed, and attorney, physician, engineer, and manager are also popular occupations.
+
+#### *50 most popular occupations of contributors who supported Donald Trump*
+```{r, echo=FALSE, message=FALSE, warning=FALSE, results="asis"}
+# Wordcloud Trump
+pal_red <- c("red","#F70D1A","#E77471","#F62217","#9F000F","#F75D59") #red color palette
+df_trump <- oc_trump_count
+df_trump$freq <- (df_trump$freq)^(1/3) #scale the frequencies
+
+w2<- wordcloud2(df_trump, size = 0.4,
+         maxRotation = 0, minRotation = 0,
+         color=rep_len(pal_red, nrow(df_trump)))
+w2
+#saveWidget(w2,"w2.html",selfcontained = F)
+#knitr::include_graphics("./w2.PNG")
+```
+
+Compared to the blue word cloud, this one for Trump has a smaller size consistent to a small total number of contributors. The most prominent word is Retired, which implies that contributors who supported Trump are dominantly retired. Besides, entrepreneur, owner, and manager are popular occupations. The actual frequency counts are shown in the following bar chart.
+
+```{r, fig.height=5, echo=FALSE}
+# Bar charts of contributor occupations
+
+# Biden
+g1<- oc_biden_count %>% head(10) %>% 
+  ggplot(aes(x=reorder(oc_str_sp, freq, median), y=freq)) +
+    geom_bar(stat="identity", fill="dodgerblue3") +
+    geom_text(aes(label=freq), hjust=-0.05, size=3) +
+    coord_flip() +
+    ylim(0, 220000) +
+    # formatting
+    ggtitle("Joe Biden") +
+    labs(y = "Frequency", x = "Contributor occupation",caption = " ") +
+    theme_minimal() +
+    theme(plot.title = element_text(size = 11, face = "bold", color = "grey35"),
+        plot.caption = element_text(color = "grey68"))
+
+# Trump
+g2<- oc_trump_count %>% head(10) %>% 
+  ggplot(aes(x=reorder(oc_str_sp, freq, median), y=freq)) +
+    geom_bar(stat="identity", fill="firebrick2") +
+    geom_text(aes(label=freq), hjust=-0.05, size=3) +
+    coord_flip() +
+    ylim(0, 155000) +
+    # formatting
+    ggtitle("Donald Trump") +
+    labs(y = "Frequency", x = " ",caption = "Source: fec.gov") +
+    theme_minimal() +
+    theme(plot.title = element_text(size = 11, face = "bold", color = "grey35"),
+        plot.caption = element_text(color = "grey68"))
+
+
+# Plot in a grid
+grid.arrange(g1, g2, ncol=2, nrow=1,
+     top = textGrob("Contributions to Presidential Candidates of 2020 US Election\nContributor Occupation Distribution",gp=gpar(fontsize=13, fontface = "bold")))
+
+```
+
+Comparing difference between candidates, more than half of 10 top occupations of Joe Biden's contributors are legal or technical professional positions, whereas more than half of 10 top occupations of Donald Trump's contributors are jobs in business. 
 
 ## Disbursement Data Analysis
 ### Disbursement Distribution
