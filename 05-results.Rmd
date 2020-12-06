@@ -71,38 +71,98 @@ president2020 %>%
 # (The default is -1).
 ```
 
-## County-level
+### County-level
 Thanks again for the great job by [*Tony McGovern*](https://github.com/tonmcg/US_County_Level_Election_Results_08-20/blob/master/2020_US_County_Level_Presidential_Results.csv)
 ```{r, message=FALSE}
 County2020 <- read_csv('https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-20/master/2020_US_County_Level_Presidential_Results.csv')
 
-county_full <- right_join(county_map,County2020, by = c('id' = 'county_fips')) %>% as_tibble()
 
 # *per_dem* and *per_gop* refer to the percentage of votes going to Democrats and Republicans respectively.
 # *diff* represents the absolute difference between Republican votes - Democrat votes.
 # *per_point_diff* represents this difference as a percentage of total votes.
 
-b1 <- c(min(county_full$diff))
-b2 <- fivenum(county_full$diff[county_full$diff<0])[3]
-b3 <- 0
-b4 <- fivenum(county_full$diff[county_full$diff>0])[3]
-b5 <- c(max(county_full$diff))
-
-diff_l <- cut(county_full$diff, breaks = c(b1,b2,b3,b4,b5))
-
-ggplot(county_full,
-       aes(x = long, y = lat, fill = diff_l, group = group))+
-  geom_polygon(color = 'white', size = 0.5)+
-  coord_equal()+
-   scale_fill_manual(values=c("#1aa6b7","#b2deec",'#ce6262','#af2d2d'),labels = c('Dem>>Rep','Dem>Rep','Dem<Rep','Dem<<Rep'))+
-  labs(fill = "Absolute Difference")+
-  theme_map()+
-  guides(fill = guide_legend(nrow = 1))+
-  theme(legend.position = 'bottom')+
-  labs(title = "2020 US Election Results: Absolute Difference",caption = "github::tonmcg & socviz::county_map")
+flow_T <- County2020 %>%
+  select(fips, diff)
+         
+# Graph Highchart
+highchart(type="map") %>%
+hc_title(text = "2020 US Election Results: Absolute Difference") %>%
+  hc_subtitle(text = "Double click the state area to zoom in") %>%
+  hc_add_series_map(uscountygeojson, flow_T,
+    name = "Votes_gop - Votes_dem",
+    value = "diff", joinBy = "fips",
+    dataLabels = list(
+       enabled = TRUE,
+       format = "{point.properties.postalcode}"
+     )) %>%
+   hc_colorAxis(minColor = "white", maxColor = "red") %>%
+   hc_legend(valueDecimals = 0, valueSuffix = "%") %>%
+   hc_mapNavigation(enabled = TRUE)
 ```
 
-Comparing 4 plots, we can see: If we simply compare the area in the 1st and 2nd plot or see the 3rd or 4th plot, we may conclude that Trump win this election. However, don't forget electoral votes are related to population. Also, it's interesting to note that *WI*, *MI*, *PA* are 'turn blue' (hard to predict it in advance).
+If we simply compare the area, we may conclude that Trump will win this election. However, don't forget electoral votes are related to population. 
+
+### Time-level
+
+In this part, I will compare popular vote and electoral college vote from 1824 to 2020 (Note that **Data for 2020 are provisonal**, collected in 5 Dec). *It's possible the candidate with the most votes from the public won't be the winner. This is because the president is not chosen directly by the voters, but what's known as the electoral college. (This explained by [BBC](https://www.bbc.com/news/world-us-canada-53558176) )*
+
+```{r, fig.width=8}
+# Code reference: https://socviz.co/workgeoms.html#workgeoms
+# HIGHLY recommended this book!! Really APPRECIATE:)
+
+elections_historic_new <- readr::read_csv(here("./data/clean/elections_historic_new.csv"))
+
+# plot
+ggplot(elections_historic_new, aes(x = popular_pct, 
+                                   y = ec_pct,
+                                   label = winner_label))+
+  geom_hline(yintercept = 0.5, size = 1.4, color = "gray80")+
+  geom_vline(xintercept = 0.5, size = 1.4, color = "gray80")+
+  geom_point(aes(colour = factor(win_party))) +
+  geom_text_repel(size = 2) + # deal with overlapping labels
+  scale_x_continuous(labels = scales::percent) +
+  scale_y_continuous(labels = scales::percent) +
+  annotate(geom = "rect", xmin = 0.37, xmax = 0.497, ymin = 0.51, ymax = 0.85, fill = "red", alpha = 0.2) + 
+  annotate(geom = "text", x = 0.35, y = 0.9, label = "Electoral vote is high \nbut with low share of popular vote", hjust = 0)+
+  labs(x = "Winner's share of popular vote", 
+       y = "Winner's share of electoral college vote", 
+       title = "Presidential Elections: Popular & Electoral College Margins", subtitle = "From 1824 to 2020(Data for 2020 are provisional)",
+       caption = "Source: socviz::elections_historic & google", fill = "Party affiliation of winner")+
+  theme_classic()+
+  theme(legend.position = 'bottom')
+```
+
+From this plot, we can see: 
+
+- Ideally, we may think the president also have high share of popular vote. Those data in the red rectangular shows not this case. This can be explained by [how the US presidential election works](https://en.wikipedia.org/wiki/United_States_presidential_election).
+
+- Adams 1824 may be regarded as an outlier. However, after looking up Wiki, He is actually from Democratic-Republican Party.
+- Finally, I can regard Roosevelt as an outstanding candidate since his electoral vote and popular vote are very high.
+
+\n
+Finally, we compare the share of electoral college vote between *Dem.* and *Rep.*.
+```{r}
+compare <- readr::read_csv(here("./data/clean/compare.csv"))
+
+# plot
+p <- ggplot(compare, aes(Year, Votes_PERCEN, frame = Year, size = Votes_PERCEN, group = Party,colour = Party)) +
+  geom_point()+
+  scale_color_manual(values=c("#19609F","#CB1C2A"))+
+  transition_time(Year) +
+  shadow_wake(wake_length = 0.05, alpha = FALSE) +
+  labs(x = "", y = "", 
+      title = "Presidential Elections:The Share of Electoral Votes for Dem. and Rep. Respetively", subtitle = "Year : {frame_time} (Data for 2020 are provisional)",
+       caption = "Source: socviz::elections_historic & google", fill = NULL)+
+  #coord_cartesian(clip = 'off') + 
+  #ease_aes('cubic-in-out')+
+  theme_classic()
+
+animate(p, fps = 3)
+```
+
+
+From this plot, we can see: Excluding year ftom 1875-1900, the votes percentage difference is relatively huge.
+
 
 
 ## Disbursement Data Analysis

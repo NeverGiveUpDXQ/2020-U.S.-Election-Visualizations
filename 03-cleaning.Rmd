@@ -7,6 +7,58 @@ library(tidyverse)
 library(socviz)
 ```
 
+## Election Result Data Transformation 
+
+Here, I use historical U.S. presidential election data provided in the `socviz` library. At that time, data for 2016 were provisonal. Now, I could [update 2016 data](https://en.wikipedia.org/wiki/2016_United_States_presidential_election) and also add a 2020 election data.
+
+```{r}
+# Update data
+data(elections_historic)
+elections_historic_new <- elections_historic 
+elections_historic_new$ec_pct[elections_historic_new$year == 2016] <- 304/(304+227)
+elections_historic_new$popular_pct[elections_historic_new$year == 2016] <- 0.461
+elections_historic_new$popular_margin[elections_historic_new$year == 2016] <- -0.021
+
+elections_historic_full <- elections_historic_new
+
+elections_historic_new <- elections_historic_new %>%
+  select(c(win_party,popular_pct,ec_pct,winner_label))
+
+# add data for 2020  
+data2020 <- data.frame(win_party = 'Dem.',popular_pct = 0.514,ec_pct = 306/(306+232), winner_label = 'Biden 2020')
+
+elections_historic_new <- rbind(elections_historic_new,data2020)
+
+write.csv(elections_historic_new, file = here("data", "clean", "elections_historic_new.csv"),row.names=FALSE)
+```
+
+Also, make comparison more convenience, I mutate and filter dataset to the following one:
+
+```{r, echo=FALSE, results='asis'}
+knitr::kable(data.frame(
+                description = c('Year','Votes_PERCEN','Party'),
+                category = c("Which election year?", "Votes percentage for president","Winner. Dem or Rep?")
+              ), 
+             col.names = c('Column','Description'),
+             row.names = F,font_size = 10)
+```
+
+```{r}
+t_win <- elections_historic_full %>%
+  filter(win_party %in% c("Dem.","Rep.")) %>%
+  select(year,ec_pct,win_party)
+
+t_los <- t_win %>%
+  mutate(ec_pct = 1 - ec_pct) %>%
+  mutate(win_party = ifelse(t_win$win_party == 'Dem.', 'Rep.', 'Dem.')) %>%
+  select(year,ec_pct,win_party)
+
+compare <- rbind(t_win,t_los) 
+names(compare) <- c('Year','Votes_PERCEN','Party')
+
+write.csv(compare, file = here("data", "clean", "compare.csv"),row.names=FALSE)
+```
+
 ## Disbursement Data Transformation
 The first step we did is to extract the necessary columns that are mentioned in the previous chapter. Then we noticed that in the `disbursement_purpose_category`, there is a `OTHER` top coding is dominant the dataset, hence it would not provide us lots of interesting information to analyze. Below is the original data distribution for the `disbursement_purpose_category` column:
 ```{r}
