@@ -8,9 +8,7 @@ This project uses three major datasets. The primary data sources are [*Federal E
 
 FEC gathers and processes campaign finance data and discloses information about the public funding of US presidential elections. We downloaded the Contribution Receipts data and the Campaign Disbursement data from the FEC website. Cook Political collects and verifies US election returns across the country and is the authoritative source for 2020 Presidential Election voting results. 
 
-## Datasets Collected
-
-### U.S. County Level 2020 Presidential Election Voting Results 
+## U.S. County Level 2020 Presidential Election Voting Results 
 
 **Dataset: 2020_US_County_Level_Presidential_Results.csv**
 
@@ -29,7 +27,7 @@ knitr::kable(DataDescription[1:10, ], caption = "Major columns used",
 
 1. The election results data was collected on Nov.8, 2020, which the results do not reflect on the latest results. The election votes counting is continuing, so we don't get the final results yet. The latest data is not yet open to public.  
 
-### Contribution Receipts
+## Contribution Receipts
 
 **Dataset: contribution_bind.csv**
 
@@ -54,7 +52,7 @@ knitr::kable(DataDescription[13:27, ], caption = "Major columns used",
 
 4. Since the information was gathered based on filings of committees and campaigns, the records do not comply with a unified format. For example, the contributor suffix column has records for "JR", "JR.", and "JR.," which are actually the same thing. There are also errors in the spellings of states and cities.
 
-### The Disbursements data
+## The Disbursements data
 
 **Dataset: schedule_b-2020-11-08T16_10_30.csv**
 
@@ -63,7 +61,7 @@ The Disbursements data on [fec.gov](fec.gov) includes the operating expenditure 
 For this analysis, we filtered the data to focus on the records from the presidential committees of 2020 Election, which the disbursement dates are from 01/01/2020 to 11/03/2020, to be consistent with the scope of the contribution receipt dataset. The dataset with filters applied was exported from [FEC Official Database](https://www.fec.gov/data/disbursements/?spender_committee_type=P&data_type=processed&min_date=01%2F01%2F2020&max_date=11%2F03%2F2020). The retrieved dataset has 260,587 records and 78 columns.
 
 ```{r, echo=FALSE, results='asis'}
-knitr::kable(DataDescription[30:38, ], caption = "Major columns used",
+knitr::kable(DataDescription[30:39, ], caption = "Major columns used",
              row.names = F,font_size = 10)
 ```
 
