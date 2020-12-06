@@ -47,7 +47,7 @@ president2020 %>%
         ggplot2_scale_function = scale_fill_manual,
         name = "Winner",
         values = c(Trump = "darkred", Biden = "darkblue"),
-        round = TRUE, radius=grid::unit(16, "pt"), direction = 1
+        round = TRUE, radius=grid::unit(16, "pt")
     ) +
     theme_statebins()+
   labs(title = "2020 US Election Results by State",caption = "Source: cookpolitical", fill = NULL)+
