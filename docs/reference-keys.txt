@@ -1,8 +1,9 @@
+tab:unnamed-chunk-5
 tab:unnamed-chunk-6
 tab:unnamed-chunk-7
 tab:unnamed-chunk-8
 tab:unnamed-chunk-12
-tab:unnamed-chunk-20
+tab:unnamed-chunk-21
 introduction
 data-sources
 u.s.-county-level-2020-presidential-election-voting-results
@@ -12,6 +13,9 @@ data-transformation
 disbursement-data-transformation
 missing-values
 results
+election-vote-results-visualizations
+state-level
+disbursement-data-analysis
 disbursement-distribution
 top-15-presidential-campaign-made-the-most-disbursement
 disbursement-details
@@ -20,6 +24,5 @@ spending-trend-of-two-major-committees
 disbursement-recipient-share
 where-does-all-of-the-disbursement-money-go
 interactive-component
-conclusion
-disbursement-data-analysis
 disbursement-data-interactive-plot
+conclusion
