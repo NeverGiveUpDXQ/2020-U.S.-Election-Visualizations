@@ -2,7 +2,7 @@
 
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
 library(choroplethr)
-library(d3treeR)
+#library(d3treeR)
 library(d3r)
 library(gganimate)
 library(GGally)
@@ -19,15 +19,6 @@ library(stringr)
 library(tidyverse)
 library(treemap)
 library(usdata)
-```
-
-## Election Vote Results Visualizations
-### State-level
-
-```{r}
-# load packages
-library(here)
-library(tidyverse)
 library(statebins)
 library(usmap)
 library(ggplot2)
@@ -35,15 +26,24 @@ library(dplyr)
 library(plyr)
 library(socviz)
 library(ggrepel)
-library(readr)
 library(ggthemes)
 library(gifski)
-library(gganimate)
 library(directlabels)
 library(png)
 #library(transformr)
 library(grid)
+library(lubridate)
+library(tidytext)
+library(devtools)
+#devtools::install_github("lchiffon/wordcloud2")
+library(wordcloud2)
+library(highcharter)
+```
 
+## Election Vote Results Visualizations
+### State-level
+
+```{r}
 # load cleaned dataset
 president2020 <- readr::read_csv(here("./data/clean/president2020.csv"))
 ```
@@ -428,9 +428,9 @@ w1<- wordcloud2(df_biden, size = 0.4,
          maxRotation = 0, minRotation = 0,
          color=rep_len(pal_blue, nrow(df_biden)))
 w1
-library(htmlwidgets)
-library(webshot)
-saveWidget(w1,"w1.html",selfcontained = F)
+#library(htmlwidgets)
+#library(webshot)
+#saveWidget(w1,"w1.html",selfcontained = F)
 #knitr::include_graphics("./w1.PNG")
 ```
 
