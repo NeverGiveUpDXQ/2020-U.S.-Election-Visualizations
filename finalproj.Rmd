@@ -1,0 +1,703 @@
+--- 
+title: "2020 U.S. Election Visulizations"
+author: "GROUP 10: Jin Qian, Wenjie Zhu, Yibai Liu"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+---
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+
+# Introduction
+
+
+<!--chapter:end:index.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+# Data sources
+
+```{r}
+library(here)
+```
+
+This project uses three major datasets. The primary data sources are [*Federal Election Commission*](http://fec.gov/data/) (FEC) and [*The Cook Political Report*](https://cookpolitical.com/2020-national-popular-vote-tracker) (Cook Political).   
+
+FEC gathers and processes campaign finance data and discloses information about the public funding of US presidential elections. We downloaded the Contribution Receipts data and the Campaign Disbursement data from the FEC website. Cook Political collects and verifies US election returns across the country and is the authoritative source for 2020 Presidential Election voting results. 
+
+## U.S. County Level 2020 Presidential Election Voting Results 
+
+```{r,include=FALSE}
+knitr::opts_chunk$set(opts.label="kill_prefix")
+DataDescription<- readr::read_csv(here("./data/DatasetDescription.csv"))
+DataDescription_add<- readr::read_csv(here("./data/DatasetDescription_add.csv"))
+```
+
+**Dataset: 2020_US_State_Level_Presidential_Results.csv**
+The dataset contains 21 columns and 61 records about the voting results of 2020 presidential election by US state. This dataset was from FEC. Here we only used 6 columns.
+
+```{r, echo=FALSE, results='asis'}
+knitr::kable(DataDescription_add, caption = "Major columns used",
+             row.names = F,font_size = 10)
+```
+
+**Dataset: 2020_US_County_Level_Presidential_Results.csv**
+
+The dataset contains 10 columns and 3159 records about the voting results of 2020 presidential election by US county. This dataset was exported from [*Tony McGovern, 2020_US_County_Level_Presidential_Results*](https://github.com/tonmcg/US_County_Level_Election_Results_08-20/blob/master/2020_US_County_Level_Presidential_Results.csv). He scraped it from results published by from Fox News, Politico, and the New York Times.
+
+
+
+```{r, echo=FALSE, results='asis'}
+knitr::kable(DataDescription[1:10, ], caption = "Major columns used",
+             row.names = F,font_size = 10)
+```
+
+**Issue with this Dataset**
+
+The election results data was collected on Nov.22, 2020, which the results do not reflect on the latest results. The election votes counting is continuing, so we don't get the final results yet. The latest data is not yet open to public.  
+
+## Contribution Receipts
+
+**Dataset: contribution_bind.csv**
+
+The contribution receipts data on [fec.gov](fec.gov) includes all receipts filed by election candidates and committees with records of contributions made by individuals, organizations, and committees. 
+ 
+Due to a huge data volume, we limited the records exported to only those contributions with an amount over or equal to 200 dollars, received within this year, and raised by the committees of two final presidential candidates of 2020 Election. The dataset with filters applied was exported from [here](https://www.fec.gov/data/receipts/?recipient_committee_type=P&data_type=processed&committee_id=C00580100&committee_id=C00703975&two_year_transaction_period=2020&min_date=01%2F01%2F2020&max_date=11%2F03%2F2020&is_individual=true&min_amount=200).
+
+The retrieved dataset has 79 columns and 984,824 records in total. There are 302,731 entries for Trump and 682,093 entries for Biden. 
+
+```{r, echo=FALSE, results='asis'}
+knitr::kable(DataDescription[13:27, ], caption = "Major columns used",
+             row.names = F,font_size = 10)
+```
+
+**Issue with this Dataset**
+
+1. The original dataset is extremely big with over 200 million records, but the majority of them have very small amounts on the receipts, therefore we filtered out records with amounts less than 200 dollars. As a result, the retrieved dataset might not capture information for all contributors, but at the same time it largely eliminates noise that we can focus on contributors who really made significant contributions to support their favorite candidate.  
+
+2. The dataset contains contribution amounts of negatives and zeros, which are probably relate to unsuccessful transfers.
+
+3. Many contributors didn't provide all the information by some reason, so there are missing values and meaningless records in some columns like name, occupation, employer, and even city and states. 
+
+4. Since the information was gathered based on filings of committees and campaigns, the records do not comply with a unified format. For example, the contributor suffix column has records for "JR", "JR.", and "JR.," which are actually the same thing. There are also errors in the spellings of states and cities.
+
+## The Disbursements data
+
+**Dataset: schedule_b-2020-11-08T16_10_30.csv**
+
+The Disbursements data on [fec.gov](fec.gov) includes the operating expenditure records of House and Senate committees, Presidential committees, and PAC and Party committees since 2003. 
+
+For this analysis, we filtered the data to focus on the records from the presidential committees of 2020 Election, which the disbursement dates are from 01/01/2020 to 11/03/2020, to be consistent with the scope of the contribution receipt dataset. The dataset with filters applied was exported from [FEC Official Database](https://www.fec.gov/data/disbursements/?spender_committee_type=P&data_type=processed&min_date=01%2F01%2F2020&max_date=11%2F03%2F2020). The retrieved dataset has 260,587 records and 78 columns.
+
+```{r, echo=FALSE, results='asis'}
+knitr::kable(DataDescription[30:39, ], caption = "Major columns used",
+             row.names = F,font_size = 10)
+```
+
+**Issue with this Dataset**
+
+1. The raw dataset we retrieved contains 260,587 entries as of Nov 18th, 2020, but the data is still getting updated with additive filings of previous disbursements being archived. The total number of records is subject to change, but the change will be trivial compared to the size of the entire dataset. Although this will not affect our analysis or overall conclusion, it would be worth paying attention to the data incompleteness here.
+
+<!--chapter:end:02-data.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+# Data transformation
+
+```{r, message=FALSE, warning=FALSE}
+library(here)
+library(readr)
+library(tidyverse)
+library(socviz)
+```
+
+## Disbursement Data Transformation
+The first step we did is to extract the necessary columns that are mentioned in the previous chapter. Then we noticed that in the `disbursement_purpose_category`, there is a `OTHER` top coding is dominant the dataset, hence it would not provide us lots of interesting information to analyze. Below is the original data distribution for the `disbursement_purpose_category` column:
+```{r}
+# Import data from csv
+exp_raw <- readr::read_csv(here("./data/raw/schedule_b-2020-11-18T20_02_30.csv"))
+
+# Extract specific columns
+exp_processed <- exp_raw %>% 
+  select(committee_name, disbursement_description, disbursement_date, disbursement_amount,
+         disbursement_purpose_category, recipient_city, recipient_zip, recipient_state, recipient_name)
+
+# Convert to correct data type and factor the data if necessary
+exp_processed$disbursement_purpose_category <- factor(exp_processed$disbursement_purpose_category)
+
+# Visualize some important data columns
+ggplot(exp_processed) + 
+  geom_bar(aes(y=fct_relevel(fct_infreq(disbursement_purpose_category) %>% fct_rev(), "OTHER"))) + 
+  xlab("Count") +
+    ylab("Disbursement Purpose") + 
+  ggtitle("Distribution of disbursement_purpose_category") +
+  theme_bw() +
+  theme(plot.title = element_text(face = "bold"),
+        plot.subtitle = element_text(face = "bold", color = "grey35"),
+        plot.caption = element_text(color = "grey68"),
+        legend.position="bottom")
+```
+
+But since we have another column which is the disbursement_description, we can use this information to decode this top code. We examined the frequently mentioned terms in `disbursement_description` among those marked as `OTHER` and manually categorize them into existing or new categories that would fit the record type better. Below is a conversion table that we used to convert the columns. The pattern we are looking for in the description ar based on high frequent terms as well as their word stems and abbreviations. The conversion are done based on the order of this list. 
+```{r, echo=FALSE, results='asis'}
+knitr::kable(data.frame(
+                description = c("BANK|PROCESS","CONSULT",
+                                "SLRY|SALARY|OFFICE|PAYROLL|PYROLL|PHONE|RENT|SOFTWARE|COMPUTER",
+                                "MARKET|MARKETING|ADVERTISING","TRAVEL|TRANSPORT","STAG|STAGING|SHIP",
+                                "EVENT|CATER|UTIL", "CONTRIBUTION", "REFUND|MILEAGE|REIMBURSE"),
+                category = c("BANKING", "CONSULTING", "ADMINISTRATIVE", "ADVERTISING",
+                             "TRAVEL", "MATERIALS", "EVENTS", "CONTRIBUTIONS", "REFUNDS")
+              ), 
+             col.names = c('Category Description','New Category'),
+             caption = "Disbursement Description to Category Conversion Table",
+             row.names = F,font_size = 10)
+```
+
+```{r}
+# label rows that will be changed before undo top coding 
+exp_processed <- 
+  transform(exp_processed, from_other=ifelse(disbursement_purpose_category=='OTHER', TRUE, FALSE))
+
+# Add more factor levels to describe the purpose better
+levels(exp_processed$disbursement_purpose_category) <-
+  c(levels(exp_processed$disbursement_purpose_category), "BANKING", "CONSULTING")
+
+# Decode disbursement_purpose_category based on the description
+exp_processed[grepl("BANK|PROCESS",exp_processed$disbursement_description, ignore.case=T) &
+  exp_processed$disbursement_purpose_category == "OTHER", ]$disbursement_purpose_category <- "BANKING"
+
+exp_processed[grepl("CONSULT",exp_processed$disbursement_description, ignore.case=T) &
+  exp_processed$disbursement_purpose_category == "OTHER", ]$disbursement_purpose_category <- "CONSULTING"
+
+exp_processed[grepl("SLRY|SALARY|OFFICE|PAYROLL|PYROLL|PHONE|RENT|SOFTWARE|COMPUTER",
+        exp_processed$disbursement_description, ignore.case=T) &
+    exp_processed$disbursement_purpose_category == "OTHER", ]$disbursement_purpose_category <- "ADMINISTRATIVE"
+
+exp_processed[grepl("MARKET|MARKETING|ADVERTISING", exp_processed$disbursement_description, ignore.case=T) &
+    exp_processed$disbursement_purpose_category == "OTHER", ]$disbursement_purpose_category <- "ADVERTISING"
+
+exp_processed[grepl("TRAVEL|TRANSPORT", exp_processed$disbursement_description, ignore.case=T) &
+  exp_processed$disbursement_purpose_category == "OTHER", ]$disbursement_purpose_category <- "TRAVEL"
+
+exp_processed[grepl("STAG|STAGING|SHIP", exp_processed$disbursement_description, ignore.case=T) & 
+  exp_processed$disbursement_purpose_category == "OTHER", ]$disbursement_purpose_category <- "MATERIALS"
+
+exp_processed[grepl("EVENT|CATER|UTIL",exp_processed$disbursement_description, ignore.case=T) &
+  exp_processed$disbursement_purpose_category == "OTHER", ]$disbursement_purpose_category <- "EVENTS"
+
+exp_processed[grepl("CONTRIBUTION", exp_processed$disbursement_description, ignore.case=T) &
+  exp_processed$disbursement_purpose_category == "OTHER", ]$disbursement_purpose_category <-"CONTRIBUTIONS"
+
+exp_processed[grepl("REFUND|MILEAGE|REIMBURSE", exp_processed$disbursement_description, ignore.case=T) &
+  exp_processed$disbursement_purpose_category == "OTHER", ]$disbursement_purpose_category <-"REFUNDS"
+```
+
+Here is the distribution after undo the top coding:
+```{r}
+ggplot(exp_processed) + 
+  geom_bar(aes(y=fct_relevel(fct_infreq(disbursement_purpose_category) %>% fct_rev(), "OTHER"))) + 
+  labs(x="Count", y="Disbursement Purpose",
+       title="Distribution of disbursement_purpose_category") +
+  theme_bw() +
+  theme(plot.title = element_text(face = "bold"),
+        plot.subtitle = element_text(face = "bold", color = "grey35"),
+        plot.caption = element_text(color = "grey68"),
+        legend.position="bottom")
+```
+
+Now, the top coding category is less significant than before. We perform our further analysis based on this cleaned data set.
+```{r}
+write.csv(exp_processed, file = here("data", "clean", "disbursement_processed.csv"),row.names=FALSE)
+```
+
+
+
+<!--chapter:end:03-cleaning.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+# Missing values
+
+<!--chapter:end:04-missing.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+# Results
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+library(choroplethr)
+library(d3treeR)
+library(d3r)
+library(gganimate)
+library(GGally)
+library(gridExtra)
+library(HH)
+library(here)
+library(highcharter)
+library(MASS)
+library(parcoords)
+library(plotly)
+library(readr)
+library(scales)
+library(stringr)
+library(tidyverse)
+library(treemap)
+library(usdata)
+```
+
+## Election Vote Results Visualizations
+### State-level
+
+```{r}
+# load packages
+library(here)
+library(tidyverse)
+library(statebins)
+library(usmap)
+library(ggplot2)
+library(dplyr)
+library(plyr)
+library(socviz)
+library(ggrepel)
+library(readr)
+library(ggthemes)
+library(gifski)
+library(gganimate)
+library(directlabels)
+library(png)
+#library(transformr)
+library(grid)
+
+# load cleaned dataset
+president2020 <- readr::read_csv(here("./data/clean/president2020.csv"))
+```
+
+```{r}
+# final results (1205)
+president2020 %>%
+    mutate(value = ifelse(dem_votes>rep_votes,'Biden','Trump')) %>%
+    statebins(
+        font_size=4, dark_label = "white", light_label = "white",
+        ggplot2_scale_function = scale_fill_manual,
+        name = "Winner",
+        values = c(Trump = "darkred", Biden = "darkblue"),
+        round = TRUE, radius=grid::unit(16, "pt"), direction = 1
+    ) +
+    theme_statebins()+
+  labs(title = "2020 US Election Results by State",caption = "Source: cookpolitical", fill = NULL)+
+  theme(plot.title = element_text(face = "bold"),
+        plot.caption = element_text(color = "grey68"),
+        legend.position="bottom",
+        axis.text.y = element_blank())
+
+# Note: direction = 1 switches the order of the fill scale 
+# so darker shades represent higher illiteracy rates
+# (The default is -1).
+```
+
+## County-level
+Thanks again for the great job by [*Tony McGovern*](https://github.com/tonmcg/US_County_Level_Election_Results_08-20/blob/master/2020_US_County_Level_Presidential_Results.csv)
+```{r, message=FALSE}
+County2020 <- read_csv('https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-20/master/2020_US_County_Level_Presidential_Results.csv')
+
+county_full <- right_join(county_map,County2020, by = c('id' = 'county_fips')) %>% as_tibble()
+
+# *per_dem* and *per_gop* refer to the percentage of votes going to Democrats and Republicans respectively.
+# *diff* represents the absolute difference between Republican votes - Democrat votes.
+# *per_point_diff* represents this difference as a percentage of total votes.
+
+b1 <- c(min(county_full$diff))
+b2 <- fivenum(county_full$diff[county_full$diff<0])[3]
+b3 <- 0
+b4 <- fivenum(county_full$diff[county_full$diff>0])[3]
+b5 <- c(max(county_full$diff))
+
+diff_l <- cut(county_full$diff, breaks = c(b1,b2,b3,b4,b5))
+
+ggplot(county_full,
+       aes(x = long, y = lat, fill = diff_l, group = group))+
+  geom_polygon(color = 'white', size = 0.5)+
+  coord_equal()+
+   scale_fill_manual(values=c("#1aa6b7","#b2deec",'#ce6262','#af2d2d'),labels = c('Dem>>Rep','Dem>Rep','Dem<Rep','Dem<<Rep'))+
+  labs(fill = "Absolute Difference")+
+  theme_map()+
+  guides(fill = guide_legend(nrow = 1))+
+  theme(legend.position = 'bottom')+
+  labs(title = "2020 US Election Results: Absolute Difference",caption = "github::tonmcg & socviz::county_map")
+```
+
+Comparing 4 plots, we can see: If we simply compare the area in the 1st and 2nd plot or see the 3rd or 4th plot, we may conclude that Trump win this election. However, don't forget electoral votes are related to population. Also, it's interesting to note that *WI*, *MI*, *PA* are 'turn blue' (hard to predict it in advance).
+
+
+## Disbursement Data Analysis
+### Disbursement Distribution
+```{r, message=FALSE, warning=FALSE}
+exp_df <- readr::read_csv(here("data", "clean", "disbursement_processed.csv"))
+exp_df$disbursement_date <- as.Date(exp_df$disbursement_date, format="%Y-%m-%d %H:%M:%S")
+# Calculate the total disbursement by committee
+disbursement_sum <- exp_df %>% 
+  filter(committee_name == 'BIDEN FOR PRESIDENT' | committee_name == 'DONALD J. TRUMP FOR PRESIDENT, INC.') %>% 
+  filter(disbursement_amount > 0)
+  
+# Generate the boxplot
+ggplot(disbursement_sum, aes(x=disbursement_amount, y= committee_name, fill=committee_name), alpha=0.8) + 
+  geom_boxplot(varwidth = TRUE) + 
+  stat_boxplot(geom ='errorbar') + 
+  scale_x_log10(breaks = trans_breaks("log10", function(x) 10^x),
+              labels = trans_format("log10", math_format(10^.x)))+
+  scale_fill_manual(name = "Committee name", values = c("dodgerblue3", "firebrick2"), 
+                    labels = c("Joe Biden","Donald Trump")) +
+  labs(y = "Candidate", x = "Disbursement Amount",caption = "Source: fec.gov", 
+       title="Disbursement Made by Presidential Committees of 2020 US Election",
+       subtitle = "in US Dollar (log10 scaled)") +
+  theme_bw() +
+  theme(plot.title = element_text(face = "bold"),
+        plot.subtitle = element_text(face = "bold", color = "grey35"),
+        plot.caption = element_text(color = "grey68"),
+        legend.position="bottom",
+        axis.text.y = element_blank())
+```
+
+
+```{r}
+disbursement_summary <- disbursement_sum %>%
+  select(committee_name, disbursement_amount) %>%
+  dplyr::group_by(committee_name) %>% 
+  dplyr::summarise(number_of_records = n(),
+                   total_disbursed_amount = sum(disbursement_amount),
+            mean_disbursement = mean(disbursement_amount, na.rm = T),
+            median_disbursement = median(disbursement_amount, na.rm = T))
+
+# Display in a table
+knitr::kable(disbursement_summary, caption = "Disbursement Summary by Candidate",
+             col.names = c('Candidate name','Number of Records',
+                           'Total disbursed amount (US Dollars)',
+                           'Mean disbursement amount (US Dollars)','Median disbursement amount (US Dollars)'),
+             format.args = list(big.mark = ",", scientific = FALSE),
+             digits = 2,align = "l",full_width = T)
+```
+Every expenditure made by Trump Committee are evenly spread out from 0 to less than a million. The distribution is a little left skewed. There are more outliers clustering at the higher expenditure level than lower expenditure level. On the other hand, Biden Committee has their expenditure distribution centered symmetrically around their median. The range of Biden Committee's single expenditure is wider than Trump Committee. There are more outliers clustering at the higher expenditure level, which means Biden Committee's made more large transactions than Trump Committee. 
+
+
+### Top 15 Presidential Campaign Made the Most Disbursement
+```{r, message=FALSE, warning=FALSE}
+# Calculate the total disbursement amount by committee (in million)
+# Get the top 15 committee
+com_exp <- exp_df %>%
+  group_by(committee_name) %>% 
+  summarize(total = round((sum(disbursement_amount) / 1e6), 2)) %>%
+  arrange(desc(total)) %>% 
+  slice(1:15) %>%
+  ungroup()
+
+# Find the corresponding Political Party for the committee
+com_exp$PoliticalParty <- c('D', 'D', 'R', 'D', 'D','D', 'D', 'D', 'D', 'I','D', 'R', 'I', 'L', 'D')
+
+# Factorize the Political Party Column
+com_exp$PoliticalParty <- factor(com_exp$PoliticalParty, 
+                              levels=c("D", "R", "I", "L"), 
+                              labels=c("Democratic", "Republican", "Independent", "Libertarian"))
+
+# Store the top 15 Committee and their party into a variable
+top15_pp <- com_exp %>% select(c("committee_name", "PoliticalParty"))
+
+# Generate the Interactive Cleveland Dot Plot
+ggplot(com_exp, aes(x = total, y = reorder(committee_name, total), color=PoliticalParty, label=total)) +
+  geom_point() + 
+  geom_text(hjust=-0.2, size = 3) +
+  scale_x_continuous(limits=c(1,1000)) +
+  scale_color_manual(name = "Political Party", values = c("dodgerblue3", "firebrick2","mediumorchid4","gold2"), 
+                    labels = c("Democratic","Republican", "Independent", "Libertarian")) +
+  scale_y_discrete(labels=c('Kamala Harris','Jo Jorgensen','Brock Pierce','Roque De La Fuente','Cory Booker',
+                            'Kanye West','John Delaney','Andrew Yang','Amy Klobuchar', 'Elizabeth Warren', 
+                            'Bernie Sanders', 'Tom Steyer', 'Donald Trump', 'Joe Biden', 'Mike Bloomberg')) +
+  labs(x = "Total Expenditure (Million $)", y = "Candidate", caption = "Source: fec.gov", 
+       title ="Top 15 Presidential Campaign Made the Most Disbursement", 
+       subtitle = "2020 Presidential Election (Rounded to 2 Digits)") + 
+  theme_bw() +
+  theme(plot.title = element_text(face = "bold"),
+        plot.subtitle = element_text(face = "bold", color = "grey35"),
+        plot.caption = element_text(color = "grey68"),
+        legend.position="bottom")
+```
+
+The above graph shows 15 committees with the most disbursement made. Among these 15 committees, 10 of them are Democrates, 2 of them are Republicans, and 2 of them are Independent, 1 of them is Libertarian. One interesting finding is that Mike Bloomberg's Committee spend the most among all of the committees. This is not expected since Bloomberg quit the election race early in March 2020. Joe Biden's committee and Donald Trump's committee gets the second and third place on the list, and this is what is expected since they are the main candidates in this election. We can see that this distribution is following an exponential trend. Each committee spends twice more than the committee that is ranked after it. 
+
+### Disbursement Details
+```{r, message=FALSE, warning=FALSE, fig.width=15, fig.height=8}
+exp_perc <- exp_df %>% 
+  filter(exp_df$committee_name %in% com_exp$committee_name & exp_df$disbursement_purpose_category != "REFUNDS") %>% 
+  group_by(committee_name, disbursement_purpose_category) %>% 
+  summarise(total = sum(disbursement_amount)) %>%
+  mutate(Freq = 100 * total / sum(total)) %>%
+  arrange(committee_name)
+
+exp_perc <- pivot_wider(exp_perc, 
+            id_cols=committee_name, 
+            names_from=disbursement_purpose_category,
+            values_from = Freq)
+exp_perc$committee_name <- factor(exp_perc$committee_name)
+exp_perc[is.na(exp_perc)] <- 0
+
+exp_perc %>%
+  ggparcoord(columns = c(2:9,11:13,10),
+             groupColumn = 1,
+             showPoints = T,
+             scale = "globalminmax",
+             mapping=aes(color=committee_name)
+             ) + 
+  scale_color_viridis_d("Committee",labels=levels(exp_perc$committee_name)) +
+  labs(x = "Expenditure Category", y = "Percentage of Total Expenditure", caption = "Source: fec.gov", 
+       title ="2020 Presidential Election Disbursement Break Down",
+       subtitle="Excluding Refunds") + 
+  theme_bw() +
+  theme(plot.title = element_text(face = "bold"),
+        plot.subtitle = element_text(face = "bold", color = "grey35"),
+        plot.caption = element_text(color = "grey68"),
+        legend.position="bottom")
+```
+
+The three areas that most of the committees focus on are Administrative, Advertising, and Consulting. Those categories are which the services could be provided virtually. Compare to those categories, disbursements in Travel, Events, and Materials are relatively low. Since those categories require in-person meetings and activities, this trend could be caused by the COVID pandemics this year. After investigating the above graph in an interactive plot, there is no obvious correlation between each pair of the disbursement categories listed above. So we will not include the interactive parallel plot explicitly here. 
+
+### When does those committee spend the most?
+#### Spending Trend of Two Major Committees
+```{r, message=FALSE, warning=FALSE}
+biden_Trend <- exp_df %>% 
+  filter(committee_name == "BIDEN FOR PRESIDENT" & disbursement_amount > 0)
+biden_Trend <- aggregate(biden_Trend$disbursement_amount,
+                         by=list(lubridate::floor_date((biden_Trend$disbursement_date), "week")), 
+                         sum)
+biden_Trend$x <- 100 * biden_Trend$x / sum(biden_Trend$x)
+biden_Trend$Committee <- "BIDEN FOR PRESIDENT"
+
+trump_Trend <- exp_df %>% 
+  filter(committee_name == "DONALD J. TRUMP FOR PRESIDENT, INC." & disbursement_amount > 0)
+
+trump_Trend <- aggregate(trump_Trend$disbursement_amount,
+                         by=list(lubridate::floor_date((trump_Trend$disbursement_date), "week")), 
+                         sum)
+
+trump_Trend$x <- 100 * trump_Trend$x / sum(trump_Trend$x)
+trump_Trend$Committee <- "DONALD J. TRUMP FOR PRESIDENT, INC."
+
+ggplot(rbind(biden_Trend, trump_Trend),
+       aes(x=Group.1, y=x, color=Committee)) +
+  geom_point() + 
+  geom_line() + 
+  geom_line(stat = "smooth", method = "loess", alpha = 0.5) + 
+  scale_x_date(labels = date_format("%m-%d"), 
+               limits = c(min=as.Date("2020-01-01"), max=as.Date("2020-11-04")), 
+               breaks = date_breaks("2 week")) + 
+  scale_y_continuous(limits=c(0,15)) +
+  scale_color_manual(values=c("dodgerblue3", "firebrick2")) + 
+  labs(x = "Date", y = "Percent of Committee's Disbursement", caption = "Source: fec.gov", 
+       title = "Percent of Total Disbursements Made by Presidential Committee per Day",
+       subtitle = "2020 Presidential Election") +
+  theme_bw() +
+  theme(plot.title = element_text(face = "bold"),
+        plot.subtitle = element_text(face = "bold", color = "grey35"),
+        plot.caption = element_text(color = "grey68"),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position="bottom")
+```
+
+From the above graph, we can see both of the committees are spending more and more as election day approaches.Th ere are some spending trend fluctuation in early 2020, but such fluctuation evens out as time goes on. Trump's committee started earlier than Biden's committee to invest money in activities regards this election. We can see this in the part of trend in January and the mass investment starting in April. Trump's committee spending trend has three peaks in the graph, which are in January, late May to early July, and late September to early October. On the other hand, Biden's committee started their disbursement later but the total disbursement grows more rapidly. There are two obvious peak in Biden's committee's spending trend line, which are in May and late September to early October.
+
+### Disbursement Recipient Share 
+```{r, message=FALSE, warning=FALSE, fig.width=15, fig.height=10}
+# Calculate the total disbursement received by recipients
+recipients_df <- exp_df %>% 
+  group_by(disbursement_purpose_category, recipient_name) %>% 
+  summarise(value = sum(disbursement_amount)) %>%
+  arrange(disbursement_purpose_category, desc(value))
+recipients_df <- filter(recipients_df, value > 0)
+
+# select top 10 recipients among each disbursement category
+top10_recipients <- recipients_df %>% 
+  arrange(disbursement_purpose_category, desc(value)) %>% 
+  group_by(disbursement_purpose_category) %>% 
+  slice(1:10)
+
+
+# Graph Treemap based on the top 10 recipients among each category
+dout <- data_to_hierarchical(data = top10_recipients, 
+           group_vars=c("disbursement_purpose_category","recipient_name"),
+           size_var = "value") 
+hchart(dout, type="treemap", allowTraversingTree=TRUE) %>%
+  hc_title(text = "<b>Major Disbursement Recipients in Each Category</b>") %>%
+  hc_tooltip(pointFormat = "<b>{point.name}</b>:<br>
+                            Total (US Dollar): {point.value:,.0f}")
+```
+This graph matches what we have discovered before. Most of the committees focus on advertising to help them win the election. Media Assembly and Media Buying & Analytics.LLC are two major companies that provides media advertising services to the 2020 election. As expected, there are also some large tech companies like Google and Facebook in this section. There are also many disbursements for administrative and consulting purposes. Administrative and consulting are the next two largest sectors. They get about equal share of the total disbursements. Zenefits, Vensure HR.LLC, ADP.LLC are three major recipients in the Administrative section. All of these three companies provides Human Resource supports such as H.R. Management software system. In the Consulting section, we see data analytics and financial consulting companies such as Hawkfish.LLC and Geller & Company.LLC. In Other section, there are banks, tech service companies, as well as Vensure HR.LLC and Hawkfish.LLC that we have seen earlier. Though we are unable to specify which purpose those disbursements are for, it is highly likely that those disbursements would be related to financial and other minor transactions regarding the services committees purchased from those supporting companies. 
+
+### Where Does All of The Disbursement Money Go?
+We are going to visualize the disbursement distribution across the 50 states in U.S in the next step:
+```{r,  message=FALSE, warning=FALSE,fig.width=10, fig.height=6}
+data("usgeojson", package = "highcharter")
+# Calculate Total Amount of Disbursement Received for Each Location
+state_total <- exp_df %>% 
+  group_by(recipient_state) %>% 
+  summarise(value= sum(disbursement_amount))
+
+state_total$recipient_state <- state.name[match(state_total$recipient_state, state.abb)]
+state_total <- state_total[complete.cases(state_total), ]
+
+highchart(type="map") %>%
+hc_title(text = "Total Disbursements By All Presidential Candidates 2020 By State") %>%
+  hc_subtitle(text = "Double click the state area to zoom in") %>%
+  hc_add_series_map(usgeojson, state_total,
+    name = "Total Disbursements",
+    value = "value", joinBy = c("woename", "recipient_state"),
+    dataLabels = list(
+       enabled = TRUE,
+       format = "{point.properties.postalcode}"
+     ),
+    tooltip = list(
+      valueDecimals = 0,
+      valuePrefix = "$",
+      valueSuffix = " USD"
+     )
+   ) %>%
+   hc_colorAxis(minColor = "white", maxColor = "red") %>%
+   hc_legend(valueDecimals = 0, valueSuffix = "%") %>%
+   hc_mapNavigation(enabled = TRUE)
+```
+Disbursement mainly goes towards the companies on the Southern and Northern-East Side of the United States. This result is consistent to [2019 Q4 U.S Real GDP data](https://apps.bea.gov/iTable/iTable.cfm?reqid=70&step=30&isuri=1&major_area=0&area=xx&year=2019&tableid=532&category=5532&area_type=0&year_end=-1&classification=non-industry&state=0&statistic=1&yearbegin=-1&unit_of_measure=levels) reported by the Bureau of Economic Analysis.Those states that are highlighted in dark blue are the states that contribute the most to the U.S's GDP. Compare to the 2020 election result, all of these states that contributes the most to the U.S total GDP, besides Taxas, voted for Joe Biden. Such pattern discontinued as we move down along the GDP level. Since the graph above includes a majority of social media and network companies, which their services can be done remotely, it would not reflect which state the candidates are focusing on to perform actions that help win the votes. On the other hand, there are two disbursement categories called `MATERIALS` and `EVENTS` that consists of the physical materials that are purchased and used locally for this presidential election, such as posters, staging materials, delivery fee, etc. If we look at the disbursement distribution across the 50 U.S. states on those categories, we might get a better idea on our previous question. In corresponding to the voting result analysis, let's focus on the two main candidates' committees.
+
+```{r, message=FALSE, warning=FALSE,fig.width=20, fig.height=6}
+# Disbursement Flow for Joe Biden's Main Committee
+target_exp <- exp_df  %>%
+  filter((committee_name == "BIDEN FOR PRESIDENT" | committee_name == "DONALD J. TRUMP FOR PRESIDENT, INC") &
+          disbursement_purpose_category == "EVENTS" | disbursement_purpose_category == "MATERIALS")
+target_exp$recipient_state <- state.name[match(target_exp$recipient_state, state.abb)]
+target_exp <- target_exp[complete.cases(target_exp$recipient_state), ]
+  
+# Compute amount of Biden committee disbursement per category and state 
+exp_flow_B <- target_exp %>%
+  filter(committee_name == "BIDEN FOR PRESIDENT") %>%
+  group_by(recipient_state) %>%
+  summarise(value = sum(disbursement_amount))
+
+# Graph Highchart
+highchart(type="map") %>%
+hc_title(text = "Total Disbursements By 2020 Joe Biden Committee By State") %>%
+  hc_subtitle(text = "Double click the state area to zoom in") %>%
+  hc_add_series_map(usgeojson, exp_flow_B,
+    name = "Total Disbursements",
+    value = "value", joinBy = c("woename", "recipient_state"),
+    dataLabels = list(
+       enabled = TRUE,
+       format = "{point.properties.postalcode}"
+     ),
+    tooltip = list(
+      valueDecimals = 0,
+      valuePrefix = "$",
+      valueSuffix = " USD"
+     )
+   ) %>%
+   hc_colorAxis(minColor = "white", maxColor = "red") %>%
+   hc_legend(valueDecimals = 0, valueSuffix = "%") %>%
+   hc_mapNavigation(enabled = TRUE)
+```
+
+
+```{r, message=FALSE, warning=FALSE,fig.width=20, fig.height=6}
+# Same steps for Trump's Main committee
+# Compute amount of Biden committee disbursement per category and state 
+exp_flow_T <- target_exp %>%
+  filter(committee_name == "DONALD J. TRUMP FOR PRESIDENT, INC.") %>%
+  group_by(recipient_state) %>%
+  summarise(value = sum(disbursement_amount))
+
+# Graph Highchart
+highchart(type="map") %>%
+hc_title(text = "Total Disbursements By 2020 Donald Trump Committee By State") %>%
+  hc_subtitle(text = "Double click the state area to zoom in") %>%
+  hc_add_series_map(usgeojson, exp_flow_T,
+    name = "Total Disbursements",
+    value = "value", joinBy = c("woename", "recipient_state"),
+    dataLabels = list(
+       enabled = TRUE,
+       format = "{point.properties.postalcode}"
+     ),
+    tooltip = list(
+      valueDecimals = 0,
+      valuePrefix = "$",
+      valueSuffix = " USD"
+     )
+   ) %>%
+   hc_colorAxis(minColor = "white", maxColor = "red") %>%
+   hc_legend(valueDecimals = 0, valueSuffix = "%") %>%
+   hc_mapNavigation(enabled = TRUE)
+```
+
+There are not a lot of physical events going on and propaganda passing out for this year's election. Partly it could due to the COVID pandemic. From the above graph, the location where Trump's committee held physical events are more widely spread out across U.S than Biden's committee, while the recipients of material and event fee made by Biden's committee mainly clustered in the east half of the U.S. and West Coast. As shown previously in the parallel axis graph, both of the committees spent less than 1% of their total expenditure in Materials and Events. Compare both maps above, we can see some regions colored in bright green and blue in the map on the right hand side, but not the map on the left hand side. Those bright colors represent that those regions are receiving more of such committee's total disbursement. The two maps are colored based on the same color scale. Since we have found that Biden's committee spent more than Trump's Committee, and Trump's committee is spending more in the above two areas, it is not difficult to conclude that Trump's committee spent a larger percent of their total expenditure in physical events. This could be one of the campaign's strategy. Also, Trump's committee is spending significantly more on some of the states where they win compare to the expenditure of Biden's committee on those states. There is such a trend in the election result this year, but to answer whether there is truly a correlation between expenditure and the voting results would need further investigations on more data sets from previous years.
+
+<!--chapter:end:05-results.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+# Interactive component
+
+
+## Disbursement Data Interactive Plot
+
+The above graph shows the Disbursement Trends of the 15 Presidential Committees that made the most disbursements. Each data point represents the rolling sum of a committee's total disbursement settled at the end of a week. The dot will be colored in grey after the candidate suspended the committee. We manipulated the cleaned datasets to extract the information needed to make this graph. The dataset is uploaded to Github and can be founded [here](https://github.com/NeverGiveUpDXQ/2020-U.S.-Election-Visualizations/tree/wz/data/d3csv).
+
+**Instructions to Use the Graph**
+
+1. Users can drag on the canvas along the y-Axis to zoom into specific ranges.
+2. Users can double click on the canvas to reset the y-Axis.
+3. Users can hover mouse on each dot to see exact disbursement value, date, and candidate information.
+4. Users can click on the dot to toggle display/fade each trend line.
+
+<iframe src="https://vizhub.com/wz2536/1369d9b47bfe47289f5929619171858b?mode=embed" title="D3 Disbursement analysis" height="450" width="750"></iframe>
+
+Reference:
+
+1. D3.js Graph Gallery: Line chart with zoom in d3.js (https://www.d3-graph-gallery.com/graph/line_brushZoom.html)
+2. D3.js Graph Gallery: Connected scatter plot with interactive legend (https://www.d3-graph-gallery.com/graph/connectedscatter_legend.html)
+
+<!--chapter:end:06-interactive.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+# Conclusion
+
+
+<!--chapter:end:07-conclusion.Rmd-->
+
