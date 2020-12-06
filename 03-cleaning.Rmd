@@ -72,10 +72,8 @@ To save file-reading time and to meet analysis and visualization needs, we made 
   - Removed uninformational words stored in the [stop words](https://www.rdocumentation.org/packages/tidytext/versions/0.2.6/topics/stop_words) dataset of package `tidytext`. For example, words like "the", "of", and "and" do not add any insight but will distort the frequency distribution. 
 Finally, the counts for each unique word were calculated and saved in a separate .csv file.
 
-```{r}
-contributions1 <- read.csv(here("./data/raw/contribution_bind.csv"), 
-                        header = TRUE,fileEncoding="UTF-8-BOM")
-#contributions1 <- readr::read_csv(here("./data/raw/contribution_bind.csv"))
+```{r, eval=FALSE}
+contributions1 <- readr::read_csv(here("./data/raw/contribution_bind.csv"))
 
 # Extract columns
 DataDescription<- readr::read_csv(here("./data/DatasetDescription.csv"))
