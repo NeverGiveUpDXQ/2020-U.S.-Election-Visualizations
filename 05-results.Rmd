@@ -137,7 +137,7 @@ From this plot, we can see:
 \n
 Finally, we compare the share of electoral college vote between *Dem.* and *Rep.*.
 
-```{r}
+```{r, message=FALSE}
 compare <- readr::read_csv(here::here("./data/clean/compare.csv"))
 
 # plot
