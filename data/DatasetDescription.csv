@@ -1,0 +1,40 @@
+﻿Column Name,Description
+state_name,State name (chr)
+county_fips,The 5-digit FIPS code corresponding to the county (chr)
+county_name,County name (chr)
+votes_gop,Votes for Trump
+votes_dem,Votes for Biden
+total_votes,Total Votes
+diff,The absolute difference between Republican votes - Democrat votes
+per_gop,Vote percentage for Trump
+per_dem,Vote percentage for Biden
+per_point_diff,The absolute percentage difference between Republican votes - Democrat votes
+,
+Column Name,Description
+committee_id,Recipient presidential committee id (chr)
+committee_name,Recipient presidential committee name (chr)
+entity_type,Contributor entity abbr. (chr)
+entity_type_desc,Contributor entity (chr)
+contributor_name,Full name of contributor (chr)
+contributor_last_name,Last name of contributor (chr)
+contributor_suffix,Suffix of contributor (chr)
+contributor_city,City of contributor's address (chr)
+contributor_state,State of contributor's address(chr)
+contributor_zip,Zip code of contributor's address (chr)
+contributor_employer,Name of contributor's employer (chr)
+contributor_occupation,Contributor's occupation (chr)
+contribution_receipt_date,Receipt date (date)
+contribution_receipt_amount,Receipt amount (num)
+contributor_aggregate_ytd,Contributor aggregated contribution of this year (num)
+… (Omit 63 unused columns),
+schedule_b-2020-11-08T16_10_30.csv,
+Column Name,Description
+committee_name,Presidential Committee Name (chr)
+disbursement_description,Details of the disbursement (chr)
+disbursement_date,Date that disbursement is made (date).
+disbursement_amount,Amount of the disbursement (num)
+disbursement_purpose_category,Purpose of the disbursement (chr)
+recipient_city,City of disbursement recipient's address (chr)
+recipient_zip,Zip code of disbursement recipient's address (chr)
+recipient_state,State of disbursement recipient's address (chr)
+… (Omit 70 unused columns),
