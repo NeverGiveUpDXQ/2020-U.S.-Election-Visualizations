@@ -26,4 +26,5 @@ gg_miss_upset(contribution_processed)
 ```
 
 In the processed contributions dataset, missing values only take 0.21% of the entire dataset with 946,704 observations of 14 attributes. As shown in the table and the upset plot above, missing values of the contributions dataset most frequently appear in columns including `contributor_employer`, `contributor_zip`, and `contributor_occupation`.
+
 The most popular pattern of missingness is only missing the contributor employer information, which 143 entries share this pattern. Besides there are also 35 entries missing both occupation and employer information, and 34 entries missing zip code information. 

@@ -127,7 +127,7 @@ ggplot(elections_historic_new, aes(x = popular_pct,
   labs(x = "Winner's share of popular vote", 
        y = "Winner's share of electoral college vote", 
        title = "Presidential Elections: Popular & Electoral College Margins", subtitle = "From 1824 to 2020(Data for 2020 are provisional)",
-       caption = "Source: socviz::elections_historic & google", fill = "Party affiliation of winner")+
+       caption = "Source: socviz & Cook Political", fill = "Party affiliation of winner")+
   theme_bw() +
   theme(plot.title = element_text(face = "bold"),
         plot.subtitle = element_text(face = "bold", color = "grey35"),
@@ -141,10 +141,12 @@ From this plot, we can see:
 - Ideally, we may think the president also have high share of popular vote. Those data in the red rectangular shows not this case. This can be explained by [how the US presidential election works](https://en.wikipedia.org/wiki/United_States_presidential_election).
 
 - Adams 1824 may be regarded as an outlier. However, after looking up Wiki, He is actually from Democratic-Republican Party.
-- Finally, I can regard Roosevelt as an outstanding candidate since his electoral vote and popular vote are very high.
+
+- Finally, we can regard Roosevelt as an outstanding candidate since his electoral vote and popular vote are very high.
 
 \n
 Finally, we compare the share of electoral college vote between *Dem.* and *Rep.*.
+
 ```{r}
 compare <- readr::read_csv(here("./data/clean/compare.csv"))
 
@@ -410,7 +412,7 @@ To obtain more information about individual contributors, we extracted keywords 
 # To save time, read the saved .csv datasets
 oc_biden_count <- readr::read_csv(here("data", "clean", "occupation_BIDEN_count.csv"))
 
-oc_trump_count <- readr::read_csv(here("data", "clean", "occupation_TRUMP_count.csv")
+oc_trump_count <- readr::read_csv(here("data", "clean", "occupation_TRUMP_count.csv"))
 
   
 # Wordcloud Biden
