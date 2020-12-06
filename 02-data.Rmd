@@ -17,6 +17,7 @@ DataDescription_add<- readr::read_csv(here("./data/DatasetDescription_add.csv"))
 ```
 
 **Dataset: 2020_US_State_Level_Presidential_Results.csv**
+
 The dataset contains 21 columns and 61 records about the voting results of 2020 presidential election by US state. This dataset was from FEC. Here we only used 6 columns.
 
 ```{r, echo=FALSE, results='asis'}
@@ -79,4 +80,4 @@ knitr::kable(DataDescription[30:39, ], caption = "Major columns used",
 
 **Issue with this Dataset**
 
-1. The raw dataset we retrieved contains 260,587 entries as of Nov 18th, 2020, but the data is still getting updated with additive filings of previous disbursements being archived. The total number of records is subject to change, but the change will be trivial compared to the size of the entire dataset. Although this will not affect our analysis or overall conclusion, it would be worth paying attention to the data incompleteness here.
+The raw dataset we retrieved contains 260,587 entries as of Nov 18th, 2020, but the data is still getting updated with additive filings of previous disbursements being archived. The total number of records is subject to change, but the change will be trivial compared to the size of the entire dataset. Although this will not affect our analysis or overall conclusion, it would be worth paying attention to the data incompleteness here.
