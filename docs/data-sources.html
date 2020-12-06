@@ -33,7 +33,7 @@
   
 <link rel="prev" href="index.html"/>
 <link rel="next" href="data-transformation.html"/>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/jquery-3.5.0/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -50,8 +50,53 @@
 
 
 
-<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<script src="libs/htmlwidgets-1.5.2/htmlwidgets.js"></script>
+<script src="libs/proj4js-2.3.15/proj4.js"></script>
+<link href="libs/highcharts-8.1.2/css/motion.css" rel="stylesheet" />
+<script src="libs/highcharts-8.1.2/highcharts.js"></script>
+<script src="libs/highcharts-8.1.2/highcharts-3d.js"></script>
+<script src="libs/highcharts-8.1.2/highcharts-more.js"></script>
+<script src="libs/highcharts-8.1.2/modules/stock.js"></script>
+<script src="libs/highcharts-8.1.2/modules/map.js"></script>
+<script src="libs/highcharts-8.1.2/modules/annotations.js"></script>
+<script src="libs/highcharts-8.1.2/modules/data.js"></script>
+<script src="libs/highcharts-8.1.2/modules/drilldown.js"></script>
+<script src="libs/highcharts-8.1.2/modules/item-series.js"></script>
+<script src="libs/highcharts-8.1.2/modules/offline-exporting.js"></script>
+<script src="libs/highcharts-8.1.2/modules/overlapping-datalabels.js"></script>
+<script src="libs/highcharts-8.1.2/modules/exporting.js"></script>
+<script src="libs/highcharts-8.1.2/modules/export-data.js"></script>
+<script src="libs/highcharts-8.1.2/modules/funnel.js"></script>
+<script src="libs/highcharts-8.1.2/modules/heatmap.js"></script>
+<script src="libs/highcharts-8.1.2/modules/treemap.js"></script>
+<script src="libs/highcharts-8.1.2/modules/sankey.js"></script>
+<script src="libs/highcharts-8.1.2/modules/dependency-wheel.js"></script>
+<script src="libs/highcharts-8.1.2/modules/organization.js"></script>
+<script src="libs/highcharts-8.1.2/modules/solid-gauge.js"></script>
+<script src="libs/highcharts-8.1.2/modules/streamgraph.js"></script>
+<script src="libs/highcharts-8.1.2/modules/sunburst.js"></script>
+<script src="libs/highcharts-8.1.2/modules/vector.js"></script>
+<script src="libs/highcharts-8.1.2/modules/wordcloud.js"></script>
+<script src="libs/highcharts-8.1.2/modules/xrange.js"></script>
+<script src="libs/highcharts-8.1.2/modules/tilemap.js"></script>
+<script src="libs/highcharts-8.1.2/modules/venn.js"></script>
+<script src="libs/highcharts-8.1.2/modules/gantt.js"></script>
+<script src="libs/highcharts-8.1.2/modules/timeline.js"></script>
+<script src="libs/highcharts-8.1.2/modules/parallel-coordinates.js"></script>
+<script src="libs/highcharts-8.1.2/modules/bullet.js"></script>
+<script src="libs/highcharts-8.1.2/modules/coloraxis.js"></script>
+<script src="libs/highcharts-8.1.2/modules/dumbbell.js"></script>
+<script src="libs/highcharts-8.1.2/modules/lollipop.js"></script>
+<script src="libs/highcharts-8.1.2/modules/series-label.js"></script>
+<script src="libs/highcharts-8.1.2/plugins/motion.js"></script>
+<script src="libs/highcharts-8.1.2/custom/reset.js"></script>
+<script src="libs/highcharts-8.1.2/modules/boost.js"></script>
+<script src="libs/highchart-binding-0.8.2/highchart.js"></script>
+<link href="libs/wordcloud2-0.0.1/wordcloud.css" rel="stylesheet" />
+<script src="libs/wordcloud2-0.0.1/wordcloud2-all.js"></script>
+<script src="libs/wordcloud2-0.0.1/hover.js"></script>
+<script src="libs/wordcloud2-binding-0.2.1/wordcloud2.js"></script>
 
 
 
@@ -138,7 +183,7 @@
 <p><strong>Dataset: 2020_US_State_Level_Presidential_Results.csv</strong></p>
 <p>The dataset contains 21 columns and 61 records about the voting results of 2020 presidential election by US state. This dataset was from FEC. Here we only used 6 columns.</p>
 <table>
-<caption><span id="tab:unnamed-chunk-5">Table 2.1: </span>Major columns used</caption>
+<caption><span id="tab:unnamed-chunk-21">Table 2.1: </span>Major columns used</caption>
 <thead>
 <tr class="header">
 <th align="left">Column Name</th>
@@ -175,7 +220,7 @@
 <p><strong>Dataset: 2020_US_County_Level_Presidential_Results.csv</strong></p>
 <p>The dataset contains 10 columns and 3159 records about the voting results of 2020 presidential election by US county. This dataset was exported from <a href="https://github.com/tonmcg/US_County_Level_Election_Results_08-20/blob/master/2020_US_County_Level_Presidential_Results.csv"><em>Tony McGovern, 2020_US_County_Level_Presidential_Results</em></a>. He scraped it from results published by from Fox News, Politico, and the New York Times.</p>
 <table>
-<caption><span id="tab:unnamed-chunk-6">Table 2.2: </span>Major columns used</caption>
+<caption><span id="tab:unnamed-chunk-22">Table 2.2: </span>Major columns used</caption>
 <colgroup>
 <col width="16%" />
 <col width="83%" />
@@ -239,7 +284,7 @@
 <p>Due to a huge data volume, we limited the records exported to only those contributions with an amount over or equal to 200 dollars, received within this year, and raised by the committees of two final presidential candidates of 2020 Election. The dataset with filters applied was exported from <a href="https://www.fec.gov/data/receipts/?recipient_committee_type=P&amp;data_type=processed&amp;committee_id=C00580100&amp;committee_id=C00703975&amp;two_year_transaction_period=2020&amp;min_date=01%2F01%2F2020&amp;max_date=11%2F03%2F2020&amp;is_individual=true&amp;min_amount=200">here</a>.</p>
 <p>The retrieved dataset has 79 columns and 984,824 records in total. There are 302,731 entries for Trump and 682,093 entries for Biden.</p>
 <table>
-<caption><span id="tab:unnamed-chunk-7">Table 2.3: </span>Major columns used</caption>
+<caption><span id="tab:unnamed-chunk-23">Table 2.3: </span>Major columns used</caption>
 <colgroup>
 <col width="33%" />
 <col width="66%" />
@@ -327,7 +372,7 @@
 <p>The Disbursements data on <a href="fec.gov">fec.gov</a> includes the operating expenditure records of House and Senate committees, Presidential committees, and PAC and Party committees since 2003.</p>
 <p>For this analysis, we filtered the data to focus on the records from the presidential committees of 2020 Election, which the disbursement dates are from 01/01/2020 to 11/03/2020, to be consistent with the scope of the contribution receipt dataset. The dataset with filters applied was exported from <a href="https://www.fec.gov/data/disbursements/?spender_committee_type=P&amp;data_type=processed&amp;min_date=01%2F01%2F2020&amp;max_date=11%2F03%2F2020">FEC Official Database</a>. The retrieved dataset has 260,587 records and 78 columns.</p>
 <table>
-<caption><span id="tab:unnamed-chunk-8">Table 2.4: </span>Major columns used</caption>
+<caption><span id="tab:unnamed-chunk-24">Table 2.4: </span>Major columns used</caption>
 <thead>
 <tr class="header">
 <th align="left">Column Name</th>
