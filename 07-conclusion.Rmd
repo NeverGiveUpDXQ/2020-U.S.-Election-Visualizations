@@ -1,2 +1,28 @@
 # Conclusion
 
+(this is a draft)
+
+After completing this project, our team has a better understanding of the  U.S. President Election.
+
+**How are electoral votes and popular votes different?**
+
+**How much has each campaign raised and spend this year?**
+
+**How are electoral votes and popular votes distributed in the country?**
+
+**Did contributions this year infer the final voting results or form a timeline reflecting on major events happened this year?**
+
+**What were each campaign’s spending strategies? Were those strategies effective in leading the voting outcome?**
+
+
+But still, our analysis is limited. 
+
+**Data Limitation**
+
+Like we said before, because of COVID-19, some state changed their voting policy and made it work smoothly. We can see more mail-in voting than ever. Given that, there has some claims of election fraud during the election. We're also worried about election result data may be noisy and unreliable in this special year.
+
+**Analysis Limitation**
+R has so many amazing visulazation packages, and what we learned and used is only the tip of the iceberg. 
+
+
+In the future, when it's available to download full reliable and original election results data, we will update what we did and try our best to complete a more detailed project.
