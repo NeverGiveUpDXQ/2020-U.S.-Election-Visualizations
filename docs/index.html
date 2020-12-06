@@ -24,7 +24,7 @@
 <meta name="author" content="GROUP 10: Jin Qian, Wenjie Zhu, Yibai Liu" />
 
 
-<meta name="date" content="2020-12-05" />
+<meta name="date" content="2020-12-06" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,7 +33,7 @@
   
 
 <link rel="next" href="data-sources.html"/>
-<script src="libs/jquery-3.5.0/jquery.min.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -51,48 +51,6 @@
 
 
 <script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
-<script src="libs/htmlwidgets-1.5.2/htmlwidgets.js"></script>
-<script src="libs/proj4js-2.3.15/proj4.js"></script>
-<link href="libs/highcharts-8.1.2/css/motion.css" rel="stylesheet" />
-<script src="libs/highcharts-8.1.2/highcharts.js"></script>
-<script src="libs/highcharts-8.1.2/highcharts-3d.js"></script>
-<script src="libs/highcharts-8.1.2/highcharts-more.js"></script>
-<script src="libs/highcharts-8.1.2/modules/stock.js"></script>
-<script src="libs/highcharts-8.1.2/modules/map.js"></script>
-<script src="libs/highcharts-8.1.2/modules/annotations.js"></script>
-<script src="libs/highcharts-8.1.2/modules/data.js"></script>
-<script src="libs/highcharts-8.1.2/modules/drilldown.js"></script>
-<script src="libs/highcharts-8.1.2/modules/item-series.js"></script>
-<script src="libs/highcharts-8.1.2/modules/offline-exporting.js"></script>
-<script src="libs/highcharts-8.1.2/modules/overlapping-datalabels.js"></script>
-<script src="libs/highcharts-8.1.2/modules/exporting.js"></script>
-<script src="libs/highcharts-8.1.2/modules/export-data.js"></script>
-<script src="libs/highcharts-8.1.2/modules/funnel.js"></script>
-<script src="libs/highcharts-8.1.2/modules/heatmap.js"></script>
-<script src="libs/highcharts-8.1.2/modules/treemap.js"></script>
-<script src="libs/highcharts-8.1.2/modules/sankey.js"></script>
-<script src="libs/highcharts-8.1.2/modules/dependency-wheel.js"></script>
-<script src="libs/highcharts-8.1.2/modules/organization.js"></script>
-<script src="libs/highcharts-8.1.2/modules/solid-gauge.js"></script>
-<script src="libs/highcharts-8.1.2/modules/streamgraph.js"></script>
-<script src="libs/highcharts-8.1.2/modules/sunburst.js"></script>
-<script src="libs/highcharts-8.1.2/modules/vector.js"></script>
-<script src="libs/highcharts-8.1.2/modules/wordcloud.js"></script>
-<script src="libs/highcharts-8.1.2/modules/xrange.js"></script>
-<script src="libs/highcharts-8.1.2/modules/tilemap.js"></script>
-<script src="libs/highcharts-8.1.2/modules/venn.js"></script>
-<script src="libs/highcharts-8.1.2/modules/gantt.js"></script>
-<script src="libs/highcharts-8.1.2/modules/timeline.js"></script>
-<script src="libs/highcharts-8.1.2/modules/parallel-coordinates.js"></script>
-<script src="libs/highcharts-8.1.2/modules/bullet.js"></script>
-<script src="libs/highcharts-8.1.2/modules/coloraxis.js"></script>
-<script src="libs/highcharts-8.1.2/modules/dumbbell.js"></script>
-<script src="libs/highcharts-8.1.2/modules/lollipop.js"></script>
-<script src="libs/highcharts-8.1.2/modules/series-label.js"></script>
-<script src="libs/highcharts-8.1.2/plugins/motion.js"></script>
-<script src="libs/highcharts-8.1.2/custom/reset.js"></script>
-<script src="libs/highcharts-8.1.2/modules/boost.js"></script>
-<script src="libs/highchart-binding-0.8.2/highchart.js"></script>
 
 
 
@@ -161,10 +119,23 @@
 <div id="header">
 <h1 class="title">2020 U.S. Election Visulizations</h1>
 <p class="author"><em>GROUP 10: Jin Qian, Wenjie Zhu, Yibai Liu</em></p>
-<p class="date"><em>2020-12-05</em></p>
+<p class="date"><em>2020-12-06</em></p>
 </div>
 <div id="introduction" class="section level1">
 <h1><span class="header-section-number">Chapter 1</span> Introduction</h1>
+<p>The year of 2020 is obviously a tough year for everyone. It is also a difficult year for the once-in-four-years U.S. Presidential Election. Due to the COVID pandemics, this race took over two weeks to be called by the Associated Press. The polling result encaptured many interesting aspects such as the current U.S economic condition, people’s expectations on the new ruling party, and politician’s response to these new expectations. On the other hand, the worries on the voting fraud and the trustworthy of data outcomes has been a major problem over this entire election, which further obscured the facts behind those numbers.</p>
+<p>Take the above facts into the consideration, it would be helpful to perform an trustful analysis on 2020 presidential election. Our team is going to approach the analysis from a more economical point of view. Some basic questions that we would like to get out from this analysis would be:</p>
+<ul>
+<li>How are electoral votes and popular votes different?</li>
+<li>How much has each campaign raised and spend this year?</li>
+</ul>
+<p>We also would like to investigate some more advanced questions such as:</p>
+<ul>
+<li>How are electoral votes and popular votes distributed in the country?</li>
+<li>Did contributions this year infer the final voting results or form a timeline reflecting on major events happened this year?</li>
+<li>What were each campaign’s spending strategies? Were those strategies effective in leading the voting outcome?</li>
+</ul>
+<p>To answer those questions, we have collected the presidential committee contribution and disbursement data from <a href="https://www.fec.gov/">Federal Election Commission</a> as well as the voting outcome from <a href="https://cookpolitical.com/">The Cook Political Report</a> to perform a cross-reference. In the following chapters, we will perform analysis on those data sets in order to clear the doubts and provide everyone a better insight on current political and economical environment.</p>
 
 </div>
             </section>
