@@ -1,7 +1,16 @@
+tab:unnamed-chunk-10
+tab:unnamed-chunk-11
+tab:unnamed-chunk-12
+tab:unnamed-chunk-13
 introduction
 data-sources
+u.s.-county-level-2020-presidential-election-voting-results
+contribution-receipts
+the-disbursements-data
 data-transformation
 missing-values
 results
+election-vote-results-visualizations
+state-level
 interactive-component
 conclusion
