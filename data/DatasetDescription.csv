@@ -37,4 +37,5 @@ disbursement_purpose_category,Purpose of the disbursement (chr)
 recipient_city,City of disbursement recipient's address (chr)
 recipient_zip,Zip code of disbursement recipient's address (chr)
 recipient_state,State of disbursement recipient's address (chr)
+recipient_name,Entity name of disbursement recipient (chr)
 … (Omit 70 unused columns),

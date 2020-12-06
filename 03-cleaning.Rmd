@@ -1,1 +1,109 @@
 # Data transformation
+
+```{r, message=FALSE, warning=FALSE}
+library(here)
+library(readr)
+library(tidyverse)
+library(socviz)
+```
+
+## Disbursement Data Transformation
+The first step we did is to extract the necessary columns that are mentioned in the previous chapter. Then we noticed that in the `disbursement_purpose_category`, there is a `OTHER` top coding is dominant the dataset, hence it would not provide us lots of interesting information to analyze. Below is the original data distribution for the `disbursement_purpose_category` column:
+```{r}
+# Import data from csv
+exp_raw <- readr::read_csv(here("./data/raw/schedule_b-2020-11-18T20_02_30.csv"))
+
+# Extract specific columns
+exp_processed <- exp_raw %>% 
+  select(committee_name, disbursement_description, disbursement_date, disbursement_amount,
+         disbursement_purpose_category, recipient_city, recipient_zip, recipient_state, recipient_name)
+
+# Convert to correct data type and factor the data if necessary
+exp_processed$disbursement_purpose_category <- factor(exp_processed$disbursement_purpose_category)
+
+# Visualize some important data columns
+ggplot(exp_processed) + 
+  geom_bar(aes(y=fct_relevel(fct_infreq(disbursement_purpose_category) %>% fct_rev(), "OTHER"))) + 
+  xlab("Count") +
+    ylab("Disbursement Purpose") + 
+  ggtitle("Distribution of disbursement_purpose_category") +
+  theme_bw() +
+  theme(plot.title = element_text(face = "bold"),
+        plot.subtitle = element_text(face = "bold", color = "grey35"),
+        plot.caption = element_text(color = "grey68"),
+        legend.position="bottom")
+```
+
+But since we have another column which is the disbursement_description, we can use this information to decode this top code. We examined the frequently mentioned terms in `disbursement_description` among those marked as `OTHER` and manually categorize them into existing or new categories that would fit the record type better. Below is a conversion table that we used to convert the columns. The pattern we are looking for in the description ar based on high frequent terms as well as their word stems and abbreviations. The conversion are done based on the order of this list. 
+```{r, echo=FALSE, results='asis'}
+knitr::kable(data.frame(
+                description = c("BANK|PROCESS","CONSULT",
+                                "SLRY|SALARY|OFFICE|PAYROLL|PYROLL|PHONE|RENT|SOFTWARE|COMPUTER",
+                                "MARKET|MARKETING|ADVERTISING","TRAVEL|TRANSPORT","STAG|STAGING|SHIP",
+                                "EVENT|CATER|UTIL", "CONTRIBUTION", "REFUND|MILEAGE|REIMBURSE"),
+                category = c("BANKING", "CONSULTING", "ADMINISTRATIVE", "ADVERTISING",
+                             "TRAVEL", "MATERIALS", "EVENTS", "CONTRIBUTIONS", "REFUNDS")
+              ), 
+             col.names = c('Category Description','New Category'),
+             caption = "Disbursement Description to Category Conversion Table",
+             row.names = F,font_size = 10)
+```
+
+```{r}
+# label rows that will be changed before undo top coding 
+exp_processed <- 
+  transform(exp_processed, from_other=ifelse(disbursement_purpose_category=='OTHER', TRUE, FALSE))
+
+# Add more factor levels to describe the purpose better
+levels(exp_processed$disbursement_purpose_category) <-
+  c(levels(exp_processed$disbursement_purpose_category), "BANKING", "CONSULTING")
+
+# Decode disbursement_purpose_category based on the description
+exp_processed[grepl("BANK|PROCESS",exp_processed$disbursement_description, ignore.case=T) &
+  exp_processed$disbursement_purpose_category == "OTHER", ]$disbursement_purpose_category <- "BANKING"
+
+exp_processed[grepl("CONSULT",exp_processed$disbursement_description, ignore.case=T) &
+  exp_processed$disbursement_purpose_category == "OTHER", ]$disbursement_purpose_category <- "CONSULTING"
+
+exp_processed[grepl("SLRY|SALARY|OFFICE|PAYROLL|PYROLL|PHONE|RENT|SOFTWARE|COMPUTER",
+        exp_processed$disbursement_description, ignore.case=T) &
+    exp_processed$disbursement_purpose_category == "OTHER", ]$disbursement_purpose_category <- "ADMINISTRATIVE"
+
+exp_processed[grepl("MARKET|MARKETING|ADVERTISING", exp_processed$disbursement_description, ignore.case=T) &
+    exp_processed$disbursement_purpose_category == "OTHER", ]$disbursement_purpose_category <- "ADVERTISING"
+
+exp_processed[grepl("TRAVEL|TRANSPORT", exp_processed$disbursement_description, ignore.case=T) &
+  exp_processed$disbursement_purpose_category == "OTHER", ]$disbursement_purpose_category <- "TRAVEL"
+
+exp_processed[grepl("STAG|STAGING|SHIP", exp_processed$disbursement_description, ignore.case=T) & 
+  exp_processed$disbursement_purpose_category == "OTHER", ]$disbursement_purpose_category <- "MATERIALS"
+
+exp_processed[grepl("EVENT|CATER|UTIL",exp_processed$disbursement_description, ignore.case=T) &
+  exp_processed$disbursement_purpose_category == "OTHER", ]$disbursement_purpose_category <- "EVENTS"
+
+exp_processed[grepl("CONTRIBUTION", exp_processed$disbursement_description, ignore.case=T) &
+  exp_processed$disbursement_purpose_category == "OTHER", ]$disbursement_purpose_category <-"CONTRIBUTIONS"
+
+exp_processed[grepl("REFUND|MILEAGE|REIMBURSE", exp_processed$disbursement_description, ignore.case=T) &
+  exp_processed$disbursement_purpose_category == "OTHER", ]$disbursement_purpose_category <-"REFUNDS"
+```
+
+Here is the distribution after undo the top coding:
+```{r}
+ggplot(exp_processed) + 
+  geom_bar(aes(y=fct_relevel(fct_infreq(disbursement_purpose_category) %>% fct_rev(), "OTHER"))) + 
+  labs(x="Count", y="Disbursement Purpose",
+       title="Distribution of disbursement_purpose_category") +
+  theme_bw() +
+  theme(plot.title = element_text(face = "bold"),
+        plot.subtitle = element_text(face = "bold", color = "grey35"),
+        plot.caption = element_text(color = "grey68"),
+        legend.position="bottom")
+```
+
+Now, the top coding category is less significant than before. We perform our further analysis based on this cleaned data set.
+```{r}
+write.csv(exp_processed, file = here("data", "clean", "disbursement_processed.csv"),row.names=FALSE)
+```
+
+

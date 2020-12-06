@@ -21,10 +21,10 @@
   
   
 
-<meta name="author" content="EDAV GROUP 10" />
+<meta name="author" content="GROUP 10: Jin Qian, Wenjie Zhu, Yibai Liu" />
 
 
-<meta name="date" content="2020-11-15" />
+<meta name="date" content="2020-12-05" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,7 +33,7 @@
   
 <link rel="prev" href="data-sources.html"/>
 <link rel="next" href="missing-values.html"/>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/jquery-3.5.0/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -50,8 +50,49 @@
 
 
 
-<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<script src="libs/htmlwidgets-1.5.2/htmlwidgets.js"></script>
+<script src="libs/proj4js-2.3.15/proj4.js"></script>
+<link href="libs/highcharts-8.1.2/css/motion.css" rel="stylesheet" />
+<script src="libs/highcharts-8.1.2/highcharts.js"></script>
+<script src="libs/highcharts-8.1.2/highcharts-3d.js"></script>
+<script src="libs/highcharts-8.1.2/highcharts-more.js"></script>
+<script src="libs/highcharts-8.1.2/modules/stock.js"></script>
+<script src="libs/highcharts-8.1.2/modules/map.js"></script>
+<script src="libs/highcharts-8.1.2/modules/annotations.js"></script>
+<script src="libs/highcharts-8.1.2/modules/data.js"></script>
+<script src="libs/highcharts-8.1.2/modules/drilldown.js"></script>
+<script src="libs/highcharts-8.1.2/modules/item-series.js"></script>
+<script src="libs/highcharts-8.1.2/modules/offline-exporting.js"></script>
+<script src="libs/highcharts-8.1.2/modules/overlapping-datalabels.js"></script>
+<script src="libs/highcharts-8.1.2/modules/exporting.js"></script>
+<script src="libs/highcharts-8.1.2/modules/export-data.js"></script>
+<script src="libs/highcharts-8.1.2/modules/funnel.js"></script>
+<script src="libs/highcharts-8.1.2/modules/heatmap.js"></script>
+<script src="libs/highcharts-8.1.2/modules/treemap.js"></script>
+<script src="libs/highcharts-8.1.2/modules/sankey.js"></script>
+<script src="libs/highcharts-8.1.2/modules/dependency-wheel.js"></script>
+<script src="libs/highcharts-8.1.2/modules/organization.js"></script>
+<script src="libs/highcharts-8.1.2/modules/solid-gauge.js"></script>
+<script src="libs/highcharts-8.1.2/modules/streamgraph.js"></script>
+<script src="libs/highcharts-8.1.2/modules/sunburst.js"></script>
+<script src="libs/highcharts-8.1.2/modules/vector.js"></script>
+<script src="libs/highcharts-8.1.2/modules/wordcloud.js"></script>
+<script src="libs/highcharts-8.1.2/modules/xrange.js"></script>
+<script src="libs/highcharts-8.1.2/modules/tilemap.js"></script>
+<script src="libs/highcharts-8.1.2/modules/venn.js"></script>
+<script src="libs/highcharts-8.1.2/modules/gantt.js"></script>
+<script src="libs/highcharts-8.1.2/modules/timeline.js"></script>
+<script src="libs/highcharts-8.1.2/modules/parallel-coordinates.js"></script>
+<script src="libs/highcharts-8.1.2/modules/bullet.js"></script>
+<script src="libs/highcharts-8.1.2/modules/coloraxis.js"></script>
+<script src="libs/highcharts-8.1.2/modules/dumbbell.js"></script>
+<script src="libs/highcharts-8.1.2/modules/lollipop.js"></script>
+<script src="libs/highcharts-8.1.2/modules/series-label.js"></script>
+<script src="libs/highcharts-8.1.2/plugins/motion.js"></script>
+<script src="libs/highcharts-8.1.2/custom/reset.js"></script>
+<script src="libs/highcharts-8.1.2/modules/boost.js"></script>
+<script src="libs/highchart-binding-0.8.2/highchart.js"></script>
 
 
 
@@ -72,10 +113,23 @@
 
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
-<li class="chapter" data-level="2" data-path="data-sources.html"><a href="data-sources.html"><i class="fa fa-check"></i><b>2</b> Data sources</a></li>
-<li class="chapter" data-level="3" data-path="data-transformation.html"><a href="data-transformation.html"><i class="fa fa-check"></i><b>3</b> Data transformation</a></li>
+<li class="chapter" data-level="2" data-path="data-sources.html"><a href="data-sources.html"><i class="fa fa-check"></i><b>2</b> Data sources</a><ul>
+<li class="chapter" data-level="2.1" data-path="data-sources.html"><a href="data-sources.html#u.s.-county-level-2020-presidential-election-voting-results"><i class="fa fa-check"></i><b>2.1</b> U.S. County Level 2020 Presidential Election Voting Results</a></li>
+<li class="chapter" data-level="2.2" data-path="data-sources.html"><a href="data-sources.html#contribution-receipts"><i class="fa fa-check"></i><b>2.2</b> Contribution Receipts</a></li>
+<li class="chapter" data-level="2.3" data-path="data-sources.html"><a href="data-sources.html#the-disbursements-data"><i class="fa fa-check"></i><b>2.3</b> The Disbursements data</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="data-transformation.html"><a href="data-transformation.html"><i class="fa fa-check"></i><b>3</b> Data transformation</a><ul>
+<li class="chapter" data-level="3.1" data-path="data-transformation.html"><a href="data-transformation.html#disbursement-data-transformation"><i class="fa fa-check"></i><b>3.1</b> Disbursement Data Transformation</a></li>
+</ul></li>
 <li class="chapter" data-level="4" data-path="missing-values.html"><a href="missing-values.html"><i class="fa fa-check"></i><b>4</b> Missing values</a></li>
-<li class="chapter" data-level="5" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>5</b> Results</a></li>
+<li class="chapter" data-level="5" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>5</b> Results</a><ul>
+<li class="chapter" data-level="5.0.1" data-path="results.html"><a href="results.html#disbursement-distribution"><i class="fa fa-check"></i><b>5.0.1</b> Disbursement Distribution</a></li>
+<li class="chapter" data-level="5.0.2" data-path="results.html"><a href="results.html#top-15-presidential-campaign-made-the-most-disbursement"><i class="fa fa-check"></i><b>5.0.2</b> Top 15 Presidential Campaign Made the Most Disbursement</a></li>
+<li class="chapter" data-level="5.0.3" data-path="results.html"><a href="results.html#disbursement-details"><i class="fa fa-check"></i><b>5.0.3</b> Disbursement Details</a></li>
+<li class="chapter" data-level="5.0.4" data-path="results.html"><a href="results.html#when-does-those-committee-spend-the-most"><i class="fa fa-check"></i><b>5.0.4</b> When does those committee spend the most?</a></li>
+<li class="chapter" data-level="5.0.5" data-path="results.html"><a href="results.html#disbursement-recipient-share"><i class="fa fa-check"></i><b>5.0.5</b> Disbursement Recipient Share</a></li>
+<li class="chapter" data-level="5.0.6" data-path="results.html"><a href="results.html#where-does-all-of-the-disbursement-money-go"><i class="fa fa-check"></i><b>5.0.6</b> Where Does All of The Disbursement Money Go?</a></li>
+</ul></li>
 <li class="chapter" data-level="6" data-path="interactive-component.html"><a href="interactive-component.html"><i class="fa fa-check"></i><b>6</b> Interactive component</a></li>
 <li class="chapter" data-level="7" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>7</b> Conclusion</a></li>
 <li class="divider"></li>
@@ -99,7 +153,67 @@
             <section class="normal" id="section-">
 <div id="data-transformation" class="section level1">
 <h1><span class="header-section-number">Chapter 3</span> Data transformation</h1>
+<div id="disbursement-data-transformation" class="section level2">
+<h2><span class="header-section-number">3.1</span> Disbursement Data Transformation</h2>
+<p>The first step we did is to extract the necessary columns that are mentioned in the previous chapter. Then we noticed that in the <code>disbursement_purpose_category</code>, there is a <code>OTHER</code> top coding is dominant the dataset, hence it would not provide us lots of interesting information to analyze. Below is the original data distribution for the <code>disbursement_purpose_category</code> column:
+<img src="finalproj_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>But since we have another column which is the disbursement_description, we can use this information to decode this top code. We examined the frequently mentioned terms in <code>disbursement_description</code> among those marked as <code>OTHER</code> and manually categorize them into existing or new categories that would fit the record type better. Below is a conversion table that we used to convert the columns. The pattern we are looking for in the description ar based on high frequent terms as well as their word stems and abbreviations. The conversion are done based on the order of this list.</p>
+<table>
+<caption><span id="tab:unnamed-chunk-12">Table 3.1: </span>Disbursement Description to Category Conversion Table</caption>
+<colgroup>
+<col width="87%" />
+<col width="12%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Category Description</th>
+<th align="left">New Category</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">BANK|PROCESS</td>
+<td align="left">BANKING</td>
+</tr>
+<tr class="even">
+<td align="left">CONSULT</td>
+<td align="left">CONSULTING</td>
+</tr>
+<tr class="odd">
+<td align="left">SLRY|SALARY|OFFICE|PAYROLL|PYROLL|PHONE|RENT|SOFTWARE|COMPUTER</td>
+<td align="left">ADMINISTRATIVE</td>
+</tr>
+<tr class="even">
+<td align="left">MARKET|MARKETING|ADVERTISING</td>
+<td align="left">ADVERTISING</td>
+</tr>
+<tr class="odd">
+<td align="left">TRAVEL|TRANSPORT</td>
+<td align="left">TRAVEL</td>
+</tr>
+<tr class="even">
+<td align="left">STAG|STAGING|SHIP</td>
+<td align="left">MATERIALS</td>
+</tr>
+<tr class="odd">
+<td align="left">EVENT|CATER|UTIL</td>
+<td align="left">EVENTS</td>
+</tr>
+<tr class="even">
+<td align="left">CONTRIBUTION</td>
+<td align="left">CONTRIBUTIONS</td>
+</tr>
+<tr class="odd">
+<td align="left">REFUND|MILEAGE|REIMBURSE</td>
+<td align="left">REFUNDS</td>
+</tr>
+</tbody>
+</table>
+<p>Here is the distribution after undo the top coding:
+<img src="finalproj_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p>Now, the top coding category is less significant than before. We perform our further analysis based on this cleaned data set.</p>
 
+</div>
 </div>
             </section>
 
