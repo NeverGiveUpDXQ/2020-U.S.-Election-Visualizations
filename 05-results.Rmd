@@ -48,7 +48,7 @@ library(grid)
 president2020 <- readr::read_csv(here("./data/clean/president2020.csv"))
 ```
 
-```{r}
+```{r, fig.width=20, fig.height=6}
 # final results (1205)
 president2020 %>%
     mutate(value = ifelse(dem_votes>rep_votes,'Biden','Trump')) %>%
@@ -73,7 +73,7 @@ president2020 %>%
 
 ### County-level
 Thanks again for the great job by [*Tony McGovern*](https://github.com/tonmcg/US_County_Level_Election_Results_08-20/blob/master/2020_US_County_Level_Presidential_Results.csv)
-```{r, message=FALSE}
+```{r, message=FALSE,fig.width=20, fig.height=6}
 County2020 <- read_csv('https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-20/master/2020_US_County_Level_Presidential_Results.csv')
 
 
@@ -106,7 +106,7 @@ If we simply compare the area, we may conclude that Trump will win this election
 
 In this part, I will compare popular vote and electoral college vote from 1824 to 2020 (Note that **Data for 2020 are provisonal**, collected in 5 Dec). *It's possible the candidate with the most votes from the public won't be the winner. This is because the president is not chosen directly by the voters, but what's known as the electoral college. (This explained by [BBC](https://www.bbc.com/news/world-us-canada-53558176) )*
 
-```{r, fig.width=8}
+```{r,fig.width=20, fig.height=6}
 # Code reference: https://socviz.co/workgeoms.html#workgeoms
 # HIGHLY recommended this book!! Really APPRECIATE:)
 
@@ -128,8 +128,12 @@ ggplot(elections_historic_new, aes(x = popular_pct,
        y = "Winner's share of electoral college vote", 
        title = "Presidential Elections: Popular & Electoral College Margins", subtitle = "From 1824 to 2020(Data for 2020 are provisional)",
        caption = "Source: socviz::elections_historic & google", fill = "Party affiliation of winner")+
-  theme_classic()+
-  theme(legend.position = 'bottom')
+  theme_bw() +
+  theme(plot.title = element_text(face = "bold"),
+        plot.subtitle = element_text(face = "bold", color = "grey35"),
+        plot.caption = element_text(color = "grey68"),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position="bottom")
 ```
 
 From this plot, we can see: 

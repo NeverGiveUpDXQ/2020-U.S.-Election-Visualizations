@@ -32,7 +32,7 @@ elections_historic_new <- rbind(elections_historic_new,data2020)
 write.csv(elections_historic_new, file = here("data", "clean", "elections_historic_new.csv"),row.names=FALSE)
 ```
 
-Also, make comparison more convenience, I mutate and filter dataset to the following one:
+Also, to make comparison of the share of electoral college vote between *Dem.* and *Rep.* more convenience, I mutate and filter dataset to the following one:
 
 ```{r, echo=FALSE, results='asis'}
 knitr::kable(data.frame(
