@@ -1,3 +1,251 @@
+--- 
+title: "2020 U.S. Election Visulizations"
+author: "GROUP 10: Jin Qian, Wenjie Zhu, Yibai Liu"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+---
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+
+# Introduction
+
+
+<!--chapter:end:index.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+# Data sources
+
+```{r}
+library(here)
+```
+
+This project uses three major datasets. The primary data sources are [*Federal Election Commission*](http://fec.gov/data/) (FEC) and [*The Cook Political Report*](https://cookpolitical.com/2020-national-popular-vote-tracker) (Cook Political).   
+
+FEC gathers and processes campaign finance data and discloses information about the public funding of US presidential elections. We downloaded the Contribution Receipts data and the Campaign Disbursement data from the FEC website. Cook Political collects and verifies US election returns across the country and is the authoritative source for 2020 Presidential Election voting results. 
+
+## U.S. County Level 2020 Presidential Election Voting Results 
+
+```{r,include=FALSE}
+knitr::opts_chunk$set(opts.label="kill_prefix")
+DataDescription<- readr::read_csv(here("./data/DatasetDescription.csv"))
+DataDescription_add<- readr::read_csv(here("./data/DatasetDescription_add.csv"))
+```
+
+**Dataset: 2020_US_State_Level_Presidential_Results.csv**
+The dataset contains 21 columns and 61 records about the voting results of 2020 presidential election by US state. This dataset was from FEC. Here we only used 6 columns.
+
+```{r, echo=FALSE, results='asis'}
+knitr::kable(DataDescription_add, caption = "Major columns used",
+             row.names = F,font_size = 10)
+```
+
+**Dataset: 2020_US_County_Level_Presidential_Results.csv**
+
+The dataset contains 10 columns and 3159 records about the voting results of 2020 presidential election by US county. This dataset was exported from [*Tony McGovern, 2020_US_County_Level_Presidential_Results*](https://github.com/tonmcg/US_County_Level_Election_Results_08-20/blob/master/2020_US_County_Level_Presidential_Results.csv). He scraped it from results published by from Fox News, Politico, and the New York Times.
+
+
+
+```{r, echo=FALSE, results='asis'}
+knitr::kable(DataDescription[1:10, ], caption = "Major columns used",
+             row.names = F,font_size = 10)
+```
+
+**Issue with this Dataset**
+
+The election results data was collected on Nov.22, 2020, which the results do not reflect on the latest results. The election votes counting is continuing, so we don't get the final results yet. The latest data is not yet open to public.  
+
+## Contribution Receipts
+
+**Dataset: contribution_bind.csv**
+
+The contribution receipts data on [fec.gov](fec.gov) includes all receipts filed by election candidates and committees with records of contributions made by individuals, organizations, and committees. 
+ 
+Due to a huge data volume, we limited the records exported to only those contributions with an amount over or equal to 200 dollars, received within this year, and raised by the committees of two final presidential candidates of 2020 Election. The dataset with filters applied was exported from [here](https://www.fec.gov/data/receipts/?recipient_committee_type=P&data_type=processed&committee_id=C00580100&committee_id=C00703975&two_year_transaction_period=2020&min_date=01%2F01%2F2020&max_date=11%2F03%2F2020&is_individual=true&min_amount=200).
+
+The retrieved dataset has 79 columns and 984,824 records in total. There are 302,731 entries for Trump and 682,093 entries for Biden. 
+
+```{r, echo=FALSE, results='asis'}
+knitr::kable(DataDescription[13:27, ], caption = "Major columns used",
+             row.names = F,font_size = 10)
+```
+
+**Issue with this Dataset**
+
+1. The original dataset is extremely big with over 200 million records, but the majority of them have very small amounts on the receipts, therefore we filtered out records with amounts less than 200 dollars. As a result, the retrieved dataset might not capture information for all contributors, but at the same time it largely eliminates noise that we can focus on contributors who really made significant contributions to support their favorite candidate.  
+
+2. The dataset contains contribution amounts of negatives and zeros, which are probably relate to unsuccessful transfers.
+
+3. Many contributors didn't provide all the information by some reason, so there are missing values and meaningless records in some columns like name, occupation, employer, and even city and states. 
+
+4. Since the information was gathered based on filings of committees and campaigns, the records do not comply with a unified format. For example, the contributor suffix column has records for "JR", "JR.", and "JR.," which are actually the same thing. There are also errors in the spellings of states and cities.
+
+## The Disbursements data
+
+**Dataset: schedule_b-2020-11-08T16_10_30.csv**
+
+The Disbursements data on [fec.gov](fec.gov) includes the operating expenditure records of House and Senate committees, Presidential committees, and PAC and Party committees since 2003. 
+
+For this analysis, we filtered the data to focus on the records from the presidential committees of 2020 Election, which the disbursement dates are from 01/01/2020 to 11/03/2020, to be consistent with the scope of the contribution receipt dataset. The dataset with filters applied was exported from [FEC Official Database](https://www.fec.gov/data/disbursements/?spender_committee_type=P&data_type=processed&min_date=01%2F01%2F2020&max_date=11%2F03%2F2020). The retrieved dataset has 260,587 records and 78 columns.
+
+```{r, echo=FALSE, results='asis'}
+knitr::kable(DataDescription[30:39, ], caption = "Major columns used",
+             row.names = F,font_size = 10)
+```
+
+**Issue with this Dataset**
+
+1. The raw dataset we retrieved contains 260,587 entries as of Nov 18th, 2020, but the data is still getting updated with additive filings of previous disbursements being archived. The total number of records is subject to change, but the change will be trivial compared to the size of the entire dataset. Although this will not affect our analysis or overall conclusion, it would be worth paying attention to the data incompleteness here.
+
+<!--chapter:end:02-data.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+# Data transformation
+
+```{r, message=FALSE, warning=FALSE}
+library(here)
+library(readr)
+library(tidyverse)
+library(socviz)
+```
+
+## Disbursement Data Transformation
+The first step we did is to extract the necessary columns that are mentioned in the previous chapter. Then we noticed that in the `disbursement_purpose_category`, there is a `OTHER` top coding is dominant the dataset, hence it would not provide us lots of interesting information to analyze. Below is the original data distribution for the `disbursement_purpose_category` column:
+```{r}
+# Import data from csv
+exp_raw <- readr::read_csv(here("./data/raw/schedule_b-2020-11-18T20_02_30.csv"))
+
+# Extract specific columns
+exp_processed <- exp_raw %>% 
+  select(committee_name, disbursement_description, disbursement_date, disbursement_amount,
+         disbursement_purpose_category, recipient_city, recipient_zip, recipient_state, recipient_name)
+
+# Convert to correct data type and factor the data if necessary
+exp_processed$disbursement_purpose_category <- factor(exp_processed$disbursement_purpose_category)
+
+# Visualize some important data columns
+ggplot(exp_processed) + 
+  geom_bar(aes(y=fct_relevel(fct_infreq(disbursement_purpose_category) %>% fct_rev(), "OTHER"))) + 
+  xlab("Count") +
+    ylab("Disbursement Purpose") + 
+  ggtitle("Distribution of disbursement_purpose_category") +
+  theme_bw() +
+  theme(plot.title = element_text(face = "bold"),
+        plot.subtitle = element_text(face = "bold", color = "grey35"),
+        plot.caption = element_text(color = "grey68"),
+        legend.position="bottom")
+```
+
+But since we have another column which is the disbursement_description, we can use this information to decode this top code. We examined the frequently mentioned terms in `disbursement_description` among those marked as `OTHER` and manually categorize them into existing or new categories that would fit the record type better. Below is a conversion table that we used to convert the columns. The pattern we are looking for in the description ar based on high frequent terms as well as their word stems and abbreviations. The conversion are done based on the order of this list. 
+```{r, echo=FALSE, results='asis'}
+knitr::kable(data.frame(
+                description = c("BANK|PROCESS","CONSULT",
+                                "SLRY|SALARY|OFFICE|PAYROLL|PYROLL|PHONE|RENT|SOFTWARE|COMPUTER",
+                                "MARKET|MARKETING|ADVERTISING","TRAVEL|TRANSPORT","STAG|STAGING|SHIP",
+                                "EVENT|CATER|UTIL", "CONTRIBUTION", "REFUND|MILEAGE|REIMBURSE"),
+                category = c("BANKING", "CONSULTING", "ADMINISTRATIVE", "ADVERTISING",
+                             "TRAVEL", "MATERIALS", "EVENTS", "CONTRIBUTIONS", "REFUNDS")
+              ), 
+             col.names = c('Category Description','New Category'),
+             caption = "Disbursement Description to Category Conversion Table",
+             row.names = F,font_size = 10)
+```
+
+```{r}
+# label rows that will be changed before undo top coding 
+exp_processed <- 
+  transform(exp_processed, from_other=ifelse(disbursement_purpose_category=='OTHER', TRUE, FALSE))
+
+# Add more factor levels to describe the purpose better
+levels(exp_processed$disbursement_purpose_category) <-
+  c(levels(exp_processed$disbursement_purpose_category), "BANKING", "CONSULTING")
+
+# Decode disbursement_purpose_category based on the description
+exp_processed[grepl("BANK|PROCESS",exp_processed$disbursement_description, ignore.case=T) &
+  exp_processed$disbursement_purpose_category == "OTHER", ]$disbursement_purpose_category <- "BANKING"
+
+exp_processed[grepl("CONSULT",exp_processed$disbursement_description, ignore.case=T) &
+  exp_processed$disbursement_purpose_category == "OTHER", ]$disbursement_purpose_category <- "CONSULTING"
+
+exp_processed[grepl("SLRY|SALARY|OFFICE|PAYROLL|PYROLL|PHONE|RENT|SOFTWARE|COMPUTER",
+        exp_processed$disbursement_description, ignore.case=T) &
+    exp_processed$disbursement_purpose_category == "OTHER", ]$disbursement_purpose_category <- "ADMINISTRATIVE"
+
+exp_processed[grepl("MARKET|MARKETING|ADVERTISING", exp_processed$disbursement_description, ignore.case=T) &
+    exp_processed$disbursement_purpose_category == "OTHER", ]$disbursement_purpose_category <- "ADVERTISING"
+
+exp_processed[grepl("TRAVEL|TRANSPORT", exp_processed$disbursement_description, ignore.case=T) &
+  exp_processed$disbursement_purpose_category == "OTHER", ]$disbursement_purpose_category <- "TRAVEL"
+
+exp_processed[grepl("STAG|STAGING|SHIP", exp_processed$disbursement_description, ignore.case=T) & 
+  exp_processed$disbursement_purpose_category == "OTHER", ]$disbursement_purpose_category <- "MATERIALS"
+
+exp_processed[grepl("EVENT|CATER|UTIL",exp_processed$disbursement_description, ignore.case=T) &
+  exp_processed$disbursement_purpose_category == "OTHER", ]$disbursement_purpose_category <- "EVENTS"
+
+exp_processed[grepl("CONTRIBUTION", exp_processed$disbursement_description, ignore.case=T) &
+  exp_processed$disbursement_purpose_category == "OTHER", ]$disbursement_purpose_category <-"CONTRIBUTIONS"
+
+exp_processed[grepl("REFUND|MILEAGE|REIMBURSE", exp_processed$disbursement_description, ignore.case=T) &
+  exp_processed$disbursement_purpose_category == "OTHER", ]$disbursement_purpose_category <-"REFUNDS"
+```
+
+Here is the distribution after undo the top coding:
+```{r}
+ggplot(exp_processed) + 
+  geom_bar(aes(y=fct_relevel(fct_infreq(disbursement_purpose_category) %>% fct_rev(), "OTHER"))) + 
+  labs(x="Count", y="Disbursement Purpose",
+       title="Distribution of disbursement_purpose_category") +
+  theme_bw() +
+  theme(plot.title = element_text(face = "bold"),
+        plot.subtitle = element_text(face = "bold", color = "grey35"),
+        plot.caption = element_text(color = "grey68"),
+        legend.position="bottom")
+```
+
+Now, the top coding category is less significant than before. We perform our further analysis based on this cleaned data set.
+```{r}
+write.csv(exp_processed, file = here("data", "clean", "disbursement_processed.csv"),row.names=FALSE)
+```
+
+
+
+<!--chapter:end:03-cleaning.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+# Missing values
+
+<!--chapter:end:04-missing.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
 # Results
 
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
@@ -408,3 +656,48 @@ hc_title(text = "Total Disbursements By 2020 Donald Trump Committee By State") %
 ```
 
 There are not a lot of physical events going on and propaganda passing out for this year's election. Partly it could due to the COVID pandemic. From the above graph, the location where Trump's committee held physical events are more widely spread out across U.S than Biden's committee, while the recipients of material and event fee made by Biden's committee mainly clustered in the east half of the U.S. and West Coast. As shown previously in the parallel axis graph, both of the committees spent less than 1% of their total expenditure in Materials and Events. Compare both maps above, we can see some regions colored in bright green and blue in the map on the right hand side, but not the map on the left hand side. Those bright colors represent that those regions are receiving more of such committee's total disbursement. The two maps are colored based on the same color scale. Since we have found that Biden's committee spent more than Trump's Committee, and Trump's committee is spending more in the above two areas, it is not difficult to conclude that Trump's committee spent a larger percent of their total expenditure in physical events. This could be one of the campaign's strategy. Also, Trump's committee is spending significantly more on some of the states where they win compare to the expenditure of Biden's committee on those states. There is such a trend in the election result this year, but to answer whether there is truly a correlation between expenditure and the voting results would need further investigations on more data sets from previous years.
+
+<!--chapter:end:05-results.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+# Interactive component
+
+
+## Disbursement Data Interactive Plot
+
+The above graph shows the Disbursement Trends of the 15 Presidential Committees that made the most disbursements. Each data point represents the rolling sum of a committee's total disbursement settled at the end of a week. The dot will be colored in grey after the candidate suspended the committee. We manipulated the cleaned datasets to extract the information needed to make this graph. The dataset is uploaded to Github and can be founded [here](https://github.com/NeverGiveUpDXQ/2020-U.S.-Election-Visualizations/tree/wz/data/d3csv).
+
+**Instructions to Use the Graph**
+
+1. Users can drag on the canvas along the y-Axis to zoom into specific ranges.
+2. Users can double click on the canvas to reset the y-Axis.
+3. Users can hover mouse on each dot to see exact disbursement value, date, and candidate information.
+4. Users can click on the dot to toggle display/fade each trend line.
+
+<iframe src="https://vizhub.com/wz2536/1369d9b47bfe47289f5929619171858b?mode=embed" title="D3 Disbursement analysis" height="450" width="750"></iframe>
+
+Reference:
+
+1. D3.js Graph Gallery: Line chart with zoom in d3.js (https://www.d3-graph-gallery.com/graph/line_brushZoom.html)
+2. D3.js Graph Gallery: Connected scatter plot with interactive legend (https://www.d3-graph-gallery.com/graph/connectedscatter_legend.html)
+
+<!--chapter:end:06-interactive.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+# Conclusion
+
+
+<!--chapter:end:07-conclusion.Rmd-->
+
