@@ -14,7 +14,7 @@ The election voting results data and the disbursements data do not have missing 
 
 ```{r, echo = F, message=F}
 # Import data from csv
-contribution_processed <- readr::read_csv(here("./data/raw/contribution_processed.csv"))
+contribution_processed <- readr::read_csv(here("./data/clean/contribution_processed.csv"))
 
 #n_miss(contribution_processed)
 #pct_miss(contribution_processed)
