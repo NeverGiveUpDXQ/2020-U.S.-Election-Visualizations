@@ -1,13 +1,9 @@
 # Results
 
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
-library(choroplethr)
-#library(d3treeR)
-library(d3r)
 library(gganimate)
 library(GGally)
 library(gridExtra)
-library(HH)
 library(here)
 library(highcharter)
 library(MASS)
@@ -17,7 +13,6 @@ library(readr)
 library(scales)
 library(stringr)
 library(tidyverse)
-library(treemap)
 library(usdata)
 library(statebins)
 library(usmap)
@@ -27,10 +22,6 @@ library(plyr)
 library(socviz)
 library(ggrepel)
 library(ggthemes)
-library(gifski)
-library(directlabels)
-library(png)
-#library(transformr)
 library(grid)
 library(lubridate)
 library(tidytext)
@@ -44,7 +35,7 @@ library(wordcloud2)
 
 ```{r}
 # load cleaned dataset
-president2020 <- readr::read_csv(here("./data/clean/president2020.csv"))
+president2020 <- readr::read_csv(here::here("./data/clean/president2020.csv"))
 ```
 
 ```{r, fig.width=20, fig.height=6}
@@ -109,7 +100,7 @@ In this part, I will compare popular vote and electoral college vote from 1824 t
 # Code reference: https://socviz.co/workgeoms.html#workgeoms
 # HIGHLY recommended this book!! Really APPRECIATE:)
 
-elections_historic_new <- readr::read_csv(here("./data/clean/elections_historic_new.csv"))
+elections_historic_new <- readr::read_csv(here::here("./data/clean/elections_historic_new.csv"))
 
 # plot
 ggplot(elections_historic_new, aes(x = popular_pct, 
@@ -147,7 +138,7 @@ From this plot, we can see:
 Finally, we compare the share of electoral college vote between *Dem.* and *Rep.*.
 
 ```{r}
-compare <- readr::read_csv(here("./data/clean/compare.csv"))
+compare <- readr::read_csv(here::here("./data/clean/compare.csv"))
 
 # plot
 p <- ggplot(compare, aes(Year, Votes_PERCEN, frame = Year, size = Votes_PERCEN, group = Party,colour = Party)) +
@@ -173,10 +164,10 @@ From this plot, we can see: Excluding year ftom 1875-1900, the votes percentage 
 ```{r, echo=FALSE}
 # Read the datasets
   # Contribution summary by state
-contrib_zip <- readr::read_csv(here("data", "clean", "Contributions_by_3Zip.csv"))
+contrib_zip <- readr::read_csv(here::here("data", "clean", "Contributions_by_3Zip.csv"))
 
   # Population and registered Voters in 2020 by state
-voters_state <- readr::read_csv(here("data", "clean", "RegisteredVotersByState.csv"))
+voters_state <- readr::read_csv(here::here("data", "clean", "RegisteredVotersByState.csv"))
 
 # All candidates
 df_all <- contrib_zip[contrib_zip$CANDIDATE_ID=="P00000001" & 
@@ -314,7 +305,7 @@ If we instead take into account the registered voters in each state and calculat
 ### Contributions Distribution and Details
 ```{r, echo=FALSE}
 # Read data
-contributions1 <- readr::read_csv(here("data", "clean", "contribution_processed.csv"))
+contributions1 <- readr::read_csv(here::here("data", "clean", "contribution_processed.csv"))
 
 #head(contributions1)
 
@@ -370,7 +361,7 @@ To see more contribution details, we selected from the original data the domesti
 ### Contributions by Date: Time Series
 ```{r, echo=FALSE}
 # Read the dataset
-contribution_by_date <- readr::read_csv(here("data", "clean", "contribution_by_date.csv"))
+contribution_by_date <- readr::read_csv(here::here("data", "clean", "contribution_by_date.csv"))
 
 # Convert format
 contribution_by_date$contribution_receipt_date <-
@@ -409,9 +400,9 @@ To obtain more information about individual contributors, we extracted keywords 
 
 ```{r,echo=FALSE}
 # To save time, read the saved .csv datasets
-oc_biden_count <- readr::read_csv(here("data", "clean", "occupation_BIDEN_count.csv"))
+oc_biden_count <- readr::read_csv(here::here("data", "clean", "occupation_BIDEN_count.csv"))
 
-oc_trump_count <- readr::read_csv(here("data", "clean", "occupation_TRUMP_count.csv"))
+oc_trump_count <- readr::read_csv(here::here("data", "clean", "occupation_TRUMP_count.csv"))
 
   
 # Wordcloud Biden
@@ -495,7 +486,7 @@ Comparing difference between candidates, more than half of 10 top occupations of
 ## Disbursement Data Analysis
 ### Disbursement Distribution
 ```{r, message=FALSE, warning=FALSE}
-exp_df <- readr::read_csv(here("data", "clean", "disbursement_processed.csv"))
+exp_df <- readr::read_csv(here::here("data", "clean", "disbursement_processed.csv"))
 exp_df$disbursement_date <- as.Date(exp_df$disbursement_date, format="%Y-%m-%d %H:%M:%S")
 # Calculate the total disbursement by committee
 disbursement_sum <- exp_df %>% 
