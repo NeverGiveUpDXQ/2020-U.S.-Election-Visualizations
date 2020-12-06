@@ -1,1 +1,19 @@
 # Results
+
+## Election Vote Results Visualizations
+
+### State-level
+
+```{r}
+president2020 <- readr::read_csv(here("./data/clean/president2020.csv"))
+
+# Note: direction = 1 switches the order of the fill scale 
+# so darker shades represent higher illiteracy rates
+# (The default is -1).
+
+statebins(president2020, value_col="dem_percent",
+          name = "Votes for Biden", direction = 1)+
+  theme_statebins()+
+  labs(title = "2020 US Election Results: Joe Biden  Vote%",caption = "Source: cookpolitical : Nov 21", fill = NULL)+
+  theme(legend.position = "right")
+```
