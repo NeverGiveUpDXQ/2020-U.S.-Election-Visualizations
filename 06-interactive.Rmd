@@ -1,6 +1,5 @@
 # Interactive component
 
-
 ## Disbursement Data Interactive Plot
 
 The above graph shows the Disbursement Trends of the 15 Presidential Committees that made the most disbursements. Each data point represents the rolling sum of a committee's total disbursement settled at the end of a week. The dot will be colored in grey after the candidate suspended the committee. We manipulated the cleaned datasets to extract the information needed to make this graph. The dataset is uploaded to Github and can be founded [here](https://github.com/NeverGiveUpDXQ/2020-U.S.-Election-Visualizations/tree/wz/data/d3csv).
@@ -14,7 +13,54 @@ The above graph shows the Disbursement Trends of the 15 Presidential Committees 
 
 <iframe src="https://vizhub.com/wz2536/1369d9b47bfe47289f5929619171858b?mode=embed" title="D3 Disbursement analysis" height="450" width="750"></iframe>
 
+## 1976-2016 Election Result Interactive Plot
+```{r}
+library(highcharter)
+library(tidyverse)
+library(jsonlite)
+
+history_election <- readr::read_csv(here::here("./data/clean/1976-2016election.csv"))
+
+history_election_ds = history_election %>%
+    group_by(state) %>%
+    do(item = list(
+        state = first(.$state),
+        sequence = .$ratio,
+        value = first(.$ratio)
+    ))%>%
+    .$item
+
+highchart(type = "map") %>% 
+  hc_add_series(data = history_election_ds,
+                name = "Popular Votes for Dem. (%)",
+                mapData = usgeojson,
+                joinBy = c("name","state"),
+                borderWidth = 0.05,
+                dataLabels = list(enabled = TRUE, format = "{point.properties.postalcode}")
+                ) %>% 
+  hc_colorAxis(#stops = color_stops(),
+               minColor = 'white',
+               maxColor = 'darkblue') %>%  
+  hc_title(text = "Share of Popular Votes for the Democrat from 1976 to 2016") %>% 
+  hc_legend(layout = "vertical", 
+            align = "right") %>% 
+  hc_add_theme(hc_theme_smpl()) %>%
+  hc_motion(
+    startIndex = 0,
+    enabled = TRUE,
+    axisLabel = "year",
+    labels = sort(unique(history_election$year)),
+    series = 0,
+    updateIterval = 50,
+    magnet = list(
+      round = "floor"
+    )
+  )
+
+```
+
 Reference:
 
 1. D3.js Graph Gallery: Line chart with zoom in d3.js (https://www.d3-graph-gallery.com/graph/line_brushZoom.html)
 2. D3.js Graph Gallery: Connected scatter plot with interactive legend (https://www.d3-graph-gallery.com/graph/connectedscatter_legend.html)
+3. RPubs: William Green(https://rpubs.com/wbgreen405/249838)

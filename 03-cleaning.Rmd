@@ -12,13 +12,31 @@ First, our purpose is to compare popular votes for democrat and republican in st
 
 - Select columns we needed. i.e. `year`, `state`, `party` and `candidatevotes`.
 - Filter column `party`. i.e. only contains democrat and republican.
+- Add a new column `ratio` = candidatevotes_democrat/(candidatevotes_democrat+candidatevotes_republican.)
+- Then convert `ratio` continuous variable to categorical variable `ratio_new`. 
 
 ```{r}
 history_data <- readr::read_csv(here::here("./data/raw/1976-2016-president.csv"))
 
-history_data <- history_data %>%
+# temporary data
+temp <- history_data %>%
   select(year, state,party,candidatevotes) %>%
   filter(party %in% c('democrat','republican'))
+
+# only choose democrat lines
+index <- temp$party == 'democrat'
+
+history_data <- temp%>%
+  group_by(year,state)%>%
+  summarise(ratio = candidatevotes/sum(candidatevotes))%>%
+  ungroup()
+
+history_data <- history_data[index,]
+
+# convert 0.2 -> 20 %
+history_data <- history_data %>%
+  mutate(year = as.character(year)) %>%
+  mutate(ratio = round(ratio*100,2))
 
 write.csv(history_data, file = here::here("data", "clean", "1976-2016election.csv"),row.names=FALSE)
 ```
