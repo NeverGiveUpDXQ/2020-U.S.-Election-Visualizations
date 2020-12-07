@@ -8,8 +8,33 @@ library(socviz)
 ```
 
 ## Election Result Data Transformation 
+First, our purpose is to compare popular votes for democrat and republican in state level from 1976 to 2016. We cleaned this dataset following steps including:
 
-We used historical U.S. presidential election data provided in the `socviz` library, but since the data for 2016 was provisional, we updated the [2016 data](https://en.wikipedia.org/wiki/2016_United_States_presidential_election) and also added the 2020 election data for our analysis.
+- Select columns we needed. i.e. `year`, `state`, `party` and `candidatevotes`.
+- Filter column `party`. i.e. only contains democrat and republican.
+
+```{r}
+history_data <- readr::read_csv(here::here("./data/raw/1976-2016-president.csv"))
+
+history_data <- history_data %>%
+  select(year, state,party,candidatevotes) %>%
+  filter(party %in% c('democrat','republican'))
+
+write.csv(history_data, file = here::here("data", "clean", "1976-2016election.csv"),row.names=FALSE)
+```
+
+After cleaning, it contains 4 columns and  records.
+```{r, echo=FALSE, results='asis'}
+knitr::kable(data.frame(
+                description = c('year','state','party','candidatevotes'),
+                category = c("Which election year?","State name",
+                "Party name: Dem or Rep?", "Popular votes")
+              ), 
+             col.names = c('Column','Description'),
+             row.names = F,font_size = 10)
+```
+
+Then, we used historical U.S. presidential election data provided in the `socviz` library, but since the data for 2016 was provisional, we updated the [2016 data](https://en.wikipedia.org/wiki/2016_United_States_presidential_election) and also added the 2020 election data for our analysis.
 
 ```{r}
 # Update data
@@ -20,7 +45,7 @@ elections_historic_new$popular_pct[elections_historic_new$year == 2016] <- 0.461
 elections_historic_new$popular_margin[elections_historic_new$year == 2016] <- -0.021
 
 elections_historic_full <- elections_historic_new
-
+# back up
 elections_historic_new <- elections_historic_new %>%
   select(c(win_party,popular_pct,ec_pct,winner_label))
 
