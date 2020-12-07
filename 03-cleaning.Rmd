@@ -8,11 +8,14 @@ library(socviz)
 ```
 
 ## Election Result Data Transformation 
-First, our purpose is to compare popular votes for democrat and republican in state level from 1976 to 2016. We cleaned this dataset following steps including:
+
+First, our purpose is to compare share of popular votes for **republican** in state level from 1976 to 2016. We cleaned this dataset following steps including:
 
 - Select columns we needed. i.e. `year`, `state`, `party` and `candidatevotes`.
 - Filter column `party`. i.e. only contains democrat and republican.
-- Add a new column `ratio` = candidatevotes_democrat/(candidatevotes_democrat+candidatevotes_republican.)
+- Add a new column `ratio`, we define **ratio = candidatevotes_xxx/(candidatevotes_democrat+candidatevotes_republican)**
+- Filter column `party`. i.e. only leave republican.
+- Check data quality & revise it
 - Then convert `ratio` continuous variable to categorical variable `ratio_new`. 
 
 ```{r}
@@ -20,33 +23,77 @@ history_data <- readr::read_csv(here::here("./data/raw/1976-2016-president.csv")
 
 # temporary data
 temp <- history_data %>%
+  filter(!writein) %>%
   select(year, state,party,candidatevotes) %>%
   filter(party %in% c('democrat','republican'))
 
-# only choose democrat lines
-index <- temp$party == 'democrat'
-
-history_data <- temp%>%
+# add a new column `ratio`
+history_election <- temp%>%
   group_by(year,state)%>%
   summarise(ratio = candidatevotes/sum(candidatevotes))%>%
   ungroup()
 
-history_data <- history_data[index,]
+# only choose republican records
+index <- temp$party == 'republican'
+history_election <- history_election[index,]
 
-# convert 0.2 -> 20 %
-history_data <- history_data %>%
-  mutate(year = as.character(year)) %>%
-  mutate(ratio = round(ratio*100,2))
+# check our data
+#history_data %>%
+#    group_by(year, state) %>%
+#    summarise(n = n())%>%
+#    filter(n != 1)
+# after checking the number, we don't have any duplicate records 
+```
 
-write.csv(history_data, file = here::here("data", "clean", "1976-2016election.csv"),row.names=FALSE)
+We then filter all outliers and want to revise them. Note that it involves 2 state: **District of Columbia** and **Minnesota**. After checking data, we know that Republican hasn't ever won D.C. and popular votes have always relatively low. So, it is reasonable. However, the share of *Minnesota* for Republican is abnormal. It is impossible that all voters chose one party.
+
+```{r}
+# check for outliers
+# boxplot(history_data$ratio)
+# It's impossible if share = 1
+# So, in this step, we filter those outlier `ratio`
+
+history_election %>%
+    filter(ratio %in% boxplot.stats(history_election$ratio)$out)
+```
+
+So, then we look back raw data. We notice that in those years, party name for Dem. is *democratic-farmer-labor* rather than *democrat*. 
+```{r}
+history_data %>%
+  filter(year %in% c(2000,2004,2012)) %>%
+  filter(state == 'Minnesota')%>%
+  select(year,party,candidatevotes)
+```
+
+```{r}
+temp1 <- history_data %>%
+  filter(!writein) %>%
+  select(year, state,party,candidatevotes) %>%
+  filter(party %in% c('democrat','republican','democratic-farmer-labor'))
+
+# reset
+temp1$party[temp1$party=='democratic-farmer-labor'] = 'democrat'
+
+# add a new column `ratio`
+history_election <- temp1%>%
+  group_by(year,state)%>%
+  summarise(ratio = candidatevotes/sum(candidatevotes))%>%
+  ungroup()
+
+# only choose republican records
+index <- temp1$party == 'republican'
+history_election <- history_election[index,]
+```
+
+```{r}
+write.csv(history_election, file = here::here("data", "clean", "1976-2016election.csv"),row.names=FALSE)
 ```
 
 After cleaning, it contains 4 columns and  records.
 ```{r, echo=FALSE, results='asis'}
 knitr::kable(data.frame(
-                description = c('year','state','party','candidatevotes'),
-                category = c("Which election year?","State name",
-                "Party name: Dem or Rep?", "Popular votes")
+                description = c('year','state','ratio'),
+                category = c("Which election year?","State name","Share of popular votes for Rep.")
               ), 
              col.names = c('Column','Description'),
              row.names = F,font_size = 10)
