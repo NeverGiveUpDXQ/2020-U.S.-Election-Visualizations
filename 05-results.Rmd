@@ -39,7 +39,6 @@ president2020 <- readr::read_csv(here::here("./data/clean/president2020.csv"))
 ```
 
 ```{r}
-# fig.width=20, fig.height=6
 # final results (1205)
 president2020 %>%
     mutate(value = ifelse(dem_votes>rep_votes,'Biden','Trump')) %>%
@@ -58,9 +57,12 @@ president2020 %>%
         axis.text.y = element_blank())
 ```
 
+
+From this plot, it's easy to see that Biden won most of the votes in the eastern and western regions of the United States, while Trump's votes are mainly from the central region. In terms of the number of winning states, they are not much different, but we need to consider that the number of electoral votes is different.
+
 ### County-level
 Thanks again for the great job by [*Tony McGovern*](https://github.com/tonmcg/US_County_Level_Election_Results_08-20/blob/master/2020_US_County_Level_Presidential_Results.csv)
-```{r, message=FALSE,fig.width=20, fig.height=6}
+```{r, message=FALSE}
 County2020 <- read_csv('https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-20/master/2020_US_County_Level_Presidential_Results.csv')
 
 county_full <- right_join(county_map,County2020, by = c('id' = 'county_fips')) %>% as_tibble()
@@ -100,7 +102,7 @@ If we simply compare the area, we may conclude that Trump will win this election
 
 In this part, I will compare popular vote and electoral college vote from 1824 to 2020 (Note that **Data for 2020 are provisonal**, collected in 5 Dec). *It's possible the candidate with the most votes from the public won't be the winner. This is because the president is not chosen directly by the voters, but what's known as the electoral college. (This explained by [BBC](https://www.bbc.com/news/world-us-canada-53558176) )*
 
-```{r,fig.width=20, fig.height=6}
+```{r}
 # Code reference: https://socviz.co/workgeoms.html#workgeoms
 # HIGHLY recommended this book!! Really APPRECIATE:)
 
@@ -145,23 +147,33 @@ Finally, we compare the share of electoral college vote between *Dem.* and *Rep.
 compare <- readr::read_csv(here::here("./data/clean/compare.csv"))
 
 # plot
-p <- ggplot(compare, aes(Year, Votes_PERCEN, frame = Year, size = Votes_PERCEN, group = Party,colour = Party)) +
+p <- ggplot(compare, aes(Year, Votes_PERCEN, 
+                         frame = Year, 
+                         size = Votes_PERCEN, 
+                         group = Party,
+                         colour = Party)) +
   geom_point()+
   scale_color_manual(values=c("#19609F","#CB1C2A"))+
   transition_time(Year) +
   shadow_wake(wake_length = 0.05, alpha = FALSE) +
-  labs(x = "", y = "", 
-      title = "Presidential Elections:The Share of Electoral Votes for Dem. and Rep. Respetively", subtitle = "Year : {frame_time} (Data for 2020 are provisional)",
-       caption = "Source: socviz::elections_historic & google", fill = NULL)+
+  labs(x = "year", y = "share", 
+      title = "Presidential Elections:The Share of Electoral Votes for Dem. and Rep.", 
+      subtitle = "Year : {frame_time} (Data for 2020 are provisional)",
+       caption = "Source: socviz & Cook Political", fill = NULL)+
   #coord_cartesian(clip = 'off') + 
   #ease_aes('cubic-in-out')+
-  theme_classic()
+  theme_bw() +
+  theme(plot.title = element_text(face = "bold"),
+        plot.subtitle = element_text(face = "bold", color = "grey35"),
+        plot.caption = element_text(color = "grey68"),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position="bottom")
 
 animate(p, fps = 3)
 ```
 
 
-From this plot, we can see: Excluding year ftom 1875-1900, the votes percentage difference is relatively huge.
+From this plot, we can see: Excluding year ftom 1875-1900, the votes percentage difference is relatively huge. At the same time, we can also see that no party has long been dominant. The share of the two parties is approximately cyclical.
 
 ## Contribution Receipts Data Analysis
 ### Contributions Overview
