@@ -728,13 +728,18 @@ target_exp <- exp_df  %>%
 target_exp$recipient_state <- state.name[match(target_exp$recipient_state, state.abb)]
 target_exp <- target_exp[complete.cases(target_exp$recipient_state), ]
   
-# Compute amount of Biden committee disbursement per category and state 
+# Compute amount of Biden & Trump committee disbursement per category and state 
 exp_flow_B <- target_exp %>%
   filter(committee_name == "BIDEN FOR PRESIDENT") %>%
   dplyr::group_by(recipient_state) %>%
   dplyr::summarise(value = sum(disbursement_amount))
 
-# Graph Highchart
+exp_flow_T <- target_exp %>%
+  filter(committee_name == "DONALD J. TRUMP FOR PRESIDENT, INC.") %>%
+  dplyr::group_by(recipient_state) %>%
+  dplyr::summarise(value = sum(disbursement_amount))
+
+# Graph Highchart for Biden committee
 highchart(type="map") %>%
 hc_title(text = "Total Disbursements By 2020 Joe Biden Committee By State") %>%
   hc_subtitle(text = "Double click the state area to zoom in") %>%
@@ -751,21 +756,14 @@ hc_title(text = "Total Disbursements By 2020 Joe Biden Committee By State") %>%
       valueSuffix = " USD"
      )
    ) %>%
-   hc_colorAxis(minColor = "white", maxColor = "red") %>%
+   hc_colorAxis(min=0, max=max(exp_flow_T$value), minColor = "white", maxColor = "red") %>%
    hc_legend(valueDecimals = 0, valueSuffix = "%") %>%
    hc_mapNavigation(enabled = TRUE)
 ```
 
 
 ```{r, message=FALSE, warning=FALSE,fig.width=20, fig.height=6}
-# Same steps for Trump's Main committee
-# Compute amount of Biden committee disbursement per category and state 
-exp_flow_T <- target_exp %>%
-  filter(committee_name == "DONALD J. TRUMP FOR PRESIDENT, INC.") %>%
-  dplyr::group_by(recipient_state) %>%
-  dplyr::summarise(value = sum(disbursement_amount))
-
-# Graph Highchart
+# Graph Highchart for Trump's Main committee
 highchart(type="map") %>%
 hc_title(text = "Total Disbursements By 2020 Donald Trump Committee By State") %>%
   hc_subtitle(text = "Double click the state area to zoom in") %>%
@@ -782,9 +780,10 @@ hc_title(text = "Total Disbursements By 2020 Donald Trump Committee By State") %
       valueSuffix = " USD"
      )
    ) %>%
-   hc_colorAxis(minColor = "white", maxColor = "red") %>%
+   hc_colorAxis(min=0, max=max(exp_flow_T$value), minColor = "white", maxColor = "red") %>%
    hc_legend(valueDecimals = 0, valueSuffix = "%") %>%
    hc_mapNavigation(enabled = TRUE)
 ```
 
-There are not a lot of physical events going on and propaganda passing out for this year's election. Partly it could due to the COVID pandemic. From the above graph, the location where Trump's committee held physical events are more widely spread out across U.S than Biden's committee, while the recipients of material and event fee made by Biden's committee mainly clustered in the east half of the U.S. and West Coast. As shown previously in the parallel axis graph, both of the committees spent less than 1% of their total expenditure in Materials and Events. Compare both maps above, we can see some regions colored in bright green and blue in the map on the right hand side, but not the map on the left hand side. Those bright colors represent that those regions are receiving more of such committee's total disbursement. The two maps are colored based on the same color scale. Since we have found that Biden's committee spent more than Trump's Committee, and Trump's committee is spending more in the above two areas, it is not difficult to conclude that Trump's committee spent a larger percent of their total expenditure in physical events. This could be one of the campaign's strategy. Also, Trump's committee is spending significantly more on some of the states where they win compare to the expenditure of Biden's committee on those states. There is such a trend in the election result this year, but to answer whether there is truly a correlation between expenditure and the voting results would need further investigations on more data sets from previous years.
+There are not a lot of physical events going on and propaganda passing out for this year's election. Partly it could due to the COVID pandemic. From the above graph, the location where Trump's committee held physical events are more widely spread out across U.S than Biden's committee, while the recipients of material and event fee made by Biden's committee mainly clustered in the east half of the U.S. and West Coast. As shown previously in the parallel axis graph, both of the committees spent less than 1% of their total expenditure in Materials and Events. Compare both maps above, we can see more regions colored in bright red in the second map, but not that much on the first map. Those bright colors represent that those regions are receiving more of such committee's total disbursement. The two maps are colored based on the same color scale. Since we have found that Biden's committee spent more than Trump's Committee, and Trump's committee is spending more in the above two categories, it is not difficult to conclude that Trump's committee spent a larger percent of their total expenditure in physical events. This could be one of the campaign's strategy. Also, Trump's committee is spending significantly more on some of the states where they win compare to the expenditure of Biden's committee on those states. There is such a trend in the election result this year, but to answer whether there is truly a correlation between expenditure and the voting results would need further investigations on more data sets from previous years.
+
