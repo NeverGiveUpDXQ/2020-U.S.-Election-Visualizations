@@ -10,7 +10,7 @@ The above graph shows the Disbursement Trends of the 15 Presidential Committees 
 1. Users can drag on the canvas along the y-Axis to zoom into specific ranges.
 2. Users can double click on the canvas to reset the y-Axis.
 3. Users can hover mouse on each dot to see exact disbursement value, date, and candidate information.
-4. Users can click on the dot to toggle display/fade each trend line.
+4. Users can click on the list of candidate names to display or hide each trend line. Hold down the Ctrl (windows) / Command (Mac) button to select multiple options.
 
 <iframe src="https://vizhub.com/wz2536/1369d9b47bfe47289f5929619171858b?mode=embed" title="D3 Disbursement analysis" height="450" width="750"></iframe>
 
