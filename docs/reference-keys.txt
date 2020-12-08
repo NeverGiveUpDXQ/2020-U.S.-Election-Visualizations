@@ -34,8 +34,3 @@ interactive-component
 disbursement-data-interactive-plot
 election-result-interactive-plot
 conclusion
-tab:unnamed-chunk-5
-tab:unnamed-chunk-6
-tab:unnamed-chunk-7
-tab:unnamed-chunk-8
-tab:unnamed-chunk-9

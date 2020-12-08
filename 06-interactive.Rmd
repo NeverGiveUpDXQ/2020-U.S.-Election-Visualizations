@@ -14,7 +14,16 @@ The above graph shows the Disbursement Trends of the 15 Presidential Committees 
 <iframe src="https://vizhub.com/wz2536/1369d9b47bfe47289f5929619171858b?mode=embed" title="D3 Disbursement analysis" height="450" width="750"></iframe>
 
 ## 1976-2016 Election Result Interactive Plot
+
+[**Instructions to Use the Graph**](https://github.com/TorsteinHonsi/Motion-Highcharts-Plugin/wiki)
+
+1. play/pause clicking the play/pause button
+2. play/pause by hitting space
+3. navigating the motion slider by dragging the slider thumb
+4. navigating the motion slider by hitting the left and right arrow keys
+
 ```{r}
+# help file: https://api.highcharts.com/highcharts/labels.items
 library(highcharter)
 library(tidyverse)
 library(jsonlite)
@@ -32,7 +41,7 @@ history_election_ds = history_election %>%
 
 highchart(type = "map") %>% 
   hc_add_series(data = history_election_ds,
-                name = "Popular Votes for Dem. (%)",
+                name = "Popular Votes for Rep.",
                 mapData = usgeojson,
                 joinBy = c("name","state"),
                 borderWidth = 0.05,
@@ -40,20 +49,20 @@ highchart(type = "map") %>%
                 ) %>% 
   hc_colorAxis(#stops = color_stops(),
                minColor = 'white',
-               maxColor = 'darkblue') %>%  
-  hc_title(text = "Share of Popular Votes for the Democrat from 1976 to 2016") %>% 
+               maxColor = 'darkred',
+               min = 0,
+               max = 1 ) %>%  
+  hc_title(text = "Share of Popular Votes for the Republican from 1976 to 2016") %>% 
   hc_legend(layout = "vertical", 
             align = "right") %>% 
   hc_add_theme(hc_theme_smpl()) %>%
   hc_motion(
-    startIndex = 0,
     enabled = TRUE,
     axisLabel = "year",
-    labels = sort(unique(history_election$year)),
-    series = 0,
-    updateIterval = 50,
+    labels = as.character(sort(unique(history_election$year))),
+    #updateIterval = 50, #Specifies or returns the time interval (in milliseconds) between screen updates
     magnet = list(
-      round = "floor"
+      round = "floor" 
     )
   )
 
