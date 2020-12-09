@@ -21,10 +21,9 @@ knitr::kable(DataDescription[1:10, ], caption = "Major columns used",
              row.names = F,font_size = 10)
 ```
 
-**Issue with this Dataset**
+**Issues with this dataset: **
 
-The election results data was retrieved on Dec. 5, 2020, which the results do not reflect on the latest results. The election votes counting is continuing, so we don't get the final results yet. The latest data is not yet open to public.  
-
+The election results data was retrieved on Dec. 5, 2020, which the results do not reflect on the latest results. The election votes counting and post-election processing are ongoing in several states, so individual statistics we used here might change.   
 
 
 ## Contribution Receipts
@@ -33,18 +32,18 @@ The election results data was retrieved on Dec. 5, 2020, which the results do no
 
 The contribution receipts data on [fec.gov](fec.gov) includes all receipts filed by election candidates and committees with records of contributions made by individuals, organizations, and committees. 
  
-Due to a huge data volume, we limited the records exported to only those contributions with an amount over or equal to 200 dollars, received within this year, and raised by the committees of two final presidential candidates of 2020 Election. The dataset with filters applied was exported from [here](https://www.fec.gov/data/receipts/?recipient_committee_type=P&data_type=processed&committee_id=C00580100&committee_id=C00703975&two_year_transaction_period=2020&min_date=01%2F01%2F2020&max_date=11%2F03%2F2020&is_individual=true&min_amount=200).
+Since contributions made in the election year seem to better reflect people's support on their favorite candidate, we applied a date filter to select records with the receipt date falling between 01/01/2020 and 11/03/2020. Due to a huge data volume, we limited data exported to only the contributions with an amount over or equal to 200 dollars and raised by the committees of two final presidential candidates of 2020 Election. The filtered dataset was retrieved from [here](https://www.fec.gov/data/receipts/?recipient_committee_type=P&data_type=processed&committee_id=C00580100&committee_id=C00703975&two_year_transaction_period=2020&min_date=01%2F01%2F2020&max_date=11%2F03%2F2020&is_individual=true&min_amount=200).
 
-The retrieved dataset has 79 columns and 984,824 records in total. There are 302,731 entries for Trump and 682,093 entries for Biden. 
+The exported dataset has 79 columns and 984,824 records in total. There are 302,731 entries for **Donald J. Trump for President committee** and 682,093 entries for **Biden for President committee**. 
 
 ```{r, echo=FALSE, results='asis'}
 knitr::kable(DataDescription[13:27, ], caption = "Major columns used",
              row.names = F,font_size = 10)
 ```
 
-**Issue with this Dataset**
+**Issues with this dataset: **
 
-1. The original dataset is extremely big with over 200 million records, but the majority of them have very small amounts on the receipts, therefore we filtered out records with amounts less than 200 dollars. As a result, the retrieved dataset might not capture information for all contributors, but at the same time it largely eliminates noise that we can focus on contributors who really made significant contributions to support their favorite candidate.  
+1. The original dataset is extremely big with over 200 million records, but many of them were very small contribubutions, therefore we filtered out records with amounts less than 200 dollars. As a result, the retrieved dataset might not capture information of all contributors, but at the same time, it largely eliminateds noise that we can focus on contributors who made significant contributions to support their favorite candidate.  
 
 2. The dataset contains contribution amounts of negatives and zeros, which are probably relate to unsuccessful transfers.
 
@@ -56,55 +55,18 @@ knitr::kable(DataDescription[13:27, ], caption = "Major columns used",
 
 **Dataset: schedule_b-2020-11-08T16_10_30.csv**
 
-The Disbursements data on [fec.gov](fec.gov) includes the operating expenditure records of House and Senate committees, Presidential committees, and PAC and Party committees since 2003. 
+The Disbursements data from [fec.gov](fec.gov) includes the operating expenditure records of House and Senate election committees, Presidential election committees, and PAC and Party committees since 2003. 
 
-For this analysis, we filtered the data to focus on the records from the presidential committees of 2020 Election, which the disbursement dates are from 01/01/2020 to 11/03/2020, to be consistent with the scope of the contribution receipt dataset. The dataset with filters applied was exported from [FEC Official Database](https://www.fec.gov/data/disbursements/?spender_committee_type=P&data_type=processed&min_date=01%2F01%2F2020&max_date=11%2F03%2F2020). The retrieved dataset has 260,587 records and 78 columns.
+For this project, we filtered the data to focus on the spending of presidential election committees of 2020 US Election, which the disbursement dates are from 01/01/2020 to 11/03/2020, consistent with the scope of the contribution receipt dataset. The dataset with filters applied was exported from [FEC Official Database](https://www.fec.gov/data/disbursements/?spender_committee_type=P&data_type=processed&min_date=01%2F01%2F2020&max_date=11%2F03%2F2020). The retrieved dataset has 260,587 records and 78 columns.
 
 ```{r, echo=FALSE, results='asis'}
 knitr::kable(DataDescription[30:39, ], caption = "Major columns used",
              row.names = F,font_size = 10)
 ```
 
-**Issue with this Dataset**
+**Issues with this dataset: **
 
-The raw dataset we retrieved contains 260,587 entries as of Nov 18th, 2020, but the data is still getting updated with additive filings of previous disbursements being archived. The total number of records is subject to change, but the change will be trivial compared to the size of the entire dataset. Although this will not affect our analysis or overall conclusion, it would be worth paying attention to the data incompleteness here.
-
-
-
- and [*Harvard Dataverse*](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/42MVDX).
-  And Harvard Dataverse provides U.S. state-level election results from 1976 to 2016.
-  
-  ```{r,include=FALSE}
-knitr::opts_chunk$set(opts.label="kill_prefix")
-DataDescription<- readr::read_csv(here::here("./data/DatasetDescription.csv"))
-DataDescription_add<- readr::read_csv(here::here("./data/DatasetDescription_add.csv"))
-```
-
-**Dataset: 1976-2016_Presidential_Results.csv**
-
-The dataset contains 14 columns and 3740 records about the voting results of presidential election by US state from 1976 to 2016. This dataset was downloaded from [*Harvard Dataverse*](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/42MVDX). 
-
-In this project, I only need 4 columns: `year`, `state`, `party` and `candidatevotes` to do visualization in part 6. 
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(DataDescription_add[7:10, ], caption = "Major columns used",
-             row.names = F,font_size = 10)
-```
-
-**Issue with this Dataset**
-
-This dataset doesn't contain 2020 U.S. State level presidential results. Although we could join with *2020_US_State_Level_Presidential_Results*(shown below), considering data consistent, we didn't do it. So, when we visulazation this dataset, we didn't consider 2020 election data.
+The disbursement data is still getting updated with additive filings of previous disbursements being archived. The total number of records is subject to change, but the change will be trivial compared to the size of the entire dataset. Although this will not affect our analysis or overall conclusion, it is worth attention to the data incompleteness here.
 
 
-**Dataset: 2020_US_State_Level_Presidential_Results.csv**
 
-The dataset contains 21 columns and 61 records about the voting results of 2020 presidential election by US state. This dataset was from FEC. Here we only used 6 columns.
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(DataDescription_add[1:6,], caption = "Major columns used",
-             row.names = F,font_size = 10)
-```
-  
-  https://cookpolitical.com/sites/default/files/2020-10/EC%20Ratings.102820.pdf
-  
-  
