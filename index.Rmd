@@ -18,7 +18,7 @@ In the project, we collected the voting data from [The Cook Political Report](ht
 
 In the following chapters, we will discuss these questions and provide some new insights on forecasting the election outcomes.
 
-For more details of this project, click [the link here](https://github.com/NeverGiveUpDXQ/2020-U.S.-Election-Visualizations.git) or copy the url https://github.com/NeverGiveUpDXQ/2020-U.S.-Election-Visualizations.git and open in browser to go to our Github repository and navigate code in `,Rmd` files.
+For more details of this project, click [the link here](https://github.com/NeverGiveUpDXQ/2020-U.S.-Election-Visualizations.git) or copy the url https://github.com/NeverGiveUpDXQ/2020-U.S.-Election-Visualizations.git and open it in browser to go to our Github repository and navigate code in `.Rmd` files.
 
 
 
