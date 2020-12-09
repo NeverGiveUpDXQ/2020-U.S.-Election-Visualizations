@@ -7,24 +7,18 @@ site: bookdown::bookdown_site
 
 # Introduction
 
-The COVID-19 pandemic being the most consequential global event in the year of 2020 has impacted everyone and every country in the world, and it has also shaped every facet of the 2020 U.S. Presidential Election. In an environment of continued uncertainty, states changed their rules of voting with the objective of arranging COVID-safe elections, but the surge in absentee/mail-in ballots has inevitably extended the post-election vote counting in some states. This issue aroused continued disputes over the election integrity in the two weeks until the Associated Press finally called Joe Biden the winner of the presidential race. Donald Trump and his proxies repeatedly attacked mail voting and sowed doubts on the process and made [conspiratorial claims](https://apnews.com/article/election-2020-joe-biden-donald-trump-politics-media-1bf96bf3910bdcbe0f125958357c8f1a) of voting fraud, saying the election was "stolen". Although these claims have been proven false and baseless by voting officials in both parties, we were still curious about if there exists other evidence that has provided hints of Biden's win. Some case studies and analysis have discussed how the US economic conditions, the racial unrest, and Trump's response to COVID-19 have impacted the election outcomes, but we chose to focus on the funding of the election campaigns of two final candidates, Joe Biden and Donald Trump, and see if their financing played a role in
+The COVID-19 pandemic being the most consequential global event in the year of 2020 has impacted everyone and every country in the world, and it has also shaped every facet of the 2020 U.S. Presidential Election. In an environment of continued uncertainty, states changed their rules of voting with the objective of arranging COVID-safe elections, but the surge in absentee/mail-in ballots has inevitably extended the post-election vote counting in some states. This issue aroused continued disputes over the election integrity in the two weeks until the Associated Press finally called Joe Biden the winner of the presidential race. Donald Trump and his proxies repeatedly attacked mail voting and sowed doubts on the process and made [conspiratorial claims](https://apnews.com/article/election-2020-joe-biden-donald-trump-politics-media-1bf96bf3910bdcbe0f125958357c8f1a) of voting fraud, saying the election was "stolen". Although these claims have been proven false and baseless by voting officials in both parties, we were still curious about if there exists other evidence that has provided hints of Biden's win. Some case studies and analysis have discussed how the US economic conditions, the racial unrest, and Trump's response to COVID-19 have impacted the odds of Trump being reelected, but we chose to focus on the public funding of the presidential election, and see if the raisings and spendings of election campaigns were linked to determining the winner of 2020 U.S. Presidential Election.
 
- rallied a great deal of support for their campaign
+In the project, we collected the voting data from [The Cook Political Report](https://cookpolitical.com/) as well as the presidential election committee contribution receipts and disbursements data from [Federal Election Commission](https://www.fec.gov/) to generate visualizations and conduct investigations on the relationships bwteen campaign finance and election results. We would like to carry out analysis from both geographic and time series perspectives and answer the following questions: 
 
-In order to find  the election outcomes now The voting result encaptured many interesting aspects such as the current U.S economic condition, people's expectations on the new ruling party, and politician's response to these new expectations.  
+    - Is there anything surprising about the 2020 U.S. Presidential Election results?
+    - How much has presidential election committees raised and spent this year?
+    - Did contributions reflect the expectations and choices of people of the United States?
+    - What were each campaign’s spending strategies and how effective were those strategies in leading the election?
 
-Take the above facts into the consideration, it would be helpful to perform an trustful analysis on 2020 presidential election. Our team is going to approach the analysis from a more economical point of view. Some basic questions that we would like to get out from this analysis would be: 
+In the following chapters, we will discuss these questions and provide some new insights on forecasting the election outcomes.
 
- - How are electoral votes and popular votes different?
- - How much has each campaign raised and spend this year?
-
-We also would like to investigate some more advanced questions such as: 
-
-  - How are electoral votes and popular votes distributed in the country? 
-  - Did contributions this year infer the final voting results or form a timeline reflecting on major events happened this year? 
-  - What were each campaign’s spending strategies? Were those strategies effective in leading the voting outcome?
-
-To answer those questions, we have collected the presidential committee contribution and disbursement data from [Federal Election Commission](https://www.fec.gov/) as well as the voting outcome from [The Cook Political Report](https://cookpolitical.com/) to perform a cross-reference. In the following chapters, we will perform analysis on those data sets in order to clear the doubts and provide everyone a better insight on current political and economical environment.
+For more details of this project, click [the link here](https://github.com/NeverGiveUpDXQ/2020-U.S.-Election-Visualizations.git) or copy the url https://github.com/NeverGiveUpDXQ/2020-U.S.-Election-Visualizations.git and open in browser to go to our Github repository and navigate code in `,Rmd` files.
 
 
 
