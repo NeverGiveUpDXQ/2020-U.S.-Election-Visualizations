@@ -9,7 +9,7 @@ library(socviz)
 
 ## Election Result Data Transformation 
 
-First, our purpose is to compare share of popular votes for **republican** in state level from 1976 to 2016. We cleaned this dataset following steps including:
+First, to compare historical popular vote results for **republicans** on the state level, we cleaned this dataset in following steps:
 
 - Select columns we needed. i.e. `year`, `state`, `party` and `candidatevotes`.
 - Filter column `party`. i.e. only contains democrat and republican.
@@ -44,7 +44,7 @@ history_election <- history_election[index,]
 # after checking the number, we don't have any duplicate records 
 ```
 
-We then filter all outliers and want to revise them. Note that it involves 2 state: **District of Columbia** and **Minnesota**. After checking data, we know that Republican hasn't ever won D.C. and popular votes have always relatively low. So, it is reasonable. However, the share of *Minnesota* for Republican is abnormal. It is impossible that all voters chose one party.
+We then filter out all outliers and want to revise them. Note that it involves 2 state: **District of Columbia** and **Minnesota**. After checking data, we know that Republicans have never won D.C. and popular votes have always relatively low. So, it is reasonable. However, the share of *Minnesota* for Republican is abnormal. It is impossible that all voters chose one party.
 
 ```{r}
 # check for outliers
