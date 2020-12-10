@@ -4,6 +4,12 @@ author: "GROUP 10: Jin Qian, Wenjie Zhu, Yibai Liu"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 ---
+--- 
+title: "2020 U.S. Election Visulizations"
+author: "GROUP 10: Jin Qian, Wenjie Zhu, Yibai Liu"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+---
 ```{r include=FALSE, cache=FALSE}
 knitr::opts_chunk$set(
   echo = FALSE,
@@ -14,7 +20,9 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-The COVID-19 pandemic being the most consequential global event in the year of 2020 has impacted everyone and every country in the world. In an environment of continued uncertainty, the 2020 U.S. Presidential Election . It took over two weeks for the race to be called by the Associated Press. The voting result encaptured many interesting aspects such as the current U.S economic condition, people's expectations on the new ruling party, and politician's response to these new expectations. On the other hand, the worries on the voting fraud and the trustworthy of data outcomes has been a major problem over this entire election, which further obscured the facts behind those numbers. 
+The COVID-19 pandemic being the most consequential global event in the year of 2020 has impacted everyone and every country in the world, and it has also shaped every facet of the 2020 U.S. Presidential Election. In an environment of continued uncertainty, states changed their rules of voting with the objective of arranging COVID-safe elections, but the surge in absentee/mail-in ballots has inevitably extended the post-election vote counting in some states. This issue aroused continued disputes over the election integrity in the two weeks until the Associated Press finally called Joe Biden the winner of the presidential race. Donald Trump and his proxies repeatedly attacked mail voting and sowed doubts on the process and made [conspiratorial claims](https://apnews.com/article/election-2020-joe-biden-donald-trump-politics-media-1bf96bf3910bdcbe0f125958357c8f1a) of voting fraud, saying the election was "stolen". Although these claims have been proven false and baseless by voting officials in both parties, we were still curious about if there exists other evidence that has provided hints of Biden's win. Some case studies have analyzed how the economic condition of the US, Trump's response to COVID-19, etc... have impacted, but we chose to have a closer look at the funding and financing 
+
+In order to find  the election outcomes now The voting result encaptured many interesting aspects such as the current U.S economic condition, people's expectations on the new ruling party, and politician's response to these new expectations.  
 
 Take the above facts into the consideration, it would be helpful to perform an trustful analysis on 2020 presidential election. Our team is going to approach the analysis from a more economical point of view. Some basic questions that we would like to get out from this analysis would be: 
 
@@ -34,474 +42,45 @@ To answer those questions, we have collected the presidential committee contribu
 
 <!--chapter:end:index.Rmd-->
 
-```{r include=FALSE, cache=FALSE}
-knitr::opts_chunk$set(
-  echo = FALSE,
-  message = FALSE,
-  warning = FALSE
-)
-```
+
 # Data sources
 
-```{r}
-library(here)
-```
+Placeholder
 
-This project uses three major datasets. The primary data sources are [*Federal Election Commission*](http://fec.gov/data/) (FEC) and [*The Cook Political Report*](https://cookpolitical.com/2020-national-popular-vote-tracker) (Cook Political).   
-
-FEC gathers and processes campaign finance data and discloses information about the public funding of US presidential elections. We downloaded the Contribution Receipts data and the Campaign Disbursement data from the FEC website. Cook Political collects and verifies US election returns across the country and is the authoritative source for 2020 Presidential Election voting results. 
 
 ## U.S. County Level 2020 Presidential Election Voting Results 
-
-```{r,include=FALSE}
-knitr::opts_chunk$set(opts.label="kill_prefix")
-DataDescription<- readr::read_csv(here("./data/DatasetDescription.csv"))
-DataDescription_add<- readr::read_csv(here("./data/DatasetDescription_add.csv"))
-```
-
-**Dataset: 2020_US_State_Level_Presidential_Results.csv**
-The dataset contains 21 columns and 61 records about the voting results of 2020 presidential election by US state. This dataset was from FEC. Here we only used 6 columns.
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(DataDescription_add, caption = "Major columns used",
-             row.names = F,font_size = 10)
-```
-
-**Dataset: 2020_US_County_Level_Presidential_Results.csv**
-
-The dataset contains 10 columns and 3159 records about the voting results of 2020 presidential election by US county. This dataset was exported from [*Tony McGovern, 2020_US_County_Level_Presidential_Results*](https://github.com/tonmcg/US_County_Level_Election_Results_08-20/blob/master/2020_US_County_Level_Presidential_Results.csv). He scraped it from results published by from Fox News, Politico, and the New York Times.
-
-
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(DataDescription[1:10, ], caption = "Major columns used",
-             row.names = F,font_size = 10)
-```
-
-**Issue with this Dataset**
-
-The election results data was collected on Nov.22, 2020, which the results do not reflect on the latest results. The election votes counting is continuing, so we don't get the final results yet. The latest data is not yet open to public.  
-
 ## Contribution Receipts
-
-**Dataset: contribution_bind.csv**
-
-The contribution receipts data on [fec.gov](fec.gov) includes all receipts filed by election candidates and committees with records of contributions made by individuals, organizations, and committees. 
- 
-Due to a huge data volume, we limited the records exported to only those contributions with an amount over or equal to 200 dollars, received within this year, and raised by the committees of two final presidential candidates of 2020 Election. The dataset with filters applied was exported from [here](https://www.fec.gov/data/receipts/?recipient_committee_type=P&data_type=processed&committee_id=C00580100&committee_id=C00703975&two_year_transaction_period=2020&min_date=01%2F01%2F2020&max_date=11%2F03%2F2020&is_individual=true&min_amount=200).
-
-The retrieved dataset has 79 columns and 984,824 records in total. There are 302,731 entries for Trump and 682,093 entries for Biden. 
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(DataDescription[13:27, ], caption = "Major columns used",
-             row.names = F,font_size = 10)
-```
-
-**Issue with this Dataset**
-
-1. The original dataset is extremely big with over 200 million records, but the majority of them have very small amounts on the receipts, therefore we filtered out records with amounts less than 200 dollars. As a result, the retrieved dataset might not capture information for all contributors, but at the same time it largely eliminates noise that we can focus on contributors who really made significant contributions to support their favorite candidate.  
-
-2. The dataset contains contribution amounts of negatives and zeros, which are probably relate to unsuccessful transfers.
-
-3. Many contributors didn't provide all the information by some reason, so there are missing values and meaningless records in some columns like name, occupation, employer, and even city and states. 
-
-4. Since the information was gathered based on filings of committees and campaigns, the records do not comply with a unified format. For example, the contributor suffix column has records for "JR", "JR.", and "JR.," which are actually the same thing. There are also errors in the spellings of states and cities.
-
 ## The Disbursements data
-
-**Dataset: schedule_b-2020-11-08T16_10_30.csv**
-
-The Disbursements data on [fec.gov](fec.gov) includes the operating expenditure records of House and Senate committees, Presidential committees, and PAC and Party committees since 2003. 
-
-For this analysis, we filtered the data to focus on the records from the presidential committees of 2020 Election, which the disbursement dates are from 01/01/2020 to 11/03/2020, to be consistent with the scope of the contribution receipt dataset. The dataset with filters applied was exported from [FEC Official Database](https://www.fec.gov/data/disbursements/?spender_committee_type=P&data_type=processed&min_date=01%2F01%2F2020&max_date=11%2F03%2F2020). The retrieved dataset has 260,587 records and 78 columns.
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(DataDescription[30:39, ], caption = "Major columns used",
-             row.names = F,font_size = 10)
-```
-
-**Issue with this Dataset**
-
-1. The raw dataset we retrieved contains 260,587 entries as of Nov 18th, 2020, but the data is still getting updated with additive filings of previous disbursements being archived. The total number of records is subject to change, but the change will be trivial compared to the size of the entire dataset. Although this will not affect our analysis or overall conclusion, it would be worth paying attention to the data incompleteness here.
 
 <!--chapter:end:02-data.Rmd-->
 
-```{r include=FALSE, cache=FALSE}
-knitr::opts_chunk$set(
-  echo = FALSE,
-  message = FALSE,
-  warning = FALSE
-)
-```
+
 # Data transformation
 
-```{r, message=FALSE, warning=FALSE}
-library(here)
-library(readr)
-library(tidyverse)
-library(socviz)
-```
+Placeholder
+
 
 ## Election Result Data Transformation 
-
-We used historical U.S. presidential election data provided in the `socviz` library, but since the data for 2016 was provisional, we updated the [2016 data](https://en.wikipedia.org/wiki/2016_United_States_presidential_election) and also added the 2020 election data for our analysis.
-
-```{r}
-# Update data
-data(elections_historic)
-elections_historic_new <- elections_historic 
-elections_historic_new$ec_pct[elections_historic_new$year == 2016] <- 304/(304+227)
-elections_historic_new$popular_pct[elections_historic_new$year == 2016] <- 0.461
-elections_historic_new$popular_margin[elections_historic_new$year == 2016] <- -0.021
-
-elections_historic_full <- elections_historic_new
-
-elections_historic_new <- elections_historic_new %>%
-  select(c(win_party,popular_pct,ec_pct,winner_label))
-
-# add data for 2020  
-data2020 <- data.frame(win_party = 'Dem.',popular_pct = 0.514,ec_pct = 306/(306+232), winner_label = 'Biden 2020')
-
-elections_historic_new <- rbind(elections_historic_new,data2020)
-
-write.csv(elections_historic_new, file = here("data", "clean", "elections_historic_new.csv"),row.names=FALSE)
-```
-
-Also, to make comparison of the share of electoral college vote between *Dem.* and *Rep.* more convenience, we mutated and filterd the dataset to the following one:
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(data.frame(
-                description = c('Year','Votes_PERCEN','Party'),
-                category = c("Which election year?", "Votes percentage for president","Winner. Dem or Rep?")
-              ), 
-             col.names = c('Column','Description'),
-             row.names = F,font_size = 10)
-```
-
-```{r}
-t_win <- elections_historic_full %>%
-  filter(win_party %in% c("Dem.","Rep.")) %>%
-  select(year,ec_pct,win_party)
-
-t_los <- t_win %>%
-  mutate(ec_pct = 1 - ec_pct) %>%
-  mutate(win_party = ifelse(t_win$win_party == 'Dem.', 'Rep.', 'Dem.')) %>%
-  select(year,ec_pct,win_party)
-
-compare <- rbind(t_win,t_los) 
-names(compare) <- c('Year','Votes_PERCEN','Party')
-
-write.csv(compare, file = here("data", "clean", "compare.csv"),row.names=FALSE)
-```
-
 ## Contribution Data Transformation
-
-For the contributions receipt dataset, we extracted only relevant columns as described in Data Sources Chapter. We changed the data types for several columns to factorize categorical variables like `committee_name` and to store `contribution_receipt_date` in a datetime format for later visualizations. We filtered the `contributor_state` column to only keep the 50 states of the US plus D.C. and eliminated noise from funds raised from foreign countries. Also, we unified different formats in the `contributor_suffix` column to eliminate the redundant factor levels. To better scale the contributions, we focused only on individual contributions, thus we applied the `entity_type == "IND"` to get rid of the contributions from committees, PACs, and organizations. 
-To save file-reading time and to meet analysis and visualization needs, we made multiple aggregations on different dimensions. We derived a data frame *contribution_by_date* from aggregating the processed data by `contribution_receipt_date`, and the sum of `contribution_receipt_amount` was calculated for this aggregated view. Additionally, we extracted the contributors' job titles from the column `contributor_occupation`, cleaned the texts following steps including: 
-  - Excluded records of uninformational or ineffective strings. For example, we got rid of records equal to "INFORMATION REQUESTED", "-", "NA", "UNKNOWN", etc.
-  - Gathered column values to a single string separated by blank spaces. We saved some two-word job titles like "SELF EMPLOYED" and "REAL ESTATE" with underlines to avoid them being separated apart.
-  - Inserted spaces to divide words that were sticked together. For example, records like "WRITEREDITORTEACHER" were converted to "WRITER EDITOR TEACHER" with spaces in between.
-  - Split the string to a vector of single words.
-  - Removed unnecessary punctuations and numbers.
-  - Fixed detectable typos and abbreviations
-  - Removed uninformational words stored in the [stop words](https://www.rdocumentation.org/packages/tidytext/versions/0.2.6/topics/stop_words) dataset of package `tidytext`. For example, words like "the", "of", and "and" do not add any insight but will distort the frequency distribution. 
-Finally, the counts for each unique word were calculated and saved in a separate .csv file.
-
-```{r}
-contributions1 <- readr::read_csv(here("./data/raw/contribution_bind.csv"))
-
-# Extract columns
-DataDescription<- readr::read_csv(here("./data/DatasetDescription.csv"))
-columns <- as.vector(DataDescription[13:26,1])
-
-contributions1<- contributions1 %>%
-  select(columns[1:14])
-
-# Change data types and factorize categorical variables
-contributions1$committee_name <- as.factor(contributions1$committee_name)
-contributions1$committee_name <- fct_recode(contributions1$committee_name,TRUMP = "DONALD J. TRUMP FOR PRESIDENT, INC.",BIDEN = "BIDEN FOR PRESIDENT")
-contributions1$contribution_receipt_date <- as.Date(contributions1$contribution_receipt_date, format = "%m/%d/%y")
-
-# Filter contributor_state
-state<- c("AL","AK","AZ","AR","CA","CO","CT","DE","DC","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY")
-
-contributions1 <- contributions1[contributions1$contributor_state %in% state,]
-
-# Update suffix
-contributions1$contributor_suffix%>%
-  unique()
-contributions1<- contributions1 %>% 
-  mutate(contributor_suffix = ifelse(contributor_suffix == "JR.", "JR", contributor_suffix))
-contributions1<- contributions1 %>% 
-  mutate(contributor_suffix = ifelse(contributor_suffix == "JR.,", "JR", contributor_suffix))
-contributions1<- contributions1 %>% 
-  mutate(contributor_suffix = ifelse(contributor_suffix == "7/18/", "", contributor_suffix))
-contributions1<- contributions1 %>% 
-  mutate(contributor_suffix = ifelse(contributor_suffix == "SR.", "SR", contributor_suffix))
-contributions1<- contributions1 %>% 
-  mutate(contributor_suffix = ifelse(contributor_suffix == "M.D.", "MD", contributor_suffix))
-contributions1<- contributions1 %>% 
-  mutate(contributor_suffix = ifelse(contributor_suffix == "ESQ.", "ESQ", contributor_suffix))
-
-#filter individual contributions
-contributions1<- contributions1[contributions1$entity_type == "IND",]
-
-write.csv(contributions1, file = here("data", "clean", "contribution_processed.csv"),row.names=FALSE)
-
-#Aggregations
-contribution_by_date <-contributions1[order(contributions1$contribution_receipt_date, decreasing= F),] %>% 
-  select(committee_name,contribution_receipt_date,contribution_receipt_amount) %>%
-  group_by(contribution_receipt_date,committee_name) %>%
-    summarise(Total = sum(contribution_receipt_amount))
-
-write.csv(contribution_by_date, file = here("data", "clean", "contribution_by_date.csv"),row.names=FALSE)
-```
-
-```{r, eval = FALSE, echo=FALSE}
-# Define a function to extract occupations
-
-GetOccupation <- function(name){
-  # Filter data by Candidate
-  if (name == 'BIDEN'){
-    contributions1 <- contributions1[contributions1$committee_name == 'BIDEN',]
-  } else if (name == 'TRUMP'){
-    contributions1 <- contributions1[contributions1$committee_name == 'TRUMP',]
-  }
-  
-  # Get rid of ineffective string records
-  INEFFECTIVE <- c("INFORMATION REQUESTED","INFORMATION REQUESTED PER BEST EFFORTS","-","--","NA","UNKNOWN")
-  contributions1 <- contributions1 %>%
-      mutate(contributor_occupation=replace(contributor_occupation,
-                    contributor_occupation %in% INEFFECTIVE, ''))
-                    
-  # Extract occupation
-  occupation <- contributions1 %>% select(contributor_occupation)
-  occupation <- drop_empty_row(occupation)
-  
-  # Keep some two-word occupations to avoid them from being separated apart
-  occupation[occupation=="NOT EMPLOYED"] <-"NOT_EMPLOYED"
-  occupation[occupation=="VICE PRESIDENT"] <-"VICE_PRESIDENT"
-  occupation[occupation=="SELF EMPLOYED"] <-"SELF_EMPLOYED"
-  occupation[occupation=="REAL ESTATE"] <-"REAL_ESTATE"
-  
-  # Count the frequency
-  occupation %>% count(contributor_occupation, name = "freq") %>% arrange(desc(freq))
-  
-  # Gather column values to a single string separated by a blank space
-  oc_str<- occupation %>% pull(contributor_occupation) %>% paste(collapse = " ")
-  
-  # Divide words by a blank space
-  patterns <- c("ATTORNEY","CONSULTANT","WRITER","PROFESSOR","DIRECTOR",
-                "PHYSICIAN","CEO","ACTOR","ENGINEER","SELF_EMPLOYED",
-                "VP","VICE_PRESIDENT","REAL_ESTATE","TEACHER")
-  replacements <- c(" ATTORNEY "," CONSULTANT "," WRITER "," PROFESSOR "," DIRECTOR ",
-                    " PHYSICIAN "," CEO "," ACTOR "," ENGINEER "," SELF_EMPLOYED ",
-                    " VICE_PRESIDENT "," VICE_PRESIDENT "," REAL_ESTATE "," TEACHER ")
-  for(i in 1:length(patterns)){
-       oc_str <- gsub(patterns[i], replacements[i],oc_str)
-  }
-  
-  # Split the string
-  oc_str_sp<- unlist(strsplit(oc_str, "\\s+"))
-  # Remove punctuation marks
-  oc_str_sp <- gsub("[[:punct:]]", "", oc_str_sp)
-  # Remove all rows starting with a number
-  oc_str_sp <- grep('^[A-Z]', oc_str_sp, value=TRUE)
-  
-  # Fix Typos for top counts occupations
-  oc_str_sp[grep('ACCOUNT|ACCNTNT|ACCOU|ACCT|ACOUNT', oc_str_sp)] <- "ACCOUNTANT"
-  oc_str_sp[grep('ADMIN|ADMIST|ADMIIN|ADMN', oc_str_sp)] <- "ADMINISTRATOR"
-  oc_str_sp[grep('RETIRED', oc_str_sp)] <- "RETIRED"
-  oc_str_sp[grep('CONSULTING', oc_str_sp)] <- "CONSULTANT"
-  oc_str_sp[grep('TECHNIC', oc_str_sp)] <- "TECHNICIAN"
-  oc_str_sp[grep('WRIT', oc_str_sp)] <- "WRITER"
-  oc_str_sp[grep('VETERNARIAN|VETERINARY', oc_str_sp)] <- "VETERINARIAN"
-  oc_str_sp[grep('THERAP', oc_str_sp)] <- "THERAPIST"
-  oc_str_sp[grep('TECHNOLOG|TECHS', oc_str_sp)] <- "TECH"
-  oc_str_sp[grep('TEACH', oc_str_sp)] <- "TEACHER"
-  oc_str_sp[grep('SEFTEMPLOYED|SELFEMPLOYE|SELEMPLOYED', oc_str_sp)] <- "SELFEMPLOYED"
-  oc_str_sp[grep('ENGIINEERN|ENGIN|ENGNEER|ENIGEER|ENGENEER|ENGI|ENGNINEER|ENGONEER|ENIGNEER|ENINGEER', oc_str_sp)] <- "ENGINEER"
-  oc_str_sp[grep('ENTREP|ENTERPRENEUR|ENTRREPRENEUR|ENTEREPRENEUR|ENTRPRENEUR', oc_str_sp)] <- "ENTREPRENEUR"
-  oc_str_sp[grep('ATTO|ATTR|ATTIORNEY|ATTAORNEY|ATTIRNEY|ATTPRNEY|ATTTORNEY', oc_str_sp)] <- "ATTORNEY"
-  oc_str_sp[grep('PHYSICI|PHYSCIAN|PHYISICIAN|PHYCISIAN|PHYSITION|PHYSCIAN|PHYSICAIN|PHYISICIAN|PHYSIAN|PHYSISIAN|PHYSICAN|PHYSISCIAN|PHYI|PHYSYCIAN|PHYSSICIAN|PHYSIVIAN|PHYSIACIAN', oc_str_sp)] <- "PHYSICIAN"
-  oc_str_sp[grep('PROFESSO|PROFOESSOR|PROFESSPR|PROFESSIR|PROFFESE|PROFESSE|PROFESSSOR|PROFSSOR|PROFESOR|PROFESSR', oc_str_sp)] <- "PROFESSOR"
-  
-  #Build a data frame
-  oc_df <- as.data.frame(oc_str_sp)
-  
-  # Remove all unnecessary words stored in the stop_words dataset
-  data(stop_words)
-  oc_df <- oc_df %>% 
-    anti_join(stop_words %>% mutate(word=toupper(word)), by = c("oc_str_sp" = "word"))
-
-  # Get the frequency table and pick top 50 words
-  oc_df$oc_str_sp <- as.factor(oc_df$oc_str_sp)
-  oc_count <- oc_df %>% count(oc_str_sp, name = "freq") %>% 
-    filter(freq > 1) %>% 
-    arrange(desc(freq)) %>% 
-    head(50)
-  
-  # Replace underlines with blank spaces
-  oc_count$oc_str_sp <- oc_count$oc_str_sp %>% 
-      str_replace("NOTEMPLOYED","NOT EMPLOYED") %>% 
-      str_replace("SELFEMPLOYED","SELF EMPLOYED") %>% 
-      str_replace("VICEPRESIDENT","VICE PRESIDENT") %>%
-      str_replace("REALESTATE","REAL ESTATE")
-  
-  # Save as a csv. file locally
-  write.csv(oc_count, file=glue::glue("~/R/occupation_{name}_count.csv"),row.names = FALSE)
-  
-  return(oc_count)
-}
-
-# Get contributor occupations
-oc_biden_count <- GetOccupation("BIDEN")
-oc_trump_count <- GetOccupation("TRUMP")
-```
-
-
 ## Disbursement Data Transformation
-The first step we did is to extract the necessary columns that are mentioned in the previous chapter. Then we noticed that in the `disbursement_purpose_category`, there is a `OTHER` top coding is dominant the dataset, hence it would not provide us lots of interesting information to analyze. Below is the original data distribution for the `disbursement_purpose_category` column:
-```{r}
-# Import data from csv
-exp_raw <- readr::read_csv(here("./data/raw/schedule_b-2020-11-18T20_02_30.csv"))
-
-# Extract specific columns
-exp_processed <- exp_raw %>% 
-  select(committee_name, disbursement_description, disbursement_date, disbursement_amount,
-         disbursement_purpose_category, recipient_city, recipient_zip, recipient_state, recipient_name)
-
-# Convert to correct data type and factor the data if necessary
-exp_processed$disbursement_purpose_category <- factor(exp_processed$disbursement_purpose_category)
-
-# Visualize some important data columns
-ggplot(exp_processed) + 
-  geom_bar(aes(y=fct_relevel(fct_infreq(disbursement_purpose_category) %>% fct_rev(), "OTHER"))) + 
-  xlab("Count") +
-    ylab("Disbursement Purpose") + 
-  ggtitle("Distribution of disbursement_purpose_category") +
-  theme_bw() +
-  theme(plot.title = element_text(face = "bold"),
-        plot.subtitle = element_text(face = "bold", color = "grey35"),
-        plot.caption = element_text(color = "grey68"),
-        legend.position="bottom")
-```
-
-But since we have another column which is the disbursement_description, we can use this information to decode this top code. We examined the frequently mentioned terms in `disbursement_description` among those marked as `OTHER` and manually categorize them into existing or new categories that would fit the record type better. Below is a conversion table that we used to convert the columns. The pattern we are looking for in the description ar based on high frequent terms as well as their word stems and abbreviations. The conversion are done based on the order of this list. 
-```{r, echo=FALSE, results='asis'}
-knitr::kable(data.frame(
-                description = c("BANK|PROCESS","CONSULT",
-                                "SLRY|SALARY|OFFICE|PAYROLL|PYROLL|PHONE|RENT|SOFTWARE|COMPUTER",
-                                "MARKET|MARKETING|ADVERTISING","TRAVEL|TRANSPORT","STAG|STAGING|SHIP",
-                                "EVENT|CATER|UTIL", "CONTRIBUTION", "REFUND|MILEAGE|REIMBURSE"),
-                category = c("BANKING", "CONSULTING", "ADMINISTRATIVE", "ADVERTISING",
-                             "TRAVEL", "MATERIALS", "EVENTS", "CONTRIBUTIONS", "REFUNDS")
-              ), 
-             col.names = c('Category Description','New Category'),
-             caption = "Disbursement Description to Category Conversion Table",
-             row.names = F,font_size = 10)
-```
-
-```{r}
-# label rows that will be changed before undo top coding 
-exp_processed <- 
-  transform(exp_processed, from_other=ifelse(disbursement_purpose_category=='OTHER', TRUE, FALSE))
-
-# Add more factor levels to describe the purpose better
-levels(exp_processed$disbursement_purpose_category) <-
-  c(levels(exp_processed$disbursement_purpose_category), "BANKING", "CONSULTING")
-
-# Decode disbursement_purpose_category based on the description
-exp_processed[grepl("BANK|PROCESS",exp_processed$disbursement_description, ignore.case=T) &
-  exp_processed$disbursement_purpose_category == "OTHER", ]$disbursement_purpose_category <- "BANKING"
-
-exp_processed[grepl("CONSULT",exp_processed$disbursement_description, ignore.case=T) &
-  exp_processed$disbursement_purpose_category == "OTHER", ]$disbursement_purpose_category <- "CONSULTING"
-
-exp_processed[grepl("SLRY|SALARY|OFFICE|PAYROLL|PYROLL|PHONE|RENT|SOFTWARE|COMPUTER",
-        exp_processed$disbursement_description, ignore.case=T) &
-    exp_processed$disbursement_purpose_category == "OTHER", ]$disbursement_purpose_category <- "ADMINISTRATIVE"
-
-exp_processed[grepl("MARKET|MARKETING|ADVERTISING", exp_processed$disbursement_description, ignore.case=T) &
-    exp_processed$disbursement_purpose_category == "OTHER", ]$disbursement_purpose_category <- "ADVERTISING"
-
-exp_processed[grepl("TRAVEL|TRANSPORT", exp_processed$disbursement_description, ignore.case=T) &
-  exp_processed$disbursement_purpose_category == "OTHER", ]$disbursement_purpose_category <- "TRAVEL"
-
-exp_processed[grepl("STAG|STAGING|SHIP", exp_processed$disbursement_description, ignore.case=T) & 
-  exp_processed$disbursement_purpose_category == "OTHER", ]$disbursement_purpose_category <- "MATERIALS"
-
-exp_processed[grepl("EVENT|CATER|UTIL",exp_processed$disbursement_description, ignore.case=T) &
-  exp_processed$disbursement_purpose_category == "OTHER", ]$disbursement_purpose_category <- "EVENTS"
-
-exp_processed[grepl("CONTRIBUTION", exp_processed$disbursement_description, ignore.case=T) &
-  exp_processed$disbursement_purpose_category == "OTHER", ]$disbursement_purpose_category <-"CONTRIBUTIONS"
-
-exp_processed[grepl("REFUND|MILEAGE|REIMBURSE", exp_processed$disbursement_description, ignore.case=T) &
-  exp_processed$disbursement_purpose_category == "OTHER", ]$disbursement_purpose_category <-"REFUNDS"
-```
-
-Here is the distribution after undo the top coding:
-```{r}
-ggplot(exp_processed) + 
-  geom_bar(aes(y=fct_relevel(fct_infreq(disbursement_purpose_category) %>% fct_rev(), "OTHER"))) + 
-  labs(x="Count", y="Disbursement Purpose",
-       title="Distribution of disbursement_purpose_category") +
-  theme_bw() +
-  theme(plot.title = element_text(face = "bold"),
-        plot.subtitle = element_text(face = "bold", color = "grey35"),
-        plot.caption = element_text(color = "grey68"),
-        legend.position="bottom")
-```
-
-Now, the top coding category is less significant than before. We perform our further analysis based on this cleaned data set.
-```{r}
-write.csv(exp_processed, file = here("data", "clean", "disbursement_processed.csv"),row.names=FALSE)
-```
-
-
 
 <!--chapter:end:03-cleaning.Rmd-->
 
-```{r include=FALSE, cache=FALSE}
-knitr::opts_chunk$set(
-  echo = FALSE,
-  message = FALSE,
-  warning = FALSE
-)
-```
+
 # Missing values
 
-```{r, message=FALSE, warning=FALSE}
-library(here)
-library(readr)
-library(tidyverse)
-library(devtools)
-#install_github("njtierney/naniar")
-library(naniar)
-```
+Placeholder
+
 
 ## Contribution Receipt Dataset
-The election voting results data and the disbursements data do not have missing values, however, the contribution receipts dataset have 275 values missed in some columns.
-
-```{r, echo = F, message=F}
-# Import data from csv
-contribution_processed <- readr::read_csv(here("./data/raw/contribution_processed.csv"))
-
-#n_miss(contribution_processed)
-#pct_miss(contribution_processed)
-#n_complete(contribution_processed)
-
-knitr::kable(colSums(is.na(contribution_processed)) %>% sort(decreasing = TRUE) %>% head(), caption = "Missing values",align = "l",full_width = F,table.attr = "style='width:30%;'")
-
-gg_miss_upset(contribution_processed)
-```
-
-In the processed contributions dataset, missing values only take 0.21% of the entire dataset with 946,704 observations of 14 attributes. As shown in the table and the upset plot above, missing values of the contributions dataset most frequently appear in columns including `contributor_employer`, `contributor_zip`, and `contributor_occupation`.
-The most popular pattern of missingness is only missing the contributor employer information, which 143 entries share this pattern. Besides there are also 35 entries missing both occupation and employer information, and 34 entries missing zip code information. 
 
 <!--chapter:end:04-missing.Rmd-->
 
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
 ```{r include=FALSE, cache=FALSE}
 knitr::opts_chunk$set(
   echo = FALSE,
@@ -512,13 +91,9 @@ knitr::opts_chunk$set(
 # Results
 
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
-library(choroplethr)
-library(d3treeR)
-library(d3r)
 library(gganimate)
 library(GGally)
 library(gridExtra)
-library(HH)
 library(here)
 library(highcharter)
 library(MASS)
@@ -528,17 +103,7 @@ library(readr)
 library(scales)
 library(stringr)
 library(tidyverse)
-library(treemap)
 library(usdata)
-```
-
-## Election Vote Results Visualizations
-### State-level
-
-```{r}
-# load packages
-library(here)
-library(tidyverse)
 library(statebins)
 library(usmap)
 library(ggplot2)
@@ -546,29 +111,34 @@ library(dplyr)
 library(plyr)
 library(socviz)
 library(ggrepel)
-library(readr)
 library(ggthemes)
-library(gifski)
-library(gganimate)
-library(directlabels)
-library(png)
-#library(transformr)
 library(grid)
-
-# load cleaned dataset
-president2020 <- readr::read_csv(here("./data/clean/president2020.csv"))
+library(lubridate)
+library(tidytext)
+#library(devtools)
+#devtools::install_github("lchiffon/wordcloud2")
+library(wordcloud2)
 ```
 
-```{r, fig.width=20, fig.height=6}
+## Election Vote Results Visualizations
+### State-level
+
+```{r}
+# load cleaned dataset
+president2020 <- readr::read_csv(here::here("./data/clean/president2020.csv"))
+```
+
+```{r}
 # final results (1205)
+# add (states that flipped from 2016)
+
 president2020 %>%
-    mutate(value = ifelse(dem_votes>rep_votes,'Biden','Trump')) %>%
+    mutate(value = ifelse(stateid %in% c('AZ', 'WI', 'MI', 'PA', 'GA'),'States that flipped from 2016',ifelse(dem_votes>rep_votes,'Democratic win','Republican win'))) %>%
     statebins(
-        font_size=4, dark_label = "white", light_label = "white",
+        font_size=4, 
         ggplot2_scale_function = scale_fill_manual,
-        name = "Winner",
-        values = c(Trump = "darkred", Biden = "darkblue"),
-        round = TRUE, radius=grid::unit(16, "pt"), direction = 1
+        values = c('Republican win' = "darkred", 'Democratic win' = "darkblue", 'States that flipped from 2016' = 'blue'),
+        round = TRUE, radius=grid::unit(16, "pt")
     ) +
     theme_statebins()+
   labs(title = "2020 US Election Results by State",caption = "Source: cookpolitical", fill = NULL)+
@@ -576,39 +146,45 @@ president2020 %>%
         plot.caption = element_text(color = "grey68"),
         legend.position="bottom",
         axis.text.y = element_blank())
-
-# Note: direction = 1 switches the order of the fill scale 
-# so darker shades represent higher illiteracy rates
-# (The default is -1).
 ```
+
+
+From this plot, it's easy to see that Biden won most of the votes in the eastern and western regions of the United States, while Trump's votes are mainly from the central region. In terms of the number of winning states, they are not much different, but we need to consider that the number of electoral votes is different.
 
 ### County-level
 Thanks again for the great job by [*Tony McGovern*](https://github.com/tonmcg/US_County_Level_Election_Results_08-20/blob/master/2020_US_County_Level_Presidential_Results.csv)
-```{r, message=FALSE,fig.width=20, fig.height=6}
+```{r, message=FALSE}
 County2020 <- read_csv('https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-20/master/2020_US_County_Level_Presidential_Results.csv')
 
+county_full <- right_join(county_map,County2020, by = c('id' = 'county_fips')) %>% as_tibble()
 
 # *per_dem* and *per_gop* refer to the percentage of votes going to Democrats and Republicans respectively.
 # *diff* represents the absolute difference between Republican votes - Democrat votes.
 # *per_point_diff* represents this difference as a percentage of total votes.
 
-flow_T <- County2020 %>%
-  select(fips, diff)
-         
-# Graph Highchart
-highchart(type="map") %>%
-hc_title(text = "2020 US Election Results: Absolute Difference") %>%
-  hc_subtitle(text = "Double click the state area to zoom in") %>%
-  hc_add_series_map(uscountygeojson, flow_T,
-    name = "Votes_gop - Votes_dem",
-    value = "diff", joinBy = "fips",
-    dataLabels = list(
-       enabled = TRUE,
-       format = "{point.properties.postalcode}"
-     )) %>%
-   hc_colorAxis(minColor = "white", maxColor = "red") %>%
-   hc_legend(valueDecimals = 0, valueSuffix = "%") %>%
-   hc_mapNavigation(enabled = TRUE)
+b1 <- c(min(county_full$diff))
+b2 <- fivenum(county_full$diff[county_full$diff<0])[3]
+b3 <- 0
+b4 <- fivenum(county_full$diff[county_full$diff>0])[3]
+b5 <- c(max(county_full$diff))
+
+diff_l <- cut(county_full$diff, breaks = c(b1,b2,b3,b4,b5))
+
+ggplot(county_full,
+       aes(x = long, y = lat, fill = diff_l, group = group))+
+  geom_polygon(color = 'white', size = 0.5)+
+  coord_equal()+
+   scale_fill_manual(values=c("#1aa6b7","#b2deec",'#ce6262','#af2d2d'),labels = c('Dem>>Rep','Dem>Rep','Dem<Rep','Dem<<Rep'))+
+  labs(fill = "Absolute Difference")+
+  theme_map()+
+  guides(fill = guide_legend(nrow = 1))+
+  labs(title = "2020 US Election Results: Absolute Difference",caption = "source: tonmcg & socviz")+
+  theme_bw() +
+  theme(plot.title = element_text(face = "bold"),
+        plot.subtitle = element_text(face = "bold", color = "grey35"),
+        plot.caption = element_text(color = "grey68"),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position="bottom")
 ```
 
 If we simply compare the area, we may conclude that Trump will win this election. However, don't forget electoral votes are related to population. 
@@ -617,11 +193,11 @@ If we simply compare the area, we may conclude that Trump will win this election
 
 In this part, I will compare popular vote and electoral college vote from 1824 to 2020 (Note that **Data for 2020 are provisonal**, collected in 5 Dec). *It's possible the candidate with the most votes from the public won't be the winner. This is because the president is not chosen directly by the voters, but what's known as the electoral college. (This explained by [BBC](https://www.bbc.com/news/world-us-canada-53558176) )*
 
-```{r,fig.width=20, fig.height=6}
+```{r}
 # Code reference: https://socviz.co/workgeoms.html#workgeoms
 # HIGHLY recommended this book!! Really APPRECIATE:)
 
-elections_historic_new <- readr::read_csv(here("./data/clean/elections_historic_new.csv"))
+elections_historic_new <- readr::read_csv(here::here("./data/clean/elections_historic_new.csv"))
 
 # plot
 ggplot(elections_historic_new, aes(x = popular_pct, 
@@ -638,7 +214,7 @@ ggplot(elections_historic_new, aes(x = popular_pct,
   labs(x = "Winner's share of popular vote", 
        y = "Winner's share of electoral college vote", 
        title = "Presidential Elections: Popular & Electoral College Margins", subtitle = "From 1824 to 2020(Data for 2020 are provisional)",
-       caption = "Source: socviz::elections_historic & google", fill = "Party affiliation of winner")+
+       caption = "Source: socviz & Cook Political", fill = "Party affiliation of winner")+
   theme_bw() +
   theme(plot.title = element_text(face = "bold"),
         plot.subtitle = element_text(face = "bold", color = "grey35"),
@@ -652,41 +228,53 @@ From this plot, we can see:
 - Ideally, we may think the president also have high share of popular vote. Those data in the red rectangular shows not this case. This can be explained by [how the US presidential election works](https://en.wikipedia.org/wiki/United_States_presidential_election).
 
 - Adams 1824 may be regarded as an outlier. However, after looking up Wiki, He is actually from Democratic-Republican Party.
-- Finally, I can regard Roosevelt as an outstanding candidate since his electoral vote and popular vote are very high.
+
+- Finally, we can regard Roosevelt as an outstanding candidate since his electoral vote and popular vote are very high.
 
 \n
 Finally, we compare the share of electoral college vote between *Dem.* and *Rep.*.
-```{r}
-compare <- readr::read_csv(here("./data/clean/compare.csv"))
+
+```{r, message=FALSE}
+compare <- readr::read_csv(here::here("./data/clean/compare.csv"))
 
 # plot
-p <- ggplot(compare, aes(Year, Votes_PERCEN, frame = Year, size = Votes_PERCEN, group = Party,colour = Party)) +
+p <- ggplot(compare, aes(Year, Votes_PERCEN, 
+                         frame = Year, 
+                         size = Votes_PERCEN, 
+                         group = Party,
+                         colour = Party)) +
   geom_point()+
   scale_color_manual(values=c("#19609F","#CB1C2A"))+
   transition_time(Year) +
   shadow_wake(wake_length = 0.05, alpha = FALSE) +
-  labs(x = "", y = "", 
-      title = "Presidential Elections:The Share of Electoral Votes for Dem. and Rep. Respetively", subtitle = "Year : {frame_time} (Data for 2020 are provisional)",
-       caption = "Source: socviz::elections_historic & google", fill = NULL)+
+  labs(x = "year", y = "share", 
+      title = "Presidential Elections:The Share of Electoral Votes for Dem. and Rep.", 
+      subtitle = "Year : {frame_time} (Data for 2020 are provisional)",
+       caption = "Source: socviz & Cook Political", fill = NULL)+
   #coord_cartesian(clip = 'off') + 
   #ease_aes('cubic-in-out')+
-  theme_classic()
+  theme_bw() +
+  theme(plot.title = element_text(face = "bold"),
+        plot.subtitle = element_text(face = "bold", color = "grey35"),
+        plot.caption = element_text(color = "grey68"),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position="bottom")
 
 animate(p, fps = 3)
 ```
 
 
-From this plot, we can see: Excluding year ftom 1875-1900, the votes percentage difference is relatively huge.
+From this plot, we can see: Excluding year ftom 1875-1900, the votes percentage difference is relatively huge. At the same time, we can also see that no party has long been dominant. The share of the two parties is approximately cyclical.
 
 ## Contribution Receipts Data Analysis
 ### Contributions Overview
 ```{r, echo=FALSE}
 # Read the datasets
   # Contribution summary by state
-contrib_zip <- readr::read_csv(here("data", "clean", "Contributions_by_3Zip.csv"))
+contrib_zip <- readr::read_csv(here::here("data", "clean", "Contributions_by_3Zip.csv"))
 
   # Population and registered Voters in 2020 by state
-voters_state <- readr::read_csv(here("data", "clean", "RegisteredVotersByState.csv"))
+voters_state <- readr::read_csv(here::here("data", "clean", "RegisteredVotersByState.csv"))
 
 # All candidates
 df_all <- contrib_zip[contrib_zip$CANDIDATE_ID=="P00000001" & 
@@ -824,7 +412,7 @@ If we instead take into account the registered voters in each state and calculat
 ### Contributions Distribution and Details
 ```{r, echo=FALSE}
 # Read data
-contributions1 <- readr::read_csv(here("data", "clean", "contribution_processed.csv"))
+contributions1 <- readr::read_csv(here::here("data", "clean", "contribution_processed.csv"))
 
 #head(contributions1)
 
@@ -880,7 +468,7 @@ To see more contribution details, we selected from the original data the domesti
 ### Contributions by Date: Time Series
 ```{r, echo=FALSE}
 # Read the dataset
-contribution_by_date <- readr::read_csv(here("data", "clean", "contribution_by_date.csv"))
+contribution_by_date <- readr::read_csv(here::here("data", "clean", "contribution_by_date.csv"))
 
 # Convert format
 contribution_by_date$contribution_receipt_date <-
@@ -919,9 +507,9 @@ To obtain more information about individual contributors, we extracted keywords 
 
 ```{r,echo=FALSE}
 # To save time, read the saved .csv datasets
-oc_biden_count <- readr::read_csv(here("data", "clean", "occupation_BIDEN_count.csv"))
+oc_biden_count <- readr::read_csv(here::here("data", "clean", "occupation_BIDEN_count.csv"))
 
-oc_trump_count <- readr::read_csv(here("data", "clean", "occupation_TRUMP_count.csv")
+oc_trump_count <- readr::read_csv(here::here("data", "clean", "occupation_TRUMP_count.csv"))
 
   
 # Wordcloud Biden
@@ -931,21 +519,16 @@ df_biden <- oc_biden_count
 df_biden$freq <- (df_biden$freq)^(1/3) #scale the frequencies
 ```
 
-#### *50 most popular occupations of contributors who supported Joe Biden*
+#### **50 most popular occupations of contributors who supported Joe Biden vs. Donald Trump: **
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, results="asis"}
 w1<- wordcloud2(df_biden, size = 0.4,
          maxRotation = 0, minRotation = 0,
          color=rep_len(pal_blue, nrow(df_biden)))
-w1
-library(htmlwidgets)
-library(webshot)
-saveWidget(w1,"w1.html",selfcontained = F)
+#library(htmlwidgets)
+#library(webshot)
+#saveWidget(w1,"w1.html",selfcontained = F)
 #knitr::include_graphics("./w1.PNG")
 ```
-
-To display words properly, the word size of the word cloud was scaled by extracting a cube root of the word frequency count. The above word cloud for Joe Biden clearly shows that a great proportion of contributors are not employed, and attorney, physician, engineer, and manager are also popular occupations.
-
-#### *50 most popular occupations of contributors who supported Donald Trump*
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, results="asis"}
 # Wordcloud Trump
 pal_red <- c("red","#F70D1A","#E77471","#F62217","#9F000F","#F75D59") #red color palette
@@ -955,12 +538,15 @@ df_trump$freq <- (df_trump$freq)^(1/3) #scale the frequencies
 w2<- wordcloud2(df_trump, size = 0.4,
          maxRotation = 0, minRotation = 0,
          color=rep_len(pal_red, nrow(df_trump)))
-w2
 #saveWidget(w2,"w2.html",selfcontained = F)
 #knitr::include_graphics("./w2.PNG")
 ```
 
-Compared to the blue word cloud, this one for Trump has a smaller size consistent to a small total number of contributors. The most prominent word is Retired, which implies that contributors who supported Trump are dominantly retired. Besides, entrepreneur, owner, and manager are popular occupations. The actual frequency counts are shown in the following bar chart.
+![](https://raw.githubusercontent.com/NeverGiveUpDXQ/2020-U.S.-Election-Visualizations/main/_bookdown_files/finalproj_files/figure-html/w1.PNG){width=45%} ![](https://raw.githubusercontent.com/NeverGiveUpDXQ/2020-U.S.-Election-Visualizations/main/_bookdown_files/finalproj_files/figure-html/w2.PNG){width=45%}
+
+To display words properly, the word size of the word cloud was scaled by extracting a cube root of the word frequency count. The blue word cloud for Joe Biden clearly shows that a great proportion of contributors are not employed, and attorney, physician, engineer, and manager are also popular occupations. 
+Compared to the blue word cloud, the red one for Trump displays the word Retired most prominently, which implies that contributors who supported Trump are dominantly retired. Besides, entrepreneur, owner, and manager are popular occupations. 
+We chose word clouds to provide an overview of all popular job titles, but since it is harder to judge the size of texts, we generated a bar chart below that enables better comparison between the actual frequency counts.
 
 ```{r, fig.height=5, echo=FALSE}
 # Bar charts of contributor occupations
@@ -1005,7 +591,7 @@ Comparing difference between candidates, more than half of 10 top occupations of
 ## Disbursement Data Analysis
 ### Disbursement Distribution
 ```{r, message=FALSE, warning=FALSE}
-exp_df <- readr::read_csv(here("data", "clean", "disbursement_processed.csv"))
+exp_df <- readr::read_csv(here::here("data", "clean", "disbursement_processed.csv"))
 exp_df$disbursement_date <- as.Date(exp_df$disbursement_date, format="%Y-%m-%d %H:%M:%S")
 # Calculate the total disbursement by committee
 disbursement_sum <- exp_df %>% 
@@ -1057,8 +643,8 @@ Every expenditure made by Trump Committee are evenly spread out from 0 to less t
 # Calculate the total disbursement amount by committee (in million)
 # Get the top 15 committee
 com_exp <- exp_df %>%
-  group_by(committee_name) %>% 
-  summarize(total = round((sum(disbursement_amount) / 1e6), 2)) %>%
+  dplyr::group_by(committee_name) %>% 
+  dplyr::summarise(total = round((sum(disbursement_amount) / 1e6), 2)) %>%
   arrange(desc(total)) %>% 
   slice(1:15) %>%
   ungroup()
@@ -1100,8 +686,8 @@ The above graph shows 15 committees with the most disbursement made. Among these
 ```{r, message=FALSE, warning=FALSE, fig.width=15, fig.height=8}
 exp_perc <- exp_df %>% 
   filter(exp_df$committee_name %in% com_exp$committee_name & exp_df$disbursement_purpose_category != "REFUNDS") %>% 
-  group_by(committee_name, disbursement_purpose_category) %>% 
-  summarise(total = sum(disbursement_amount)) %>%
+  dplyr::group_by(committee_name, disbursement_purpose_category) %>% 
+  dplyr::summarise(total = sum(disbursement_amount)) %>%
   mutate(Freq = 100 * total / sum(total)) %>%
   arrange(committee_name)
 
@@ -1180,15 +766,15 @@ From the above graph, we can see both of the committees are spending more and mo
 ```{r, message=FALSE, warning=FALSE, fig.width=15, fig.height=10}
 # Calculate the total disbursement received by recipients
 recipients_df <- exp_df %>% 
-  group_by(disbursement_purpose_category, recipient_name) %>% 
-  summarise(value = sum(disbursement_amount)) %>%
+  dplyr::group_by(disbursement_purpose_category, recipient_name) %>% 
+  dplyr::summarise(value = sum(disbursement_amount)) %>%
   arrange(disbursement_purpose_category, desc(value))
 recipients_df <- filter(recipients_df, value > 0)
 
 # select top 10 recipients among each disbursement category
 top10_recipients <- recipients_df %>% 
   arrange(disbursement_purpose_category, desc(value)) %>% 
-  group_by(disbursement_purpose_category) %>% 
+  dplyr::group_by(disbursement_purpose_category) %>% 
   slice(1:10)
 
 
@@ -1209,8 +795,8 @@ We are going to visualize the disbursement distribution across the 50 states in 
 data("usgeojson", package = "highcharter")
 # Calculate Total Amount of Disbursement Received for Each Location
 state_total <- exp_df %>% 
-  group_by(recipient_state) %>% 
-  summarise(value= sum(disbursement_amount))
+  dplyr::group_by(recipient_state) %>% 
+  dplyr::summarise(value= sum(disbursement_amount))
 
 state_total$recipient_state <- state.name[match(state_total$recipient_state, state.abb)]
 state_total <- state_total[complete.cases(state_total), ]
@@ -1245,13 +831,18 @@ target_exp <- exp_df  %>%
 target_exp$recipient_state <- state.name[match(target_exp$recipient_state, state.abb)]
 target_exp <- target_exp[complete.cases(target_exp$recipient_state), ]
   
-# Compute amount of Biden committee disbursement per category and state 
+# Compute amount of Biden & Trump committee disbursement per category and state 
 exp_flow_B <- target_exp %>%
   filter(committee_name == "BIDEN FOR PRESIDENT") %>%
-  group_by(recipient_state) %>%
-  summarise(value = sum(disbursement_amount))
+  dplyr::group_by(recipient_state) %>%
+  dplyr::summarise(value = sum(disbursement_amount))
 
-# Graph Highchart
+exp_flow_T <- target_exp %>%
+  filter(committee_name == "DONALD J. TRUMP FOR PRESIDENT, INC.") %>%
+  dplyr::group_by(recipient_state) %>%
+  dplyr::summarise(value = sum(disbursement_amount))
+
+# Graph Highchart for Biden committee
 highchart(type="map") %>%
 hc_title(text = "Total Disbursements By 2020 Joe Biden Committee By State") %>%
   hc_subtitle(text = "Double click the state area to zoom in") %>%
@@ -1268,21 +859,14 @@ hc_title(text = "Total Disbursements By 2020 Joe Biden Committee By State") %>%
       valueSuffix = " USD"
      )
    ) %>%
-   hc_colorAxis(minColor = "white", maxColor = "red") %>%
+   hc_colorAxis(min=0, max=max(exp_flow_T$value), minColor = "white", maxColor = "red") %>%
    hc_legend(valueDecimals = 0, valueSuffix = "%") %>%
    hc_mapNavigation(enabled = TRUE)
 ```
 
 
 ```{r, message=FALSE, warning=FALSE,fig.width=20, fig.height=6}
-# Same steps for Trump's Main committee
-# Compute amount of Biden committee disbursement per category and state 
-exp_flow_T <- target_exp %>%
-  filter(committee_name == "DONALD J. TRUMP FOR PRESIDENT, INC.") %>%
-  group_by(recipient_state) %>%
-  summarise(value = sum(disbursement_amount))
-
-# Graph Highchart
+# Graph Highchart for Trump's Main committee
 highchart(type="map") %>%
 hc_title(text = "Total Disbursements By 2020 Donald Trump Committee By State") %>%
   hc_subtitle(text = "Double click the state area to zoom in") %>%
@@ -1299,53 +883,32 @@ hc_title(text = "Total Disbursements By 2020 Donald Trump Committee By State") %
       valueSuffix = " USD"
      )
    ) %>%
-   hc_colorAxis(minColor = "white", maxColor = "red") %>%
+   hc_colorAxis(min=0, max=max(exp_flow_T$value), minColor = "white", maxColor = "red") %>%
    hc_legend(valueDecimals = 0, valueSuffix = "%") %>%
    hc_mapNavigation(enabled = TRUE)
 ```
 
-There are not a lot of physical events going on and propaganda passing out for this year's election. Partly it could due to the COVID pandemic. From the above graph, the location where Trump's committee held physical events are more widely spread out across U.S than Biden's committee, while the recipients of material and event fee made by Biden's committee mainly clustered in the east half of the U.S. and West Coast. As shown previously in the parallel axis graph, both of the committees spent less than 1% of their total expenditure in Materials and Events. Compare both maps above, we can see some regions colored in bright green and blue in the map on the right hand side, but not the map on the left hand side. Those bright colors represent that those regions are receiving more of such committee's total disbursement. The two maps are colored based on the same color scale. Since we have found that Biden's committee spent more than Trump's Committee, and Trump's committee is spending more in the above two areas, it is not difficult to conclude that Trump's committee spent a larger percent of their total expenditure in physical events. This could be one of the campaign's strategy. Also, Trump's committee is spending significantly more on some of the states where they win compare to the expenditure of Biden's committee on those states. There is such a trend in the election result this year, but to answer whether there is truly a correlation between expenditure and the voting results would need further investigations on more data sets from previous years.
+There are not a lot of physical events going on and propaganda passing out for this year's election. Partly it could due to the COVID pandemic. From the above graph, the location where Trump's committee held physical events are more widely spread out across U.S than Biden's committee, while the recipients of material and event fee made by Biden's committee mainly clustered in the east half of the U.S. and West Coast. As shown previously in the parallel axis graph, both of the committees spent less than 1% of their total expenditure in Materials and Events. Compare both maps above, we can see more regions colored in bright red in the second map, but not that much on the first map. Those bright colors represent that those regions are receiving more of such committee's total disbursement. The two maps are colored based on the same color scale. Since we have found that Biden's committee spent more than Trump's Committee, and Trump's committee is spending more in the above two categories, it is not difficult to conclude that Trump's committee spent a larger percent of their total expenditure in physical events. This could be one of the campaign's strategy. Also, Trump's committee is spending significantly more on some of the states where they win compare to the expenditure of Biden's committee on those states. There is such a trend in the election result this year, but to answer whether there is truly a correlation between expenditure and the voting results would need further investigations on more data sets from previous years.
+
 
 <!--chapter:end:05-results.Rmd-->
 
-```{r include=FALSE, cache=FALSE}
-knitr::opts_chunk$set(
-  echo = FALSE,
-  message = FALSE,
-  warning = FALSE
-)
-```
+
 # Interactive component
+
+Placeholder
 
 
 ## Disbursement Data Interactive Plot
-
-The above graph shows the Disbursement Trends of the 15 Presidential Committees that made the most disbursements. Each data point represents the rolling sum of a committee's total disbursement settled at the end of a week. The dot will be colored in grey after the candidate suspended the committee. We manipulated the cleaned datasets to extract the information needed to make this graph. The dataset is uploaded to Github and can be founded [here](https://github.com/NeverGiveUpDXQ/2020-U.S.-Election-Visualizations/tree/wz/data/d3csv).
-
-**Instructions to Use the Graph**
-
-1. Users can drag on the canvas along the y-Axis to zoom into specific ranges.
-2. Users can double click on the canvas to reset the y-Axis.
-3. Users can hover mouse on each dot to see exact disbursement value, date, and candidate information.
-4. Users can click on the dot to toggle display/fade each trend line.
-
-<iframe src="https://vizhub.com/wz2536/1369d9b47bfe47289f5929619171858b?mode=embed" title="D3 Disbursement analysis" height="450" width="750"></iframe>
-
-Reference:
-
-1. D3.js Graph Gallery: Line chart with zoom in d3.js (https://www.d3-graph-gallery.com/graph/line_brushZoom.html)
-2. D3.js Graph Gallery: Connected scatter plot with interactive legend (https://www.d3-graph-gallery.com/graph/connectedscatter_legend.html)
+## 1976-2016 Election Result Interactive Plot
 
 <!--chapter:end:06-interactive.Rmd-->
 
-```{r include=FALSE, cache=FALSE}
-knitr::opts_chunk$set(
-  echo = FALSE,
-  message = FALSE,
-  warning = FALSE
-)
-```
+
 # Conclusion
+
+Placeholder
+
 
 
 <!--chapter:end:07-conclusion.Rmd-->

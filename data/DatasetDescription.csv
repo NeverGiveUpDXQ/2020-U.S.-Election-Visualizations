@@ -2,13 +2,13 @@
 state_name,State name (chr)
 county_fips,The 5-digit FIPS code corresponding to the county (chr)
 county_name,County name (chr)
-votes_gop,Votes for Trump
-votes_dem,Votes for Biden
-total_votes,Total Votes
-diff,The absolute difference between Republican votes - Democrat votes
-per_gop,Vote percentage for Trump
-per_dem,Vote percentage for Biden
-per_point_diff,The absolute percentage difference between Republican votes - Democrat votes
+votes_gop,Votes for Trump (num)
+votes_dem,Votes for Biden (num)
+total_votes,Total Votes (num)
+diff,Difference between votes for Trump and Biden (num)
+per_gop,Percentage of votes for Trump (num)
+per_dem,Percentage of votes for Biden (num)
+per_point_diff,Difference between percentages of votes for Trump and Biden (num)
 ,
 Column Name,Description
 committee_id,Recipient presidential committee id (chr)

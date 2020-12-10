@@ -1,13 +1,14 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
 # Results
 
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
-library(choroplethr)
-library(d3treeR)
-library(d3r)
 library(gganimate)
 library(GGally)
 library(gridExtra)
-library(HH)
 library(here)
 library(highcharter)
 library(MASS)
@@ -17,17 +18,7 @@ library(readr)
 library(scales)
 library(stringr)
 library(tidyverse)
-library(treemap)
 library(usdata)
-```
-
-## Election Vote Results Visualizations
-### State-level
-
-```{r}
-# load packages
-library(here)
-library(tidyverse)
 library(statebins)
 library(usmap)
 library(ggplot2)
@@ -35,29 +26,34 @@ library(dplyr)
 library(plyr)
 library(socviz)
 library(ggrepel)
-library(readr)
 library(ggthemes)
-library(gifski)
-library(gganimate)
-library(directlabels)
-library(png)
-#library(transformr)
 library(grid)
-
-# load cleaned dataset
-president2020 <- readr::read_csv(here("./data/clean/president2020.csv"))
+library(lubridate)
+library(tidytext)
+#library(devtools)
+#devtools::install_github("lchiffon/wordcloud2")
+library(wordcloud2)
 ```
 
-```{r, fig.width=20, fig.height=6}
+## Election Vote Results Visualizations
+### State-level
+
+```{r}
+# load cleaned dataset
+president2020 <- readr::read_csv(here::here("./data/clean/president2020.csv"))
+```
+
+```{r}
 # final results (1205)
+# add (states that flipped from 2016)
+
 president2020 %>%
-    mutate(value = ifelse(dem_votes>rep_votes,'Biden','Trump')) %>%
+    mutate(value = ifelse(stateid %in% c('AZ', 'WI', 'MI', 'PA', 'GA'),'States that flipped from 2016',ifelse(dem_votes>rep_votes,'Democratic win','Republican win'))) %>%
     statebins(
-        font_size=4, dark_label = "white", light_label = "white",
+        font_size=4, 
         ggplot2_scale_function = scale_fill_manual,
-        name = "Winner",
-        values = c(Trump = "darkred", Biden = "darkblue"),
-        round = TRUE, radius=grid::unit(16, "pt"), direction = 1
+        values = c('Republican win' = "darkred", 'Democratic win' = "darkblue", 'States that flipped from 2016' = 'blue'),
+        round = TRUE, radius=grid::unit(16, "pt")
     ) +
     theme_statebins()+
   labs(title = "2020 US Election Results by State",caption = "Source: cookpolitical", fill = NULL)+
@@ -65,39 +61,45 @@ president2020 %>%
         plot.caption = element_text(color = "grey68"),
         legend.position="bottom",
         axis.text.y = element_blank())
-
-# Note: direction = 1 switches the order of the fill scale 
-# so darker shades represent higher illiteracy rates
-# (The default is -1).
 ```
+
+
+From this plot, it's easy to see that Biden won most of the votes in the eastern and western regions of the United States, while Trump's votes are mainly from the central region. In terms of the number of winning states, they are not much different, but we need to consider that the number of electoral votes is different.
 
 ### County-level
 Thanks again for the great job by [*Tony McGovern*](https://github.com/tonmcg/US_County_Level_Election_Results_08-20/blob/master/2020_US_County_Level_Presidential_Results.csv)
-```{r, message=FALSE,fig.width=20, fig.height=6}
+```{r, message=FALSE}
 County2020 <- read_csv('https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-20/master/2020_US_County_Level_Presidential_Results.csv')
 
+county_full <- right_join(county_map,County2020, by = c('id' = 'county_fips')) %>% as_tibble()
 
 # *per_dem* and *per_gop* refer to the percentage of votes going to Democrats and Republicans respectively.
 # *diff* represents the absolute difference between Republican votes - Democrat votes.
 # *per_point_diff* represents this difference as a percentage of total votes.
 
-flow_T <- County2020 %>%
-  select(fips, diff)
-         
-# Graph Highchart
-highchart(type="map") %>%
-hc_title(text = "2020 US Election Results: Absolute Difference") %>%
-  hc_subtitle(text = "Double click the state area to zoom in") %>%
-  hc_add_series_map(uscountygeojson, flow_T,
-    name = "Votes_gop - Votes_dem",
-    value = "diff", joinBy = "fips",
-    dataLabels = list(
-       enabled = TRUE,
-       format = "{point.properties.postalcode}"
-     )) %>%
-   hc_colorAxis(minColor = "white", maxColor = "red") %>%
-   hc_legend(valueDecimals = 0, valueSuffix = "%") %>%
-   hc_mapNavigation(enabled = TRUE)
+b1 <- c(min(county_full$diff))
+b2 <- fivenum(county_full$diff[county_full$diff<0])[3]
+b3 <- 0
+b4 <- fivenum(county_full$diff[county_full$diff>0])[3]
+b5 <- c(max(county_full$diff))
+
+diff_l <- cut(county_full$diff, breaks = c(b1,b2,b3,b4,b5))
+
+ggplot(county_full,
+       aes(x = long, y = lat, fill = diff_l, group = group))+
+  geom_polygon(color = 'white', size = 0.5)+
+  coord_equal()+
+   scale_fill_manual(values=c("#1aa6b7","#b2deec",'#ce6262','#af2d2d'),labels = c('Dem>>Rep','Dem>Rep','Dem<Rep','Dem<<Rep'))+
+  labs(fill = "Absolute Difference")+
+  theme_map()+
+  guides(fill = guide_legend(nrow = 1))+
+  labs(title = "2020 US Election Results: Absolute Difference",caption = "source: tonmcg & socviz")+
+  theme_bw() +
+  theme(plot.title = element_text(face = "bold"),
+        plot.subtitle = element_text(face = "bold", color = "grey35"),
+        plot.caption = element_text(color = "grey68"),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position="bottom")
 ```
 
 If we simply compare the area, we may conclude that Trump will win this election. However, don't forget electoral votes are related to population. 
@@ -106,11 +108,11 @@ If we simply compare the area, we may conclude that Trump will win this election
 
 In this part, I will compare popular vote and electoral college vote from 1824 to 2020 (Note that **Data for 2020 are provisonal**, collected in 5 Dec). *It's possible the candidate with the most votes from the public won't be the winner. This is because the president is not chosen directly by the voters, but what's known as the electoral college. (This explained by [BBC](https://www.bbc.com/news/world-us-canada-53558176) )*
 
-```{r,fig.width=20, fig.height=6}
+```{r}
 # Code reference: https://socviz.co/workgeoms.html#workgeoms
 # HIGHLY recommended this book!! Really APPRECIATE:)
 
-elections_historic_new <- readr::read_csv(here("./data/clean/elections_historic_new.csv"))
+elections_historic_new <- readr::read_csv(here::here("./data/clean/elections_historic_new.csv"))
 
 # plot
 ggplot(elections_historic_new, aes(x = popular_pct, 
@@ -147,37 +149,47 @@ From this plot, we can see:
 \n
 Finally, we compare the share of electoral college vote between *Dem.* and *Rep.*.
 
-```{r}
-compare <- readr::read_csv(here("./data/clean/compare.csv"))
+```{r, message=FALSE}
+compare <- readr::read_csv(here::here("./data/clean/compare.csv"))
 
 # plot
-p <- ggplot(compare, aes(Year, Votes_PERCEN, frame = Year, size = Votes_PERCEN, group = Party,colour = Party)) +
+p <- ggplot(compare, aes(Year, Votes_PERCEN, 
+                         frame = Year, 
+                         size = Votes_PERCEN, 
+                         group = Party,
+                         colour = Party)) +
   geom_point()+
   scale_color_manual(values=c("#19609F","#CB1C2A"))+
   transition_time(Year) +
   shadow_wake(wake_length = 0.05, alpha = FALSE) +
-  labs(x = "", y = "", 
-      title = "Presidential Elections:The Share of Electoral Votes for Dem. and Rep. Respetively", subtitle = "Year : {frame_time} (Data for 2020 are provisional)",
-       caption = "Source: socviz::elections_historic & google", fill = NULL)+
+  labs(x = "year", y = "share", 
+      title = "Presidential Elections:The Share of Electoral Votes for Dem. and Rep.", 
+      subtitle = "Year : {frame_time} (Data for 2020 are provisional)",
+       caption = "Source: socviz & Cook Political", fill = NULL)+
   #coord_cartesian(clip = 'off') + 
   #ease_aes('cubic-in-out')+
-  theme_classic()
+  theme_bw() +
+  theme(plot.title = element_text(face = "bold"),
+        plot.subtitle = element_text(face = "bold", color = "grey35"),
+        plot.caption = element_text(color = "grey68"),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position="bottom")
 
 animate(p, fps = 3)
 ```
 
 
-From this plot, we can see: Excluding year ftom 1875-1900, the votes percentage difference is relatively huge.
+From this plot, we can see: Excluding year ftom 1875-1900, the votes percentage difference is relatively huge. At the same time, we can also see that no party has long been dominant. The share of the two parties is approximately cyclical.
 
 ## Contribution Receipts Data Analysis
 ### Contributions Overview
 ```{r, echo=FALSE}
 # Read the datasets
   # Contribution summary by state
-contrib_zip <- readr::read_csv(here("data", "clean", "Contributions_by_3Zip.csv"))
+contrib_zip <- readr::read_csv(here::here("data", "clean", "Contributions_by_3Zip.csv"))
 
   # Population and registered Voters in 2020 by state
-voters_state <- readr::read_csv(here("data", "clean", "RegisteredVotersByState.csv"))
+voters_state <- readr::read_csv(here::here("data", "clean", "RegisteredVotersByState.csv"))
 
 # All candidates
 df_all <- contrib_zip[contrib_zip$CANDIDATE_ID=="P00000001" & 
@@ -315,7 +327,7 @@ If we instead take into account the registered voters in each state and calculat
 ### Contributions Distribution and Details
 ```{r, echo=FALSE}
 # Read data
-contributions1 <- readr::read_csv(here("data", "clean", "contribution_processed.csv"))
+contributions1 <- readr::read_csv(here::here("data", "clean", "contribution_processed.csv"))
 
 #head(contributions1)
 
@@ -371,7 +383,7 @@ To see more contribution details, we selected from the original data the domesti
 ### Contributions by Date: Time Series
 ```{r, echo=FALSE}
 # Read the dataset
-contribution_by_date <- readr::read_csv(here("data", "clean", "contribution_by_date.csv"))
+contribution_by_date <- readr::read_csv(here::here("data", "clean", "contribution_by_date.csv"))
 
 # Convert format
 contribution_by_date$contribution_receipt_date <-
@@ -410,9 +422,9 @@ To obtain more information about individual contributors, we extracted keywords 
 
 ```{r,echo=FALSE}
 # To save time, read the saved .csv datasets
-oc_biden_count <- readr::read_csv(here("data", "clean", "occupation_BIDEN_count.csv"))
+oc_biden_count <- readr::read_csv(here::here("data", "clean", "occupation_BIDEN_count.csv"))
 
-oc_trump_count <- readr::read_csv(here("data", "clean", "occupation_TRUMP_count.csv"))
+oc_trump_count <- readr::read_csv(here::here("data", "clean", "occupation_TRUMP_count.csv"))
 
   
 # Wordcloud Biden
@@ -422,21 +434,16 @@ df_biden <- oc_biden_count
 df_biden$freq <- (df_biden$freq)^(1/3) #scale the frequencies
 ```
 
-#### *50 most popular occupations of contributors who supported Joe Biden*
+#### **50 most popular occupations of contributors who supported Joe Biden vs. Donald Trump: **
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, results="asis"}
 w1<- wordcloud2(df_biden, size = 0.4,
          maxRotation = 0, minRotation = 0,
          color=rep_len(pal_blue, nrow(df_biden)))
-w1
-library(htmlwidgets)
-library(webshot)
-saveWidget(w1,"w1.html",selfcontained = F)
+#library(htmlwidgets)
+#library(webshot)
+#saveWidget(w1,"w1.html",selfcontained = F)
 #knitr::include_graphics("./w1.PNG")
 ```
-
-To display words properly, the word size of the word cloud was scaled by extracting a cube root of the word frequency count. The above word cloud for Joe Biden clearly shows that a great proportion of contributors are not employed, and attorney, physician, engineer, and manager are also popular occupations.
-
-#### *50 most popular occupations of contributors who supported Donald Trump*
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, results="asis"}
 # Wordcloud Trump
 pal_red <- c("red","#F70D1A","#E77471","#F62217","#9F000F","#F75D59") #red color palette
@@ -446,12 +453,15 @@ df_trump$freq <- (df_trump$freq)^(1/3) #scale the frequencies
 w2<- wordcloud2(df_trump, size = 0.4,
          maxRotation = 0, minRotation = 0,
          color=rep_len(pal_red, nrow(df_trump)))
-w2
 #saveWidget(w2,"w2.html",selfcontained = F)
 #knitr::include_graphics("./w2.PNG")
 ```
 
-Compared to the blue word cloud, this one for Trump has a smaller size consistent to a small total number of contributors. The most prominent word is Retired, which implies that contributors who supported Trump are dominantly retired. Besides, entrepreneur, owner, and manager are popular occupations. The actual frequency counts are shown in the following bar chart.
+![](https://raw.githubusercontent.com/NeverGiveUpDXQ/2020-U.S.-Election-Visualizations/main/_bookdown_files/finalproj_files/figure-html/w1.PNG){width=45%} ![](https://raw.githubusercontent.com/NeverGiveUpDXQ/2020-U.S.-Election-Visualizations/main/_bookdown_files/finalproj_files/figure-html/w2.PNG){width=45%}
+
+To display words properly, the word size of the word cloud was scaled by extracting a cube root of the word frequency count. The blue word cloud for Joe Biden clearly shows that a great proportion of contributors are not employed, and attorney, physician, engineer, and manager are also popular occupations. 
+Compared to the blue word cloud, the red one for Trump displays the word Retired most prominently, which implies that contributors who supported Trump are dominantly retired. Besides, entrepreneur, owner, and manager are popular occupations. 
+We chose word clouds to provide an overview of all popular job titles, but since it is harder to judge the size of texts, we generated a bar chart below that enables better comparison between the actual frequency counts.
 
 ```{r, fig.height=5, echo=FALSE}
 # Bar charts of contributor occupations
@@ -496,7 +506,7 @@ Comparing difference between candidates, more than half of 10 top occupations of
 ## Disbursement Data Analysis
 ### Disbursement Distribution
 ```{r, message=FALSE, warning=FALSE}
-exp_df <- readr::read_csv(here("data", "clean", "disbursement_processed.csv"))
+exp_df <- readr::read_csv(here::here("data", "clean", "disbursement_processed.csv"))
 exp_df$disbursement_date <- as.Date(exp_df$disbursement_date, format="%Y-%m-%d %H:%M:%S")
 # Calculate the total disbursement by committee
 disbursement_sum <- exp_df %>% 
@@ -548,8 +558,8 @@ Every expenditure made by Trump Committee are evenly spread out from 0 to less t
 # Calculate the total disbursement amount by committee (in million)
 # Get the top 15 committee
 com_exp <- exp_df %>%
-  group_by(committee_name) %>% 
-  summarize(total = round((sum(disbursement_amount) / 1e6), 2)) %>%
+  dplyr::group_by(committee_name) %>% 
+  dplyr::summarise(total = round((sum(disbursement_amount) / 1e6), 2)) %>%
   arrange(desc(total)) %>% 
   slice(1:15) %>%
   ungroup()
@@ -591,8 +601,8 @@ The above graph shows 15 committees with the most disbursement made. Among these
 ```{r, message=FALSE, warning=FALSE, fig.width=15, fig.height=8}
 exp_perc <- exp_df %>% 
   filter(exp_df$committee_name %in% com_exp$committee_name & exp_df$disbursement_purpose_category != "REFUNDS") %>% 
-  group_by(committee_name, disbursement_purpose_category) %>% 
-  summarise(total = sum(disbursement_amount)) %>%
+  dplyr::group_by(committee_name, disbursement_purpose_category) %>% 
+  dplyr::summarise(total = sum(disbursement_amount)) %>%
   mutate(Freq = 100 * total / sum(total)) %>%
   arrange(committee_name)
 
@@ -671,15 +681,15 @@ From the above graph, we can see both of the committees are spending more and mo
 ```{r, message=FALSE, warning=FALSE, fig.width=15, fig.height=10}
 # Calculate the total disbursement received by recipients
 recipients_df <- exp_df %>% 
-  group_by(disbursement_purpose_category, recipient_name) %>% 
-  summarise(value = sum(disbursement_amount)) %>%
+  dplyr::group_by(disbursement_purpose_category, recipient_name) %>% 
+  dplyr::summarise(value = sum(disbursement_amount)) %>%
   arrange(disbursement_purpose_category, desc(value))
 recipients_df <- filter(recipients_df, value > 0)
 
 # select top 10 recipients among each disbursement category
 top10_recipients <- recipients_df %>% 
   arrange(disbursement_purpose_category, desc(value)) %>% 
-  group_by(disbursement_purpose_category) %>% 
+  dplyr::group_by(disbursement_purpose_category) %>% 
   slice(1:10)
 
 
@@ -700,8 +710,8 @@ We are going to visualize the disbursement distribution across the 50 states in 
 data("usgeojson", package = "highcharter")
 # Calculate Total Amount of Disbursement Received for Each Location
 state_total <- exp_df %>% 
-  group_by(recipient_state) %>% 
-  summarise(value= sum(disbursement_amount))
+  dplyr::group_by(recipient_state) %>% 
+  dplyr::summarise(value= sum(disbursement_amount))
 
 state_total$recipient_state <- state.name[match(state_total$recipient_state, state.abb)]
 state_total <- state_total[complete.cases(state_total), ]
@@ -736,13 +746,18 @@ target_exp <- exp_df  %>%
 target_exp$recipient_state <- state.name[match(target_exp$recipient_state, state.abb)]
 target_exp <- target_exp[complete.cases(target_exp$recipient_state), ]
   
-# Compute amount of Biden committee disbursement per category and state 
+# Compute amount of Biden & Trump committee disbursement per category and state 
 exp_flow_B <- target_exp %>%
   filter(committee_name == "BIDEN FOR PRESIDENT") %>%
-  group_by(recipient_state) %>%
-  summarise(value = sum(disbursement_amount))
+  dplyr::group_by(recipient_state) %>%
+  dplyr::summarise(value = sum(disbursement_amount))
 
-# Graph Highchart
+exp_flow_T <- target_exp %>%
+  filter(committee_name == "DONALD J. TRUMP FOR PRESIDENT, INC.") %>%
+  dplyr::group_by(recipient_state) %>%
+  dplyr::summarise(value = sum(disbursement_amount))
+
+# Graph Highchart for Biden committee
 highchart(type="map") %>%
 hc_title(text = "Total Disbursements By 2020 Joe Biden Committee By State") %>%
   hc_subtitle(text = "Double click the state area to zoom in") %>%
@@ -759,21 +774,14 @@ hc_title(text = "Total Disbursements By 2020 Joe Biden Committee By State") %>%
       valueSuffix = " USD"
      )
    ) %>%
-   hc_colorAxis(minColor = "white", maxColor = "red") %>%
+   hc_colorAxis(min=0, max=max(exp_flow_T$value), minColor = "white", maxColor = "red") %>%
    hc_legend(valueDecimals = 0, valueSuffix = "%") %>%
    hc_mapNavigation(enabled = TRUE)
 ```
 
 
 ```{r, message=FALSE, warning=FALSE,fig.width=20, fig.height=6}
-# Same steps for Trump's Main committee
-# Compute amount of Biden committee disbursement per category and state 
-exp_flow_T <- target_exp %>%
-  filter(committee_name == "DONALD J. TRUMP FOR PRESIDENT, INC.") %>%
-  group_by(recipient_state) %>%
-  summarise(value = sum(disbursement_amount))
-
-# Graph Highchart
+# Graph Highchart for Trump's Main committee
 highchart(type="map") %>%
 hc_title(text = "Total Disbursements By 2020 Donald Trump Committee By State") %>%
   hc_subtitle(text = "Double click the state area to zoom in") %>%
@@ -790,9 +798,10 @@ hc_title(text = "Total Disbursements By 2020 Donald Trump Committee By State") %
       valueSuffix = " USD"
      )
    ) %>%
-   hc_colorAxis(minColor = "white", maxColor = "red") %>%
+   hc_colorAxis(min=0, max=max(exp_flow_T$value), minColor = "white", maxColor = "red") %>%
    hc_legend(valueDecimals = 0, valueSuffix = "%") %>%
    hc_mapNavigation(enabled = TRUE)
 ```
 
-There are not a lot of physical events going on and propaganda passing out for this year's election. Partly it could due to the COVID pandemic. From the above graph, the location where Trump's committee held physical events are more widely spread out across U.S than Biden's committee, while the recipients of material and event fee made by Biden's committee mainly clustered in the east half of the U.S. and West Coast. As shown previously in the parallel axis graph, both of the committees spent less than 1% of their total expenditure in Materials and Events. Compare both maps above, we can see some regions colored in bright green and blue in the map on the right hand side, but not the map on the left hand side. Those bright colors represent that those regions are receiving more of such committee's total disbursement. The two maps are colored based on the same color scale. Since we have found that Biden's committee spent more than Trump's Committee, and Trump's committee is spending more in the above two areas, it is not difficult to conclude that Trump's committee spent a larger percent of their total expenditure in physical events. This could be one of the campaign's strategy. Also, Trump's committee is spending significantly more on some of the states where they win compare to the expenditure of Biden's committee on those states. There is such a trend in the election result this year, but to answer whether there is truly a correlation between expenditure and the voting results would need further investigations on more data sets from previous years.
+There are not a lot of physical events going on and propaganda passing out for this year's election. Partly it could due to the COVID pandemic. From the above graph, the location where Trump's committee held physical events are more widely spread out across U.S than Biden's committee, while the recipients of material and event fee made by Biden's committee mainly clustered in the east half of the U.S. and West Coast. As shown previously in the parallel axis graph, both of the committees spent less than 1% of their total expenditure in Materials and Events. Compare both maps above, we can see more regions colored in bright red in the second map, but not that much on the first map. Those bright colors represent that those regions are receiving more of such committee's total disbursement. The two maps are colored based on the same color scale. Since we have found that Biden's committee spent more than Trump's Committee, and Trump's committee is spending more in the above two categories, it is not difficult to conclude that Trump's committee spent a larger percent of their total expenditure in physical events. This could be one of the campaign's strategy. Also, Trump's committee is spending significantly more on some of the states where they win compare to the expenditure of Biden's committee on those states. There is such a trend in the election result this year, but to answer whether there is truly a correlation between expenditure and the voting results would need further investigations on more data sets from previous years.
+

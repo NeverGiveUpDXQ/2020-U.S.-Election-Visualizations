@@ -1,5 +1,25 @@
 # Interactive component
 
+## Link to the interactive map
+Click [here](https://bl.ocks.org/ybliu9/raw/8d43f3f08508aa7bc70d6dcc40c57f68/11c5476acb05ffe563cdbd156d4fb3ed86f71fe0/) or copy the url: https://bl.ocks.org/ybliu9/raw/8d43f3f08508aa7bc70d6dcc40c57f68/11c5476acb05ffe563cdbd156d4fb3ed86f71fe0/
+
+It may take a couple of seconds to load all features.
+
+### Descriptions
+
+The interactive part of our analysis was built with D3 version 6, which the original code has been uploaded to [](blockbuilder.org). You can also find code [here](https://github.com/NeverGiveUpDXQ/2020-U.S.-Election-Visualizations/blob/main/interactive-map-2020-election.html) in our github repo. 
+This interactive map shows the number of votes obtained by each party/presidential candidate, their shares of votes, and [margins of victory (MOV)](https://ballotpedia.org/Margin-of-victory_(MOV)) on US county level during 2020 Presidential Election. We used the same voting results data retrieved from Fox News as described in previous sections, but formats of certain columns were changed to adapt to the plot. You can find the data [here](https://github.com/NeverGiveUpDXQ/2020-U.S.-Election-Visualizations/blob/main/data/d3csv/2020_map_d3.csv) under the `data` folder of our repo.
+
+### Instructions for using the map:
+
+The plot is initialized with a mapping of 2020 US Presidential Election votes with no default county specified. The color of each county reflects the winning party's margin of victory, as scaled on the legend. 
+1. Users can scroll up or down to manually zoom in or out the full map. 
+2. Users can click and drag to move the map.
+3. Users can hover the mouse over a county to see county name, vote counts for each party, and the margin. 
+4. Users can select the county of interest by clicking the county on the map. The map will then automatically zoom in on the selected area. 
+Notes: 
+Since the post-election processing is onging and vote counting is not 100% completed in several states, the vote counts are subject to change. Alaska did not return voting results by county, so the data is reported on the state level. 
+
 
 ## Disbursement Data Interactive Plot
 
@@ -10,11 +30,69 @@ The above graph shows the Disbursement Trends of the 15 Presidential Committees 
 1. Users can drag on the canvas along the y-Axis to zoom into specific ranges.
 2. Users can double click on the canvas to reset the y-Axis.
 3. Users can hover mouse on each dot to see exact disbursement value, date, and candidate information.
-4. Users can click on the dot to toggle display/fade each trend line.
+4. Users can click on the list of candidate names to display or hide each trend line. Hold down the Ctrl (windows) / Command (Mac) button to select multiple options.
 
 <iframe src="https://vizhub.com/wz2536/1369d9b47bfe47289f5929619171858b?mode=embed" title="D3 Disbursement analysis" height="450" width="750"></iframe>
 
-Reference:
+## 1976-2016 Election Result Interactive Plot
+
+[**Instructions to Use the Graph**](https://github.com/TorsteinHonsi/Motion-Highcharts-Plugin/wiki)
+
+1. play/pause clicking the play/pause button
+2. play/pause by hitting space
+3. navigating the motion slider by dragging the slider thumb
+4. navigating the motion slider by hitting the left and right arrow keys
+
+```{r}
+# help file: https://api.highcharts.com/highcharts/labels.items
+library(highcharter)
+library(tidyverse)
+library(jsonlite)
+
+history_election <- readr::read_csv(here::here("./data/clean/1976-2016election.csv"))
+
+history_election_ds = history_election %>%
+    group_by(state) %>%
+    do(item = list(
+        state = first(.$state),
+        sequence = .$ratio,
+        value = first(.$ratio)
+    ))%>%
+    .$item
+
+highchart(type = "map") %>% 
+  hc_add_series(data = history_election_ds,
+                name = "Popular Votes for Rep.",
+                mapData = usgeojson,
+                joinBy = c("name","state"),
+                borderWidth = 0.05,
+                dataLabels = list(enabled = TRUE, format = "{point.properties.postalcode}")
+                ) %>% 
+  hc_colorAxis(#stops = color_stops(),
+               minColor = 'white',
+               maxColor = 'darkred',
+               min = 0,
+               max = 1 ) %>%  
+  hc_title(text = "Share of Popular Votes for the Republican from 1976 to 2016") %>% 
+  hc_legend(layout = "vertical", 
+            align = "right") %>% 
+  hc_add_theme(hc_theme_smpl()) %>%
+  hc_motion(
+    enabled = TRUE,
+    axisLabel = "year",
+    labels = as.character(sort(unique(history_election$year))),
+    #updateIterval = 50, #Specifies or returns the time interval (in milliseconds) between screen updates
+    magnet = list(
+      round = "floor" 
+    )
+  )
+
+```
+
+References:
 
 1. D3.js Graph Gallery: Line chart with zoom in d3.js (https://www.d3-graph-gallery.com/graph/line_brushZoom.html)
 2. D3.js Graph Gallery: Connected scatter plot with interactive legend (https://www.d3-graph-gallery.com/graph/connectedscatter_legend.html)
+3. RPubs: William Green(https://rpubs.com/wbgreen405/249838)
+4. Tony McGovern: US County Level Election Results (https://github.com/tonmcg/US_County_Level_Election_Results_08-20/blob/master/index.html)
+5. Observable: d3-6.0 Migration Guide(https://observablehq.com/@d3/d3v6-migration-guide#events)

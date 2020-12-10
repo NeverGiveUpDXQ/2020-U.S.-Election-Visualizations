@@ -9,7 +9,96 @@ library(socviz)
 
 ## Election Result Data Transformation 
 
-We used historical U.S. presidential election data provided in the `socviz` library, but since the data for 2016 was provisional, we updated the [2016 data](https://en.wikipedia.org/wiki/2016_United_States_presidential_election) and also added the 2020 election data for our analysis.
+First, to compare historical popular vote results for **republicans** on the state level, we cleaned this dataset in following steps:
+
+- Select columns we needed. i.e. `year`, `state`, `party` and `candidatevotes`.
+- Filter column `party`. i.e. only contains democrat and republican.
+- Add a new column `ratio`, we define **ratio = candidatevotes_xxx/(candidatevotes_democrat+candidatevotes_republican)**
+- Filter column `party`. i.e. only leave republican.
+- Check data quality & revise it
+
+```{r}
+history_data <- readr::read_csv(here::here("./data/raw/1976-2016-president.csv"))
+
+# temporary data
+temp <- history_data %>%
+  filter(!writein) %>%
+  select(year, state,party,candidatevotes) %>%
+  filter(party %in% c('democrat','republican'))
+
+# add a new column `ratio`
+history_election <- temp%>%
+  group_by(year,state)%>%
+  summarise(ratio = candidatevotes/sum(candidatevotes))%>%
+  ungroup()
+
+# only choose republican records
+index <- temp$party == 'republican'
+history_election <- history_election[index,]
+
+# check our data
+#history_data %>%
+#    group_by(year, state) %>%
+#    summarise(n = n())%>%
+#    filter(n != 1)
+# after checking the number, we don't have any duplicate records 
+```
+
+We then filter out all outliers and want to revise them. Note that it involves 2 state: **District of Columbia** and **Minnesota**. After checking data, we know that Republicans have never won D.C. and popular votes have always relatively low. So, it is reasonable. However, the share of *Minnesota* for Republican is abnormal. It is impossible that all voters chose one party.
+
+```{r}
+# check for outliers
+# boxplot(history_data$ratio)
+# It's impossible if share = 1
+# So, in this step, we filter those outlier `ratio`
+
+history_election %>%
+    filter(ratio %in% boxplot.stats(history_election$ratio)$out)
+```
+
+So, then we look back raw data. We notice that in those years, party name for Dem. is *democratic-farmer-labor* rather than *democrat*. 
+```{r}
+history_data %>%
+  filter(year %in% c(2000,2004,2012)) %>%
+  filter(state == 'Minnesota')%>%
+  select(year,party,candidatevotes)
+```
+
+```{r}
+temp1 <- history_data %>%
+  filter(!writein) %>%
+  select(year, state,party,candidatevotes) %>%
+  filter(party %in% c('democrat','republican','democratic-farmer-labor'))
+
+# reset
+temp1$party[temp1$party=='democratic-farmer-labor'] = 'democrat'
+
+# add a new column `ratio`
+history_election <- temp1%>%
+  group_by(year,state)%>%
+  summarise(ratio = candidatevotes/sum(candidatevotes))%>%
+  ungroup()
+
+# only choose republican records
+index <- temp1$party == 'republican'
+history_election <- history_election[index,]
+```
+
+```{r}
+write.csv(history_election, file = here::here("data", "clean", "1976-2016election.csv"),row.names=FALSE)
+```
+
+After cleaning, it contains 3 columns and 561 records.
+```{r, echo=FALSE, results='asis'}
+knitr::kable(data.frame(
+                description = c('year','state','ratio'),
+                category = c("Which election year?","State name","Share of popular votes for Rep.")
+              ), 
+             col.names = c('Column','Description'),
+             row.names = F,font_size = 10)
+```
+
+Then, we used historical U.S. presidential election data provided in the `socviz` library, but since the data for 2016 was provisional, we updated the [2016 data](https://en.wikipedia.org/wiki/2016_United_States_presidential_election) and also added the 2020 election data for our analysis.
 
 ```{r}
 # Update data
@@ -20,7 +109,7 @@ elections_historic_new$popular_pct[elections_historic_new$year == 2016] <- 0.461
 elections_historic_new$popular_margin[elections_historic_new$year == 2016] <- -0.021
 
 elections_historic_full <- elections_historic_new
-
+# back up
 elections_historic_new <- elections_historic_new %>%
   select(c(win_party,popular_pct,ec_pct,winner_label))
 
@@ -29,7 +118,7 @@ data2020 <- data.frame(win_party = 'Dem.',popular_pct = 0.514,ec_pct = 306/(306+
 
 elections_historic_new <- rbind(elections_historic_new,data2020)
 
-write.csv(elections_historic_new, file = here("data", "clean", "elections_historic_new.csv"),row.names=FALSE)
+write.csv(elections_historic_new, file = here::here("data", "clean", "elections_historic_new.csv"),row.names=FALSE)
 ```
 
 Also, to make comparison of the share of electoral college vote between *Dem.* and *Rep.* more convenience, we mutated and filterd the dataset to the following one:
@@ -56,7 +145,7 @@ t_los <- t_win %>%
 compare <- rbind(t_win,t_los) 
 names(compare) <- c('Year','Votes_PERCEN','Party')
 
-write.csv(compare, file = here("data", "clean", "compare.csv"),row.names=FALSE)
+write.csv(compare, file = here::here("data", "clean", "compare.csv"),row.names=FALSE)
 ```
 
 ## Contribution Data Transformation
@@ -73,10 +162,10 @@ To save file-reading time and to meet analysis and visualization needs, we made 
 Finally, the counts for each unique word were calculated and saved in a separate .csv file.
 
 ```{r, eval=FALSE}
-contributions1 <- readr::read_csv(here("./data/raw/contribution_bind.csv"))
+contributions1 <- readr::read_csv(here::here("./data/raw/contribution_bind.csv"))
 
 # Extract columns
-DataDescription<- readr::read_csv(here("./data/DatasetDescription.csv"))
+DataDescription<- readr::read_csv(here::here("./data/DatasetDescription.csv"))
 columns <- as.vector(DataDescription[13:26,1])
 
 contributions1<- contributions1 %>%
@@ -111,7 +200,7 @@ contributions1<- contributions1 %>%
 #filter individual contributions
 contributions1<- contributions1[contributions1$entity_type == "IND",]
 
-write.csv(contributions1, file = here("data", "clean", "contribution_processed.csv"),row.names=FALSE)
+write.csv(contributions1, file = here::here("data", "clean", "contribution_processed.csv"),row.names=FALSE)
 
 #Aggregations
 contribution_by_date <-contributions1[order(contributions1$contribution_receipt_date, decreasing= F),] %>% 
@@ -119,7 +208,7 @@ contribution_by_date <-contributions1[order(contributions1$contribution_receipt_
   group_by(contribution_receipt_date,committee_name) %>%
     summarise(Total = sum(contribution_receipt_amount))
 
-write.csv(contribution_by_date, file = here("data", "clean", "contribution_by_date.csv"),row.names=FALSE)
+write.csv(contribution_by_date, file = here::here("data", "clean", "contribution_by_date.csv"),row.names=FALSE)
 ```
 
 ```{r, eval = FALSE, echo=FALSE}
@@ -229,7 +318,7 @@ oc_trump_count <- GetOccupation("TRUMP")
 The first step we did is to extract the necessary columns that are mentioned in the previous chapter. Then we noticed that in the `disbursement_purpose_category`, there is a `OTHER` top coding is dominant the dataset, hence it would not provide us lots of interesting information to analyze. Below is the original data distribution for the `disbursement_purpose_category` column:
 ```{r}
 # Import data from csv
-exp_raw <- readr::read_csv(here("./data/raw/schedule_b-2020-11-18T20_02_30.csv"))
+exp_raw <- readr::read_csv(here::here("./data/raw/schedule_b-2020-11-18T20_02_30.csv"))
 
 # Extract specific columns
 exp_processed <- exp_raw %>% 
@@ -321,7 +410,7 @@ ggplot(exp_processed) +
 
 Now, the top coding category is less significant than before. We perform our further analysis based on this cleaned data set.
 ```{r}
-write.csv(exp_processed, file = here("data", "clean", "disbursement_processed.csv"),row.names=FALSE)
+write.csv(exp_processed, file = here::here("data", "clean", "disbursement_processed.csv"),row.names=FALSE)
 ```
 
 
