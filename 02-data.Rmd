@@ -17,6 +17,7 @@ The dataset contains 10 columns and 3159 records covering the voting results of 
 
 
 ```{r, echo=FALSE, results='asis'}
+DataDescription<- readr::read_csv(here::here("./data/DatasetDescription.csv"))
 knitr::kable(DataDescription[1:10, ], caption = "Major columns used",
              row.names = F,font_size = 10)
 ```

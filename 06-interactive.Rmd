@@ -20,20 +20,6 @@ The plot is initialized with a mapping of 2020 US Presidential Election votes wi
 Notes: 
 Since the post-election processing is onging and vote counting is not 100% completed in several states, the vote counts are subject to change. Alaska did not return voting results by county, so the data is reported on the state level. 
 
-
-## Disbursement Data Interactive Plot
-
-The above graph shows the Disbursement Trends of the 15 Presidential Committees that made the most disbursements. Each data point represents the rolling sum of a committee's total disbursement settled at the end of a week. The dot will be colored in grey after the candidate suspended the committee. We manipulated the cleaned datasets to extract the information needed to make this graph. The dataset is uploaded to Github and can be founded [here](https://github.com/NeverGiveUpDXQ/2020-U.S.-Election-Visualizations/tree/wz/data/d3csv).
-
-**Instructions to Use the Graph**
-
-1. Users can drag on the canvas along the y-Axis to zoom into specific ranges.
-2. Users can double click on the canvas to reset the y-Axis.
-3. Users can hover mouse on each dot to see exact disbursement value, date, and candidate information.
-4. Users can click on the list of candidate names to display or hide each trend line. Hold down the Ctrl (windows) / Command (Mac) button to select multiple options.
-
-<iframe src="https://vizhub.com/wz2536/1369d9b47bfe47289f5929619171858b?mode=embed" title="D3 Disbursement analysis" height="450" width="750"></iframe>
-
 ## 1976-2016 Election Result Interactive Plot
 
 [**Instructions to Use the Graph**](https://github.com/TorsteinHonsi/Motion-Highcharts-Plugin/wiki)
@@ -88,6 +74,21 @@ highchart(type = "map") %>%
   )
 
 ```
+
+
+## Disbursement Data Interactive Plot
+
+The above graph shows the Disbursement Trends of the 15 Presidential Committees that made the most disbursements. Each data point represents the rolling sum of a committee's total disbursement settled at the end of a week. The dot will be colored in grey after the candidate suspended the committee. We manipulated the cleaned datasets to extract the information needed to make this graph. The dataset is uploaded to Github and can be founded [here](https://github.com/NeverGiveUpDXQ/2020-U.S.-Election-Visualizations/tree/wz/data/d3csv).
+
+**Instructions to Use the Graph**
+
+1. Users can drag on the canvas along the y-Axis to zoom into specific ranges.
+2. Users can double click on the canvas to reset the y-Axis.
+3. Users can hover mouse on each dot to see exact disbursement value, date, candidate information, and the key events happening on that week.
+4. Users can click on the button on the legend to display or hide each trend line.
+
+<iframe src="https://vizhub.com/wz2536/1369d9b47bfe47289f5929619171858b?mode=embed" title="D3 Disbursement analysis" height="450" width="750"></iframe>
+
 
 References:
 

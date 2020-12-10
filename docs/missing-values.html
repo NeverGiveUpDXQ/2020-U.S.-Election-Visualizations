@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 4 Missing values | 2020 U.S. Election Visulizations</title>
-  <meta name="description" content="Chapter 4 Missing values | 2020 U.S. Election Visulizations" />
+  <title>Chapter 4 Missing values | 2020 U.S. Presidential Election Exploration</title>
+  <meta name="description" content="Chapter 4 Missing values | 2020 U.S. Presidential Election Exploration" />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 4 Missing values | 2020 U.S. Election Visulizations" />
+  <meta property="og:title" content="Chapter 4 Missing values | 2020 U.S. Presidential Election Exploration" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 4 Missing values | 2020 U.S. Election Visulizations" />
+  <meta name="twitter:title" content="Chapter 4 Missing values | 2020 U.S. Presidential Election Exploration" />
   
   
   
@@ -24,7 +24,7 @@
 <meta name="author" content="GROUP 10: Jin Qian, Wenjie Zhu, Yibai Liu" />
 
 
-<meta name="date" content="2020-12-06" />
+<meta name="date" content="2020-12-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -114,7 +114,7 @@
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
 <li class="chapter" data-level="2" data-path="data-sources.html"><a href="data-sources.html"><i class="fa fa-check"></i><b>2</b> Data sources</a><ul>
-<li class="chapter" data-level="2.1" data-path="data-sources.html"><a href="data-sources.html#u.s.-county-level-2020-presidential-election-voting-results"><i class="fa fa-check"></i><b>2.1</b> U.S. County Level 2020 Presidential Election Voting Results</a></li>
+<li class="chapter" data-level="2.1" data-path="data-sources.html"><a href="data-sources.html#u.s.-county-level-voting-results-of-2020-presidential-election"><i class="fa fa-check"></i><b>2.1</b> U.S. County Level Voting Results of 2020 Presidential Election</a></li>
 <li class="chapter" data-level="2.2" data-path="data-sources.html"><a href="data-sources.html#contribution-receipts"><i class="fa fa-check"></i><b>2.2</b> Contribution Receipts</a></li>
 <li class="chapter" data-level="2.3" data-path="data-sources.html"><a href="data-sources.html#the-disbursements-data"><i class="fa fa-check"></i><b>2.3</b> The Disbursements data</a></li>
 </ul></li>
@@ -148,7 +148,12 @@
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="interactive-component.html"><a href="interactive-component.html"><i class="fa fa-check"></i><b>6</b> Interactive component</a><ul>
-<li class="chapter" data-level="6.1" data-path="interactive-component.html"><a href="interactive-component.html#disbursement-data-interactive-plot"><i class="fa fa-check"></i><b>6.1</b> Disbursement Data Interactive Plot</a></li>
+<li class="chapter" data-level="6.1" data-path="interactive-component.html"><a href="interactive-component.html#link-to-the-interactive-map"><i class="fa fa-check"></i><b>6.1</b> Link to the interactive map</a><ul>
+<li class="chapter" data-level="6.1.1" data-path="interactive-component.html"><a href="interactive-component.html#descriptions"><i class="fa fa-check"></i><b>6.1.1</b> Descriptions</a></li>
+<li class="chapter" data-level="6.1.2" data-path="interactive-component.html"><a href="interactive-component.html#instructions-for-using-the-map"><i class="fa fa-check"></i><b>6.1.2</b> Instructions for using the map:</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="interactive-component.html"><a href="interactive-component.html#election-result-interactive-plot"><i class="fa fa-check"></i><b>6.2</b> 1976-2016 Election Result Interactive Plot</a></li>
+<li class="chapter" data-level="6.3" data-path="interactive-component.html"><a href="interactive-component.html#disbursement-data-interactive-plot"><i class="fa fa-check"></i><b>6.3</b> Disbursement Data Interactive Plot</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>7</b> Conclusion</a></li>
 <li class="divider"></li>
@@ -162,7 +167,7 @@
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">2020 U.S. Election Visulizations</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">2020 U.S. Presidential Election Exploration</a>
           </h1>
         </div>
 
@@ -174,9 +179,9 @@
 <h1><span class="header-section-number">Chapter 4</span> Missing values</h1>
 <div id="contribution-receipt-dataset" class="section level2">
 <h2><span class="header-section-number">4.1</span> Contribution Receipt Dataset</h2>
-<p>The election voting results data and the disbursements data do not have missing values, however, the contribution receipts dataset have 275 values missed in some columns.</p>
+<p>The election voting results and the disbursements datasets do not have missing values, however, the contribution receipts dataset have 275 values missed in some columns.</p>
 <table>
-<caption><span id="tab:unnamed-chunk-23">Table 4.1: </span>Missing values</caption>
+<caption><span id="tab:unnamed-chunk-47">Table 4.1: </span>Missing values</caption>
 <thead>
 <tr class="header">
 <th align="left"></th>
@@ -210,7 +215,7 @@
 </tr>
 </tbody>
 </table>
-<p><img src="finalproj_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-47-1.png" width="672" /></p>
 <p>In the processed contributions dataset, missing values only take 0.21% of the entire dataset with 946,704 observations of 14 attributes. As shown in the table and the upset plot above, missing values of the contributions dataset most frequently appear in columns including <code>contributor_employer</code>, <code>contributor_zip</code>, and <code>contributor_occupation</code>.</p>
 <p>The most popular pattern of missingness is only missing the contributor employer information, which 143 entries share this pattern. Besides there are also 35 entries missing both occupation and employer information, and 34 entries missing zip code information.</p>
 

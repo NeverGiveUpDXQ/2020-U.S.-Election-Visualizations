@@ -29,7 +29,7 @@ temp <- history_data %>%
 # add a new column `ratio`
 history_election <- temp%>%
   group_by(year,state)%>%
-  summarise(ratio = candidatevotes/sum(candidatevotes))%>%
+  dplyr::summarise(ratio = candidatevotes/sum(candidatevotes))%>%
   ungroup()
 
 # only choose republican records
@@ -76,7 +76,7 @@ temp1$party[temp1$party=='democratic-farmer-labor'] = 'democrat'
 # add a new column `ratio`
 history_election <- temp1%>%
   group_by(year,state)%>%
-  summarise(ratio = candidatevotes/sum(candidatevotes))%>%
+  dplyr::summarise(ratio = candidatevotes/sum(candidatevotes))%>%
   ungroup()
 
 # only choose republican records
