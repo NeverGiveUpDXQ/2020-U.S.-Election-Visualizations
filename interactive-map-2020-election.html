@@ -361,7 +361,7 @@
                             county = city['county_name'];
                         state = city['state_abbr'];
                         data = [city["per_dem"], -city["per_gop"]];
-                        name = county + ', ' + state + ": Margin = " + fmt(-data[0] - data[1]);
+                        name = county + ', ' + state + ": Margin = " + fmt(Math.abs(data[0] + data[1]));
                     }
                 }
 
