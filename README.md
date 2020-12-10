@@ -6,7 +6,7 @@
 
 
 
-## Link to our project's page
+## Link to the book of our project
 https://nevergiveupdxq.github.io/2020-U.S.-Election-Visualizations/
 
 
