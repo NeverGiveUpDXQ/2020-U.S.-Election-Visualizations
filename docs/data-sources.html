@@ -184,7 +184,7 @@
 <p><strong>Dataset: 2020_US_County_Level_Presidential_Results.csv</strong></p>
 <p>The dataset contains 10 columns and 3159 records covering the voting results of 2020 presidential election by US county. Since the county level data was not downloadable from the website, we exported this dataset from the github repo <a href="https://github.com/tonmcg/US_County_Level_Election_Results_08-20/blob/master/2020_US_County_Level_Presidential_Results.csv">* 2020_US_County_Level_Presidential_Results*</a>, which contains the latest voting data scraped by Tony McGovern from Fox News website.</p>
 <table>
-<caption><span id="tab:unnamed-chunk-24">Table 2.1: </span>Major columns used</caption>
+<caption><span id="tab:unnamed-chunk-4">Table 2.1: </span>Major columns used</caption>
 <colgroup>
 <col width="18%" />
 <col width="81%" />
@@ -248,7 +248,7 @@
 <p>Since contributions made in the election year seem to better reflect people’s support on their favorite candidate, we applied a date filter to select records with the receipt date falling between 01/01/2020 and 11/03/2020. Due to a huge data volume, we limited data exported to only the contributions with an amount over or equal to 200 dollars and raised by the committees of two final presidential candidates of 2020 Election. The filtered dataset was retrieved from <a href="https://www.fec.gov/data/receipts/?recipient_committee_type=P&amp;data_type=processed&amp;committee_id=C00580100&amp;committee_id=C00703975&amp;two_year_transaction_period=2020&amp;min_date=01%2F01%2F2020&amp;max_date=11%2F03%2F2020&amp;is_individual=true&amp;min_amount=200">here</a>.</p>
 <p>The exported dataset has 79 columns and 984,824 records in total. There are 302,731 entries for <strong>Donald J. Trump for President committee</strong> and 682,093 entries for <strong>Biden for President committee</strong>.</p>
 <table>
-<caption><span id="tab:unnamed-chunk-25">Table 2.2: </span>Major columns used</caption>
+<caption><span id="tab:unnamed-chunk-5">Table 2.2: </span>Major columns used</caption>
 <colgroup>
 <col width="33%" />
 <col width="66%" />
@@ -336,7 +336,7 @@
 <p>The Disbursements data from <a href="fec.gov">fec.gov</a> includes the operating expenditure records of House and Senate election committees, Presidential election committees, and PAC and Party committees since 2003.</p>
 <p>For this project, we filtered the data to focus on the spending of presidential election committees of 2020 US Election, which the disbursement dates are from 01/01/2020 to 11/03/2020, consistent with the scope of the contribution receipt dataset. The dataset with filters applied was exported from <a href="https://www.fec.gov/data/disbursements/?spender_committee_type=P&amp;data_type=processed&amp;min_date=01%2F01%2F2020&amp;max_date=11%2F03%2F2020">FEC Official Database</a>. The retrieved dataset has 260,587 records and 78 columns.</p>
 <table>
-<caption><span id="tab:unnamed-chunk-26">Table 2.3: </span>Major columns used</caption>
+<caption><span id="tab:unnamed-chunk-6">Table 2.3: </span>Major columns used</caption>
 <thead>
 <tr class="header">
 <th align="left">Column Name</th>

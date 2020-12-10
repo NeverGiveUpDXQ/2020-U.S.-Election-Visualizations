@@ -1,11 +1,11 @@
-tab:unnamed-chunk-24
-tab:unnamed-chunk-25
-tab:unnamed-chunk-26
-tab:unnamed-chunk-41
-tab:unnamed-chunk-47
-tab:unnamed-chunk-60
-fig:unnamed-chunk-61
-tab:unnamed-chunk-68
+tab:unnamed-chunk-4
+tab:unnamed-chunk-5
+tab:unnamed-chunk-6
+tab:unnamed-chunk-21
+tab:unnamed-chunk-27
+tab:unnamed-chunk-40
+fig:unnamed-chunk-41
+tab:unnamed-chunk-48
 introduction
 data-sources
 u.s.-county-level-voting-results-of-2020-presidential-election
@@ -45,6 +45,4 @@ instructions-for-using-the-map
 election-result-interactive-plot
 disbursement-data-interactive-plot
 conclusion
-tab:unnamed-chunk-14
-fig:unnamed-chunk-15
-tab:unnamed-chunk-22
+tab:unnamed-chunk-16
