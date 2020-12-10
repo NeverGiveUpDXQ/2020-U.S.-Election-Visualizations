@@ -1,5 +1,25 @@
 # Interactive component
 
+## Link to the interactive map
+Click [here](https://bl.ocks.org/ybliu9/raw/8d43f3f08508aa7bc70d6dcc40c57f68/aab27482403a8284aec446178394ded9929742df/) or copy the url: https://bl.ocks.org/ybliu9/raw/8d43f3f08508aa7bc70d6dcc40c57f68/aab27482403a8284aec446178394ded9929742df/
+
+It may take a couple of seconds to load all features.
+
+### Descriptions
+The interactive part of our analysis was built with D3 version 6, which the original code has been uploaded to [](blockbuilder.org). You can also find code [here](https://github.com/NeverGiveUpDXQ/2020-U.S.-Election-Visualizations/blob/main/interactive-map-2020-election.html) in our github repo. 
+This interactive map shows the number of votes obtained by each party/presidential candidate, their shares of votes, and [margins of victory (MOV)](https://ballotpedia.org/Margin-of-victory_(MOV)) on US county level during 2020 Presidential Election. We used the same voting results data retrieved from Fox News as described in previous sections, but formats of certain columns were changed to adapt to the plot. You can find the data [here](https://github.com/NeverGiveUpDXQ/2020-U.S.-Election-Visualizations/blob/main/data/d3csv/2020_map_d3.csv) under the `data` folder of our repo.
+
+### Instructions for using the map:
+
+The plot is initialized with a mapping of 2020 US Presidential Election votes with no default county specified. The color of each county ..
+1. Users can scroll up or down to manually zoom in or out the full map. 
+2. Users can click and drag to move the map.
+3. Users can hover the mouse over a county to see county name, vote counts for each party, and the margin of victory. 
+4. Users can select the county of interest by clicking the county on the map. The map will then automatically zoom in on the selected area. 
+Notes: 
+Alaska did not return voting results by county, so the data will be reported on the state level. 
+
+
 ## Disbursement Data Interactive Plot
 
 The above graph shows the Disbursement Trends of the 15 Presidential Committees that made the most disbursements. Each data point represents the rolling sum of a committee's total disbursement settled at the end of a week. The dot will be colored in grey after the candidate suspended the committee. We manipulated the cleaned datasets to extract the information needed to make this graph. The dataset is uploaded to Github and can be founded [here](https://github.com/NeverGiveUpDXQ/2020-U.S.-Election-Visualizations/tree/wz/data/d3csv).
@@ -68,7 +88,7 @@ highchart(type = "map") %>%
 
 ```
 
-Reference:
+References:
 
 1. D3.js Graph Gallery: Line chart with zoom in d3.js (https://www.d3-graph-gallery.com/graph/line_brushZoom.html)
 2. D3.js Graph Gallery: Connected scatter plot with interactive legend (https://www.d3-graph-gallery.com/graph/connectedscatter_legend.html)
