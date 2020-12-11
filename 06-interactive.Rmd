@@ -20,60 +20,6 @@ The plot is initialized with a mapping of 2020 US Presidential Election votes wi
 Notes: 
 Since the post-election processing is onging and vote counting is not 100% completed in several states, the vote counts are subject to change. Alaska did not return voting results by county, so the data is reported on the state level. 
 
-## 1976-2016 Election Result Interactive Plot
-
-[**Instructions to Use the Graph**](https://github.com/TorsteinHonsi/Motion-Highcharts-Plugin/wiki)
-
-1. play/pause clicking the play/pause button
-2. play/pause by hitting space
-3. navigating the motion slider by dragging the slider thumb
-4. navigating the motion slider by hitting the left and right arrow keys
-
-```{r}
-# help file: https://api.highcharts.com/highcharts/labels.items
-library(highcharter)
-library(tidyverse)
-library(jsonlite)
-
-history_election <- readr::read_csv(here::here("./data/clean/1976-2016election.csv"))
-
-history_election_ds = history_election %>%
-    group_by(state) %>%
-    do(item = list(
-        state = first(.$state),
-        sequence = .$ratio,
-        value = first(.$ratio)
-    ))%>%
-    .$item
-
-highchart(type = "map") %>% 
-  hc_add_series(data = history_election_ds,
-                name = "Popular Votes for Rep.",
-                mapData = usgeojson,
-                joinBy = c("name","state"),
-                borderWidth = 0.05,
-                dataLabels = list(enabled = TRUE, format = "{point.properties.postalcode}")
-                ) %>% 
-  hc_colorAxis(#stops = color_stops(),
-               minColor = 'white',
-               maxColor = 'darkred',
-               min = 0,
-               max = 1 ) %>%  
-  hc_title(text = "Share of Popular Votes for the Republican from 1976 to 2016") %>% 
-  hc_legend(layout = "vertical", 
-            align = "right") %>% 
-  hc_add_theme(hc_theme_smpl()) %>%
-  hc_motion(
-    enabled = TRUE,
-    axisLabel = "year",
-    labels = as.character(sort(unique(history_election$year))),
-    #updateIterval = 50, #Specifies or returns the time interval (in milliseconds) between screen updates
-    magnet = list(
-      round = "floor" 
-    )
-  )
-
-```
 
 
 ## Disbursement Data Interactive Plot
@@ -94,6 +40,5 @@ References:
 
 1. D3.js Graph Gallery: Line chart with zoom in d3.js (https://www.d3-graph-gallery.com/graph/line_brushZoom.html)
 2. D3.js Graph Gallery: Connected scatter plot with interactive legend (https://www.d3-graph-gallery.com/graph/connectedscatter_legend.html)
-3. RPubs: William Green(https://rpubs.com/wbgreen405/249838)
-4. Tony McGovern: US County Level Election Results (https://github.com/tonmcg/US_County_Level_Election_Results_08-20/blob/master/index.html)
-5. Observable: d3-6.0 Migration Guide(https://observablehq.com/@d3/d3v6-migration-guide#events)
+3. Tony McGovern: US County Level Election Results (https://github.com/tonmcg/US_County_Level_Election_Results_08-20/blob/master/index.html)
+4. Observable: d3-6.0 Migration Guide(https://observablehq.com/@d3/d3v6-migration-guide#events)

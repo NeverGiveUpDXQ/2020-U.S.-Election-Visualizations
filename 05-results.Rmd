@@ -66,45 +66,73 @@ president2020 %>%
 
 From this plot, it's easy to see that Biden won most of the votes in the eastern and western regions of the United States, while Trump's votes are mainly from the central region. In terms of the number of winning states, they are not much different, but we need to consider that the number of electoral votes is different.
 
-### County-level
-Thanks again for the great job by [*Tony McGovern*](https://github.com/tonmcg/US_County_Level_Election_Results_08-20/blob/master/2020_US_County_Level_Presidential_Results.csv)
-```{r, message=FALSE}
-County2020 <- read_csv('https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-20/master/2020_US_County_Level_Presidential_Results.csv')
+Also, in state-level, if we compare election results between 2016 and 2020, we could find:
+- Joe Biden flipped 5 states from Donald Trump. i.e **Michigan**(0.23%R -> 2.78%D), **Pennsylvania**(0.72%R -> 1.16%D), **Wisconsin**(0.77%R -> 0.63D), **Arizona**(3.55%R -> 0.31%D), **Georgia**(5.13%R -> 0.24%D).
 
-county_full <- right_join(county_map,County2020, by = c('id' = 'county_fips')) %>% as_tibble()
+- Joe Biden enlarge the margin of **Minnesoda**(1.52%D -> 7.11%D) and **New Hampshire**(0.37%D -> 7.35%D) that Hillary Clinton won in 2016.
 
-# *per_dem* and *per_gop* refer to the percentage of votes going to Democrats and Republicans respectively.
-# *diff* represents the absolute difference between Republican votes - Democrat votes.
-# *per_point_diff* represents this difference as a percentage of total votes.
+```{r}
 
-b1 <- c(min(county_full$diff))
-b2 <- fivenum(county_full$diff[county_full$diff<0])[3]
-b3 <- 0
-b4 <- fivenum(county_full$diff[county_full$diff>0])[3]
-b5 <- c(max(county_full$diff))
-
-diff_l <- cut(county_full$diff, breaks = c(b1,b2,b3,b4,b5))
-
-ggplot(county_full,
-       aes(x = long, y = lat, fill = diff_l, group = group))+
-  geom_polygon(color = 'white', size = 0.5)+
-  coord_equal()+
-   scale_fill_manual(values=c("#1aa6b7","#b2deec",'#ce6262','#af2d2d'),labels = c('Dem>>Rep','Dem>Rep','Dem<Rep','Dem<<Rep'))+
-  labs(fill = "Absolute Difference")+
-  theme_map()+
-  guides(fill = guide_legend(nrow = 1))+
-  labs(title = "2020 US Election Results: Absolute Difference",caption = "source: tonmcg & socviz")+
-  theme_bw() +
-  theme(plot.title = element_text(face = "bold"),
-        plot.subtitle = element_text(face = "bold", color = "grey35"),
-        plot.caption = element_text(color = "grey68"),
-        axis.text.x = element_text(angle = 45, hjust = 1),
-        legend.position="bottom")
 ```
 
-If we simply compare the area, we may conclude that Trump will win this election. However, don't forget electoral votes are related to population. 
 
-### Time-level
+### Time-level: 1976-2016 Election Result Interactive Plot
+
+[**Instructions to Use the Graph**](https://github.com/TorsteinHonsi/Motion-Highcharts-Plugin/wiki)
+
+1. play/pause clicking the play/pause button
+2. play/pause by hitting space
+3. navigating the motion slider by dragging the slider thumb
+4. navigating the motion slider by hitting the left and right arrow keys
+
+```{r}
+# help file: https://api.highcharts.com/highcharts/labels.items
+# reference : RPubs: William Green(https://rpubs.com/wbgreen405/249838)
+
+library(highcharter)
+library(tidyverse)
+library(jsonlite)
+
+history_election <- readr::read_csv(here::here("./data/clean/1976-2016election.csv"))
+
+history_election_ds = history_election %>%
+    group_by(state) %>%
+    do(item = list(
+        state = first(.$state),
+        sequence = .$ratio,
+        value = first(.$ratio)
+    ))%>%
+    .$item
+
+highchart(type = "map") %>% 
+  hc_add_series(data = history_election_ds,
+                name = "Popular Votes for Rep.",
+                mapData = usgeojson,
+                joinBy = c("name","state"),
+                borderWidth = 0.05,
+                dataLabels = list(enabled = TRUE, format = "{point.properties.postalcode}")
+                ) %>% 
+  hc_colorAxis(#stops = color_stops(),
+               minColor = 'white',
+               maxColor = 'darkred',
+               min = 0,
+               max = 1 ) %>%  
+  hc_title(text = "Share of Popular Votes for the Republican from 1976 to 2016") %>% 
+  hc_legend(layout = "vertical", 
+            align = "right") %>% 
+  hc_add_theme(hc_theme_smpl()) %>%
+  hc_motion(
+    enabled = TRUE,
+    axisLabel = "year",
+    labels = as.character(sort(unique(history_election$year))),
+    #updateIterval = 50, #Specifies or returns the time interval (in milliseconds) between screen updates
+    magnet = list(
+      round = "floor" 
+    )
+  )
+
+```
+
 
 In this part, I will compare popular vote and electoral college vote from 1824 to 2020 (Note that **Data for 2020 are provisonal**, collected in 5 Dec). *It's possible the candidate with the most votes from the public won't be the winner. This is because the president is not chosen directly by the voters, but what's known as the electoral college. (This explained by [BBC](https://www.bbc.com/news/world-us-canada-53558176) )*
 
