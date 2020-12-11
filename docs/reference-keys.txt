@@ -43,5 +43,3 @@ descriptions
 instructions-for-using-the-map
 conclusion
 tab:unnamed-chunk-14
-fig:unnamed-chunk-15
-tab:unnamed-chunk-22

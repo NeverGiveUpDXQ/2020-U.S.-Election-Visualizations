@@ -760,6 +760,7 @@ state_total <- exp_df %>%
 state_total$recipient_state <- state.name[match(state_total$recipient_state, state.abb)]
 state_total <- state_total[complete.cases(state_total), ]
 
+colors <- c("white", "orange", "red")
 highchart(type="map") %>%
 hc_title(text = "Total Disbursements By All Presidential Candidates 2020 By State") %>%
   hc_subtitle(text = "Double click the state area to zoom in") %>%
@@ -776,7 +777,7 @@ hc_title(text = "Total Disbursements By All Presidential Candidates 2020 By Stat
       valueSuffix = " USD"
      )
    ) %>%
-   hc_colorAxis(minColor = "white", maxColor = "red", min=1e6, type="logarithmic", endOnTick=FALSE) %>%
+   hc_colorAxis(minColor = "white", maxColor = "red", min=1e6, type="logarithmic", endOnTick=FALSE, stops = color_stops(n=length(colors), colors = colors)) %>%
    hc_legend(valueDecimals = 0, valueSuffix = "%") %>%
    hc_mapNavigation(enabled = TRUE)
 ```
@@ -818,7 +819,7 @@ hc_title(text = "Total Disbursements By 2020 Joe Biden Committee By State") %>%
       valueSuffix = " USD"
      )
    ) %>%
-   hc_colorAxis(min=1e3, max=max(exp_flow_T$value), minColor = "white", maxColor = "red",type="logarithmic", endOnTick=FALSE) %>%
+   hc_colorAxis(min=1e3, max=max(exp_flow_T$value), minColor = "white", maxColor = "red",type="logarithmic", stops = color_stops(n=length(colors), colors = colors), endOnTick=FALSE) %>%
    hc_legend(valueDecimals = 0, valueSuffix = "%") %>%
    hc_mapNavigation(enabled = TRUE)
 ```
@@ -842,7 +843,7 @@ hc_title(text = "Total Disbursements By 2020 Donald Trump Committee By State") %
       valueSuffix = " USD"
      )
    ) %>%
-   hc_colorAxis(min=1e3, max=max(exp_flow_T$value), minColor = "white", maxColor = "red",type="logarithmic", endOnTick=FALSE) %>%
+   hc_colorAxis(min=1e3, max=max(exp_flow_T$value), minColor = "white", maxColor = "red",type="logarithmic",stops = color_stops(n=length(colors), colors = colors), endOnTick=FALSE) %>%
    hc_legend(valueDecimals = 0, valueSuffix = "%") %>%
    hc_mapNavigation(enabled = TRUE)
 ```
