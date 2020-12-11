@@ -675,7 +675,7 @@ ggplot(rbind(biden_Trend, trump_Trend),
         legend.position="bottom")
 ```
 
-From the above graph, we can see both of the committees are spending more and more as election day approaches.Th ere are some spending trend fluctuation in early 2020, but such fluctuation evens out as time goes on. Trump's committee started earlier than Biden's committee to invest money in activities regards this election. We can see this in the part of trend in January and the mass investment starting in April. Trump's committee spending trend has three peaks in the graph, which are in January, late May to early July, and late September to early October. On the other hand, Biden's committee started their disbursement later but the total disbursement grows more rapidly. There are two obvious peak in Biden's committee's spending trend line, which are in May and late September to early October.
+The above graph shows a percentage of total disbursement made per week by the two presidential committee in 2020. From the above graph, we can see both of the committees are spending more and more as election day approaches.There are some spending trend fluctuation in early 2020, but such fluctuation evens out as time goes on.Trump's committee (represented by the red trend line in the graph) started earlier than Biden's committee to invest money in activities regards this election. We can see this in the part of trend in January and the mass investment starting in April. Trump's committee spending trend has three peaks in the graph, which are in early May, late June to early July, and early September to early October. Those corresponds to the cost of launching the Trump election game app, release of digital ads for praising his policy on COVID and attacking Biden's statement correspondingly (information source: [ballotpedia.org](https://ballotpedia.org/Joe_Biden_presidential_campaign,_2020#Ballotpedia.27s_Daily_Presidential_News_Briefing)) On the other hand, Biden's committee (represented by the blue trend line in the graph) started their disbursement later but the total disbursement grows more rapidly. The first peak in the blue trend line appears in late February to early March. According to the presidential committee activity timeline provided by ballotpedia.org, that corresponds to Biden's first largest $12 million ad buy. There is another peak in Biden's committee spending trend line which is in late September to early October. Comparing to Trump's committee trend line that looks evenly distributed across that period of time, Biden's committee became more active as the election day approaches.
 
 ### Disbursement Recipient Share 
 ```{r, message=FALSE, warning=FALSE, fig.width=15, fig.height=10}
@@ -774,7 +774,7 @@ hc_title(text = "Total Disbursements By 2020 Joe Biden Committee By State") %>%
       valueSuffix = " USD"
      )
    ) %>%
-   hc_colorAxis(min=0, max=max(exp_flow_T$value), minColor = "white", maxColor = "red") %>%
+   hc_colorAxis(min=1, max=max(exp_flow_T$value), minColor = "white", maxColor = "red",type="logarithmic", endOnTick=FALSE) %>%
    hc_legend(valueDecimals = 0, valueSuffix = "%") %>%
    hc_mapNavigation(enabled = TRUE)
 ```
@@ -798,7 +798,7 @@ hc_title(text = "Total Disbursements By 2020 Donald Trump Committee By State") %
       valueSuffix = " USD"
      )
    ) %>%
-   hc_colorAxis(min=0, max=max(exp_flow_T$value), minColor = "white", maxColor = "red") %>%
+   hc_colorAxis(min=1, max=max(exp_flow_T$value), minColor = "white", maxColor = "red",type="logarithmic", endOnTick=FALSE) %>%
    hc_legend(valueDecimals = 0, valueSuffix = "%") %>%
    hc_mapNavigation(enabled = TRUE)
 ```

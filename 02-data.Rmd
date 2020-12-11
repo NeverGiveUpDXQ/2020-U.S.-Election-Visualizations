@@ -31,7 +31,7 @@ The election results data was retrieved on Dec. 5, 2020, which the results do no
 
 **Dataset: contribution_bind.csv**
 
-The contribution receipts data on [fec.gov](fec.gov) includes all receipts filed by election candidates and committees with records of contributions made by individuals, organizations, and committees. 
+The contribution receipts data on [fec.gov](https://www.fec.gov/) includes all receipts filed by election candidates and committees with records of contributions made by individuals, organizations, and committees. 
  
 Since contributions made in the election year seem to better reflect people's support on their favorite candidate, we applied a date filter to select records with the receipt date falling between 01/01/2020 and 11/03/2020. Due to a huge data volume, we limited data exported to only the contributions with an amount over or equal to 200 dollars and raised by the committees of two final presidential candidates of 2020 Election. The filtered dataset was retrieved from [here](https://www.fec.gov/data/receipts/?recipient_committee_type=P&data_type=processed&committee_id=C00580100&committee_id=C00703975&two_year_transaction_period=2020&min_date=01%2F01%2F2020&max_date=11%2F03%2F2020&is_individual=true&min_amount=200).
 
@@ -56,7 +56,7 @@ knitr::kable(DataDescription[13:27, ], caption = "Major columns used",
 
 **Dataset: schedule_b-2020-11-08T16_10_30.csv**
 
-The Disbursements data from [fec.gov](fec.gov) includes the operating expenditure records of House and Senate election committees, Presidential election committees, and PAC and Party committees since 2003. 
+The Disbursements data from [fec.gov](https://www.fec.gov/) includes the operating expenditure records of House and Senate election committees, Presidential election committees, and PAC and Party committees since 2003. 
 
 For this project, we filtered the data to focus on the spending of presidential election committees of 2020 US Election, which the disbursement dates are from 01/01/2020 to 11/03/2020, consistent with the scope of the contribution receipt dataset. The dataset with filters applied was exported from [FEC Official Database](https://www.fec.gov/data/disbursements/?spender_committee_type=P&data_type=processed&min_date=01%2F01%2F2020&max_date=11%2F03%2F2020). The retrieved dataset has 260,587 records and 78 columns.
 
