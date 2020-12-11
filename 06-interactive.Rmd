@@ -23,7 +23,5 @@ Since the post-election processing is onging and vote counting is not 100% compl
 
 References:
 
-1. D3.js Graph Gallery: Line chart with zoom in d3.js (https://www.d3-graph-gallery.com/graph/line_brushZoom.html)
-2. D3.js Graph Gallery: Connected scatter plot with interactive legend (https://www.d3-graph-gallery.com/graph/connectedscatter_legend.html)
-3. Tony McGovern: US County Level Election Results (https://github.com/tonmcg/US_County_Level_Election_Results_08-20/blob/master/index.html)
-4. Observable: d3-6.0 Migration Guide(https://observablehq.com/@d3/d3v6-migration-guide#events)
+1. Tony McGovern: US County Level Election Results (https://github.com/tonmcg/US_County_Level_Election_Results_08-20/blob/master/index.html)
+2. Observable: d3-6.0 Migration Guide(https://observablehq.com/@d3/d3v6-migration-guide#events)
