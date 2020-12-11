@@ -110,10 +110,10 @@ highchart() %>%
 
 From this plot, it's easy to see that Biden won most of the votes in the eastern and western regions of the United States, while Trump's votes are mainly from the central region. In terms of the number of winning states, they are not much different, but we need to consider that the number of electoral votes is different.
 
-Also, in state-level, if we compare election results between 2016 and 2020, we could find:
+Also, we compared election results between 2016 and 2020 on the state level, and we found:
 - Joe Biden flipped 5 states from Donald Trump. i.e **Michigan**(0.23%R -> 2.78%D), **Pennsylvania**(0.72%R -> 1.16%D), **Wisconsin**(0.77%R -> 0.63D), **Arizona**(3.55%R -> 0.31%D), **Georgia**(5.13%R -> 0.24%D).
 
-- Joe Biden enlarge the margin of **Minnesoda**(1.52%D -> 7.11%D) and **New Hampshire**(0.37%D -> 7.35%D) that Hillary Clinton won in 2016.
+- Joe Biden enlarged the margin of **Minnesoda**(1.52%D -> 7.11%D) and **New Hampshire**(0.37%D -> 7.35%D) that Hillary Clinton won in 2016.
 
 
 
@@ -215,7 +215,7 @@ From this plot, we can see:
 
 - Finally, we can regard Roosevelt as an outstanding candidate since his electoral vote and popular vote are very high.
 
-## Contribution Receipts Data Analysis
+## Contribution Receipts Data
 ### Contributions Overview
 ```{r, echo=FALSE}
 # Read the datasets
@@ -258,7 +258,25 @@ statepop1 <- statepop1 %>%
 ```
 
 #### Total Contributions by State
+As an overview, we plotted the total amounts of contributions made by each state this year that were received by all presidential candidates of 2020 US election. 
+
 ```{r, echo=FALSE}
+# Define highcharter theme
+thm <- hc_theme(
+  chart = list(
+        backgroundColor = "white", 
+        style = list(fontFamily = "Montserrat")),
+  title = list(style = list(color ='#333333',
+                            fontWeight = "bold",
+                            fontFamily = "Arial")),
+  subtitle = list(style = list(color ='#666666',
+                               fontSize = "14px",
+                               fontFamily = "Arial")),
+  legend = list(itemStyle = list(fontFamily = "Arial",color ='black'), 
+                itemHoverStyle = list(color ='gray')))
+
+
+
 # All states
 data("usgeojson", package = "highcharter")
 highchart() %>%
@@ -279,10 +297,12 @@ hc_title(text = "Total Contributions to All Presidential Candidates 2020 By Stat
    ) %>%
    hc_colorAxis(minColor = "white", maxColor = "orange") %>%
    hc_legend(valueDecimals = 0, valueSuffix = "%") %>%
-   hc_mapNavigation(enabled = TRUE) 
+   hc_mapNavigation(enabled = TRUE) %>%
+   hc_add_theme(thm)
 ```
 
-As shown in the above map, California has contributed the most to all presidential candidates in 2020 US Election, which exceeded 260 million US dollars. New York, Texas, and Florida also made significant contributions. However, some states like Wyoming and West Virginia only contributed less than 30 million US dollars.
+As shown in the map above, California has contributed the most to all presidential candidates in 2020 US Election, which exceeded 260 million US dollars. Contributions from New York, Texas, and Florida were also significant. On the other hand, North Dakota, South Dakota, and Wyoming have made the least contributions to all presidential candidates, probably because of their small populations.
+
 
 ```{r, echo=FALSE}
 # Biden
@@ -305,6 +325,7 @@ p2<- statepop1 %>% arrange(desc(TRUMP_RECEIPT_AMOUNT)) %>% head(5) %>%
   ggplot(aes(x=reorder(abbr, TRUMP_RECEIPT_AMOUNT, median), y=TRUMP_RECEIPT_AMOUNT)) +
     geom_bar(stat="identity", fill="firebrick2") +
     geom_text(aes(label=TRUMP_RECEIPT_AMOUNT), hjust=1.2, color="white",size=3.5) +
+    scale_y_continuous(limits = c(0, 130)) +
     coord_flip() +
     # formatting
     ggtitle("Donald Trump") +
@@ -319,7 +340,7 @@ grid.arrange(p1, p2, ncol=2, nrow=1,
 
 ```
 
-The bar chart above focuses on the total amounts raised by the final presidential candidates Joe Biden and Donald Trump, and it displays top 5 states that contributed the most to each candidate. Joe Biden received  solid support from California and New York which contributed 127M dollars and 63M dollars respectively, more than twice as contributed to Donald Trump. Donald Trump raised significant amounts from Texas and Florida, and these are consistent with the final voting results.
+The bar chart above focuses on the total amounts raised from each state by the final presidential candidates Joe Biden and Donald Trump, and it displays top 5 states that contributed the most to each candidate. Joe Biden received solid support from California and New York which contributed 127M dollars and 63M dollars respectively, more than twice as contributed to Donald Trump. Donald Trump raised significant amounts from Texas and Florida equal to 52M and 48M dollars respectively, much more than Biden. This is consistent with the voting results as Biden has won in both states with a margin larger than 20%. We found that these are consistent with the final voting results as Biden has won California and New York with a margin larger than 20% whereas Trump won Florida and Texas, two of the battleground states.
 
 #### Contributions Per Registered Voter by State
 ```{r, echo=FALSE}
@@ -349,13 +370,31 @@ p4<- statepop1 %>% arrange(desc(TRUMP_CONTRIB_PP)) %>% head(5) %>%
     theme(plot.title = element_text(size = 11, face = "bold", color = "grey35"),
         plot.caption = element_text(color = "grey68"))
 
+p5<- statepop1 %>% arrange(desc(TRUMP_CONTRIB_PP)) %>% head(5) %>% 
+  ggplot(aes(x=reorder(abbr, TRUMP_CONTRIB_PP, median), y=TRUMP_CONTRIB_PP)) +
+    geom_bar(stat="identity", fill="firebrick2") +
+    geom_text(aes(label=TRUMP_CONTRIB_PP), hjust=1, color="white", size=3.5) +
+    scale_y_continuous(limits = c(0, 37)) +
+    coord_flip() +
+    # formatting
+    ggtitle("Donald Trump") +
+    labs(y = "Contribution Amount (US Dollar)", x = " ",caption = "Source: fec.gov") +
+    theme_minimal() +
+    theme(plot.title = element_text(size = 11, face = "bold", color = "grey35"),
+        plot.caption = element_text(color = "grey68"))
+
+
 # Plot in a grid
 grid.arrange(p3, p4, ncol=2, nrow=1,
      top = textGrob("Contributions to Presidential Candidates of 2020 US Election\nContributions Per Registered Voter Ranked by State",gp=gpar(fontsize=13, fontface = "bold")))
 
+grid.arrange(p3, p5, ncol=2, nrow=1,
+     top = textGrob("Contributions to Presidential Candidates of 2020 US Election\nContributions Per Registered Voter Ranked by State",gp=gpar(fontsize=13, fontface = "bold")))
+
 ```
 
-If we instead take into account the registered voters in each state and calculate contributions per registered voter, we found that District of Columbia has the highest average contribution to Biden, which is 37 dollars per registered voter, way more than other states. This is likely due to a smaller population thereby fewer registered voters in DC. In addition, Wyoming surprisingly has contributed the most to Trump on an average level, and a possible reason is that the percentage of registered voters is the lowest in Wyoming, and only 47.4% of Wyoming's population registered to vote.
+If we instead take into account the registered voters in each state and calculate contributions per registered voter, we found that District of Columbia has the highest average contribution to Biden, which is 37 dollars per registered voter, way more than any other state. Remarkably, in the election Biden won 93% of total votes in DC. In addition, Wyoming surprisingly has contributed the most to Trump on an average level. Wyoming has the lowest percentage of registered voters among all states that only 47.4% of its population registered to vote, and its support for Trump was reflected on the voting results as Trump won the state with a margin over 40%.
+In fact, Biden has won all five states (DC, MA, DE, CA, and MD) listed on the left of the plot above which has made the most contributions per registered voter, and his margins of victory in these states were . Trump has won four of the five states (WY, FL, AZ, and TX) listed on the right of the plot above except for Nevada. Trump lost Nevada by 2.4% vote share.
 
 
 ### Contributions Distribution and Details
@@ -429,7 +468,7 @@ ts <- contribution_by_date[order(contribution_by_date$contribution_receipt_date,
                                  decreasing= F),]
 
 # Interactive time series plot with highcharter
-ts %>%
+ts1 <- ts %>%
   hchart("area",hcaes(x = contribution_receipt_date, y = Total, 
                       group = committee_name)) %>%
   hc_chart(zoomType = "x") %>%
@@ -440,19 +479,49 @@ ts %>%
   hc_yAxis(title = list(text = "Contribution Amount (US Dollars)"),
            tickInterval = 2000000,
            max = 14000000) %>%
-  hc_title(text = "<b>Individual Contributions to Presidential Candidates 2020</b>") %>%
-  hc_subtitle(text = "Click and drag in the plot area to zoom in") %>%
+  hc_title(text = "<b>Individual Contributions to US Presidential Candidates 2020</b>") %>%
+  hc_subtitle(text = "Click and drag in the plot area to zoom in on a time span") %>%
   hc_plotOptions(area = list(lineWidth = 0.5))
+
+ts1 %>%
+  hc_add_annotation(
+    labelOptions = list(
+      backgroundColor = 'rgba(0,0,0,0.4)',
+      verticalAlign = 'top',
+      y = 15
+    ),
+    labels = list(
+      list(point = list(xAxis = 0, yAxis = 0,
+          x = datetime_to_timestamp(as.Date("2020/02/29")),
+          y = 2200000), text = "Feb.29 - Biden Won South Carolina Primary"),
+      list(point = list(xAxis = 0, yAxis = 0,
+          x = datetime_to_timestamp(as.Date("2020/03/04")),
+          y = 3700000), text = "Mar.4 - Michael Bloomberg dropped out and endorsed Biden"),
+      list(point = list(xAxis = 0, yAxis = 0,
+          x = datetime_to_timestamp(as.Date("2020/08/11")),
+          y = 6900000), text = "Aug.11 - Biden names Kamala Harris as VP nominee"),
+      list(point = list(xAxis = 0, yAxis = 0,
+          x = datetime_to_timestamp(as.Date("2020/08/20")),
+          y = 13500000), text = "Aug.20 - Biden Accepted Democratic Nomination"),
+      list(point = list(xAxis = 0, yAxis = 0,
+          x = datetime_to_timestamp(as.Date("2020/08/27")),
+          y = 4860000), text = "Aug.27 - Trump Accepted Republican Nomination"),
+      list(point = list(xAxis = 0, yAxis = 0,
+          x = datetime_to_timestamp(as.Date("2020/09/29")),
+          y = 11500000), text = "Sep.29 - First Presidential Debate")
+      )
+    )
 ```
 
-We also grouped data points by receipt date and calculated the daily raisings of each candidate from January 1, 2020 to October 15, 2020, which are shown the plot above. It is clear that Joe Biden generally raised more funds than Donald Trump. There was a small peak in raisings for Biden in the early March that paralleled Biden's win in the South Carolina Democratic presidential primary, which we learned from the [news](https://edition.cnn.com/2020/03/01/politics/joe-biden-south-carolina-fundraising-february-cnntv/index.html) of the time. 
-More notably, Biden achieved success in fundraising from mid-August, and Biden's daily raisings hit the 13.6M dollars on August 20, 2020 by the time he [officially accepted the Democratic nomination](https://www.nytimes.com/2020/08/20/us/politics/Joe-Biden-accepts-democratic-nomination.html).
-Although Donald Trump also received more funds in the second half year, the contributions to Trump did not significantly increase as the election season approached. 
+We also grouped data points by receipt date and calculated the daily raisings of each candidate from January 1, 2020 to October 15, 2020, which are shown as the plot above. It is clear that Joe Biden generally raised more funds than Donald Trump. We marked on the plot the major events when there were peaks in raisings of both candidates. A small peak of Biden's raisings in the early March was prominent, and this paralleled [Biden's win in the South Carolina Democratic presidential primary](https://edition.cnn.com/2020/03/01/politics/joe-biden-south-carolina-fundraising-february-cnntv/index.html) along with [Michael Bloomberg's quit](https://www.latimes.com/politics/story/2020-03-04/michael-bloomberg-quits-presidential-race), which we learned from the news of the time.
+More notably, Biden achieved greater success in fundraising from mid-August, and Biden's daily raisings hit the 13.6M dollars on August 20, 2020 by the time he [officially accepted the Democratic nomination](https://www.nytimes.com/2020/08/20/us/politics/Joe-Biden-accepts-democratic-nomination.html). On September 30, the next day of the first Presidential Debate, Joe Biden secured another huge funding of 12.2M dollars, which to some extent reflected people's choice. 
+Although Donald Trump also received more funds in the second half year, the contributions to Trump did not significantly increase as the election season approached. Trump's peak in daily raisings of 4.9M dollars was reached on August 27, 2020 when he [officially accepted the Republican nomination](https://www.usatoday.com/story/news/politics/elections/2020/08/27/rnc-donald-trump-republican-nomination-white-house-biden/5652490002/), but the amount was much less than that raised by Biden.   
 
 
 ### Contributor Occupations
 
-To obtain more information about individual contributors, we extracted keywords in each contributor's occupation and divide by candidate, so that we were able to draw word clouds for each candidate.
+To obtain a better understanding about individual contributors, we extracted keywords from contributors occupations and separated them by candidate, so that we were able to draw word a cloud for each candidate.
+
 
 ```{r,echo=FALSE}
 # To save time, read the saved .csv datasets
@@ -468,7 +537,7 @@ df_biden <- oc_biden_count
 df_biden$freq <- (df_biden$freq)^(1/3) #scale the frequencies
 ```
 
-#### **50 most popular occupations of contributors who supported Joe Biden vs. Donald Trump: **
+#### **50 most popular contributor occupations: Joe Biden vs. Donald Trump: **
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, results="asis"}
 w1<- wordcloud2(df_biden, size = 0.4,
          maxRotation = 0, minRotation = 0,
@@ -493,8 +562,8 @@ w2<- wordcloud2(df_trump, size = 0.4,
 
 ![](https://raw.githubusercontent.com/NeverGiveUpDXQ/2020-U.S.-Election-Visualizations/main/_bookdown_files/finalproj_files/figure-html/w1.PNG){width=45%} ![](https://raw.githubusercontent.com/NeverGiveUpDXQ/2020-U.S.-Election-Visualizations/main/_bookdown_files/finalproj_files/figure-html/w2.PNG){width=45%}
 
-To display words properly, the word size of the word cloud was scaled by extracting a cube root of the word frequency count. The blue word cloud for Joe Biden clearly shows that a great proportion of contributors are not employed, and attorney, physician, engineer, and manager are also popular occupations. 
-Compared to the blue word cloud, the red one for Trump displays the word Retired most prominently, which implies that contributors who supported Trump are dominantly retired. Besides, entrepreneur, owner, and manager are popular occupations. 
+To display words properly, the size of words in word clouds was scaled by extracting a cube root of the word frequency count. The blue word cloud on the left for Joe Biden clearly showed that a great proportion of contributors were **not employed**, and **attorney**, **physician**, **engineer**, and **manager** were also popular occupations. 
+In contrast, the red one on the left for Trump displayed the word **retired** most prominently, which implied that contributors who have supported Trump were dominantly retired. Besides, **entrepreneur**, **owner**, and **manager** were popular occupations. 
 We chose word clouds to provide an overview of all popular job titles, but since it is harder to judge the size of texts, we generated a bar chart below that enables better comparison between the actual frequency counts.
 
 ```{r, fig.height=5, echo=FALSE}
@@ -535,7 +604,7 @@ grid.arrange(g1, g2, ncol=2, nrow=1,
 
 ```
 
-Comparing difference between candidates, more than half of 10 top occupations of Joe Biden's contributors are legal or technical professional positions, whereas more than half of 10 top occupations of Donald Trump's contributors are jobs in business. 
+Comparing the difference between two candidates, more than half of 10 top occupations of Joe Biden's contributors are legal or technical professional positions, whereas more than half of 10 top occupations of Donald Trump's contributors are jobs in business. 
 
 ## Disbursement Data Analysis
 ### Disbursement Distribution
