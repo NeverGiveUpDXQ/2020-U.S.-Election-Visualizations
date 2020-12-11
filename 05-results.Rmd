@@ -553,27 +553,27 @@ knitr::kable(disbursement_summary, caption = "Disbursement Summary by Candidate"
 Every expenditure made by Trump Committee are evenly spread out from 0 to less than a million. The distribution is a little left skewed. There are more outliers clustering at the higher expenditure level than lower expenditure level. On the other hand, Biden Committee has their expenditure distribution centered symmetrically around their median. The range of Biden Committee's single expenditure is wider than Trump Committee. There are more outliers clustering at the higher expenditure level, which means Biden Committee's made more large transactions than Trump Committee. 
 
 
-### Top 15 Presidential Campaign Made the Most Disbursement
+### Top 5 Presidential Campaign Made the Most Disbursement
 ```{r, message=FALSE, warning=FALSE}
 # Calculate the total disbursement amount by committee (in million)
-# Get the top 15 committee
+# Get the top 5 committee
 com_exp <- exp_df %>%
   dplyr::group_by(committee_name) %>% 
   dplyr::summarise(total = round((sum(disbursement_amount) / 1e6), 2)) %>%
   arrange(desc(total)) %>% 
-  slice(1:15) %>%
+  slice(1:5) %>%
   ungroup()
 
 # Find the corresponding Political Party for the committee
-com_exp$PoliticalParty <- c('D', 'D', 'R', 'D', 'D','D', 'D', 'D', 'D', 'I','D', 'R', 'I', 'L', 'D')
+com_exp$PoliticalParty <- c('D', 'D', 'R', 'D', 'D')
 
 # Factorize the Political Party Column
 com_exp$PoliticalParty <- factor(com_exp$PoliticalParty, 
                               levels=c("D", "R", "I", "L"), 
                               labels=c("Democratic", "Republican", "Independent", "Libertarian"))
 
-# Store the top 15 Committee and their party into a variable
-top15_pp <- com_exp %>% select(c("committee_name", "PoliticalParty"))
+# Store the top 5 Committee and their party into a variable
+top5_pp <- com_exp %>% select(c("committee_name", "PoliticalParty"))
 
 # Generate the Interactive Cleveland Dot Plot
 ggplot(com_exp, aes(x = total, y = reorder(committee_name, total), color=PoliticalParty, label=total)) +
@@ -586,7 +586,7 @@ ggplot(com_exp, aes(x = total, y = reorder(committee_name, total), color=Politic
                             'Kanye West','John Delaney','Andrew Yang','Amy Klobuchar', 'Elizabeth Warren', 
                             'Bernie Sanders', 'Tom Steyer', 'Donald Trump', 'Joe Biden', 'Mike Bloomberg')) +
   labs(x = "Total Expenditure (Million $)", y = "Candidate", caption = "Source: fec.gov", 
-       title ="Top 15 Presidential Campaign Made the Most Disbursement", 
+       title ="Top 5 Presidential Campaign Made the Most Disbursement", 
        subtitle = "2020 Presidential Election (Rounded to 2 Digits)") + 
   theme_bw() +
   theme(plot.title = element_text(face = "bold"),
@@ -595,10 +595,10 @@ ggplot(com_exp, aes(x = total, y = reorder(committee_name, total), color=Politic
         legend.position="bottom")
 ```
 
-The above graph shows 15 committees with the most disbursement made. Among these 15 committees, 10 of them are Democrates, 2 of them are Republicans, and 2 of them are Independent, 1 of them is Libertarian. One interesting finding is that Mike Bloomberg's Committee spend the most among all of the committees. This is not expected since Bloomberg quit the election race early in March 2020. Joe Biden's committee and Donald Trump's committee gets the second and third place on the list, and this is what is expected since they are the main candidates in this election. We can see that this distribution is following an exponential trend. Each committee spends twice more than the committee that is ranked after it. 
+The above graph shows 5 committees with the most disbursement made. Among these 5 committees, 4 of them are Democratics, 1 of them is Republican. One fact that might lead to this result could be that the Democratic party is receiving more contributions than the Republican party in this election. One interesting finding is that Mike Bloomberg's Committee spend the most among all of the committees. This is not expected since Bloomberg quit the election race early in March 2020. Joe Biden's committee and Donald Trump's committee gets the second and third place on the list, and this is what is expected since they are the main candidates in this election. We can see that this distribution is following an exponential trend. Each committee spends about twice more than the committee that is ranked after it. 
 
 ### Disbursement Details
-```{r, message=FALSE, warning=FALSE, fig.width=15, fig.height=8}
+```{r, message=FALSE, warning=FALSE}
 exp_perc <- exp_df %>% 
   filter(exp_df$committee_name %in% com_exp$committee_name & exp_df$disbursement_purpose_category != "REFUNDS") %>% 
   dplyr::group_by(committee_name, disbursement_purpose_category) %>% 
@@ -614,10 +614,10 @@ exp_perc$committee_name <- factor(exp_perc$committee_name)
 exp_perc[is.na(exp_perc)] <- 0
 
 exp_perc %>%
-  ggparcoord(columns = c(2:9,11:13,10),
+  ggparcoord(columns = c(2,3,5,9,11),
              groupColumn = 1,
              showPoints = T,
-             scale = "globalminmax",
+             scale = "uniminmax",
              mapping=aes(color=committee_name)
              ) + 
   scale_color_viridis_d("Committee",labels=levels(exp_perc$committee_name)) +
