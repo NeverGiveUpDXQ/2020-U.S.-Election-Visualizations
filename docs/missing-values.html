@@ -128,9 +128,8 @@
 </ul></li>
 <li class="chapter" data-level="5" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>5</b> Results</a><ul>
 <li class="chapter" data-level="5.1" data-path="results.html"><a href="results.html#election-vote-results-visualizations"><i class="fa fa-check"></i><b>5.1</b> Election Vote Results Visualizations</a><ul>
-<li class="chapter" data-level="5.1.1" data-path="results.html"><a href="results.html#state-level"><i class="fa fa-check"></i><b>5.1.1</b> State-level</a></li>
-<li class="chapter" data-level="5.1.2" data-path="results.html"><a href="results.html#county-level"><i class="fa fa-check"></i><b>5.1.2</b> County-level</a></li>
-<li class="chapter" data-level="5.1.3" data-path="results.html"><a href="results.html#time-level"><i class="fa fa-check"></i><b>5.1.3</b> Time-level</a></li>
+<li class="chapter" data-level="5.1.1" data-path="results.html"><a href="results.html#state-level"><i class="fa fa-check"></i><b>5.1.1</b> State level</a></li>
+<li class="chapter" data-level="5.1.2" data-path="results.html"><a href="results.html#time-level"><i class="fa fa-check"></i><b>5.1.2</b> Time level</a></li>
 </ul></li>
 <li class="chapter" data-level="5.2" data-path="results.html"><a href="results.html#contribution-receipts-data-analysis"><i class="fa fa-check"></i><b>5.2</b> Contribution Receipts Data Analysis</a><ul>
 <li class="chapter" data-level="5.2.1" data-path="results.html"><a href="results.html#contributions-overview"><i class="fa fa-check"></i><b>5.2.1</b> Contributions Overview</a></li>
@@ -140,7 +139,7 @@
 </ul></li>
 <li class="chapter" data-level="5.3" data-path="results.html"><a href="results.html#disbursement-data-analysis"><i class="fa fa-check"></i><b>5.3</b> Disbursement Data Analysis</a><ul>
 <li class="chapter" data-level="5.3.1" data-path="results.html"><a href="results.html#disbursement-distribution"><i class="fa fa-check"></i><b>5.3.1</b> Disbursement Distribution</a></li>
-<li class="chapter" data-level="5.3.2" data-path="results.html"><a href="results.html#top-15-presidential-campaign-made-the-most-disbursement"><i class="fa fa-check"></i><b>5.3.2</b> Top 15 Presidential Campaign Made the Most Disbursement</a></li>
+<li class="chapter" data-level="5.3.2" data-path="results.html"><a href="results.html#top-5-presidential-campaign-made-the-most-disbursement"><i class="fa fa-check"></i><b>5.3.2</b> Top 5 Presidential Campaign Made the Most Disbursement</a></li>
 <li class="chapter" data-level="5.3.3" data-path="results.html"><a href="results.html#disbursement-details"><i class="fa fa-check"></i><b>5.3.3</b> Disbursement Details</a></li>
 <li class="chapter" data-level="5.3.4" data-path="results.html"><a href="results.html#when-does-those-committee-spend-the-most"><i class="fa fa-check"></i><b>5.3.4</b> When does those committee spend the most?</a></li>
 <li class="chapter" data-level="5.3.5" data-path="results.html"><a href="results.html#disbursement-recipient-share"><i class="fa fa-check"></i><b>5.3.5</b> Disbursement Recipient Share</a></li>
@@ -152,8 +151,6 @@
 <li class="chapter" data-level="6.1.1" data-path="interactive-component.html"><a href="interactive-component.html#descriptions"><i class="fa fa-check"></i><b>6.1.1</b> Descriptions</a></li>
 <li class="chapter" data-level="6.1.2" data-path="interactive-component.html"><a href="interactive-component.html#instructions-for-using-the-map"><i class="fa fa-check"></i><b>6.1.2</b> Instructions for using the map:</a></li>
 </ul></li>
-<li class="chapter" data-level="6.2" data-path="interactive-component.html"><a href="interactive-component.html#election-result-interactive-plot"><i class="fa fa-check"></i><b>6.2</b> 1976-2016 Election Result Interactive Plot</a></li>
-<li class="chapter" data-level="6.3" data-path="interactive-component.html"><a href="interactive-component.html#disbursement-data-interactive-plot"><i class="fa fa-check"></i><b>6.3</b> Disbursement Data Interactive Plot</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>7</b> Conclusion</a></li>
 <li class="divider"></li>
@@ -181,7 +178,7 @@
 <h2><span class="header-section-number">4.1</span> Contribution Receipt Dataset</h2>
 <p>The election voting results and the disbursements datasets do not have missing values, however, the contribution receipts dataset have 275 values missed in some columns.</p>
 <table>
-<caption><span id="tab:unnamed-chunk-27">Table 4.1: </span>Missing values</caption>
+<caption><span id="tab:unnamed-chunk-25">Table 4.1: </span>Missing values</caption>
 <thead>
 <tr class="header">
 <th align="left"></th>
@@ -215,7 +212,7 @@
 </tr>
 </tbody>
 </table>
-<p><img src="finalproj_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
 <p>In the processed contributions dataset, missing values only take 0.21% of the entire dataset with 946,704 observations of 14 attributes. As shown in the table and the upset plot above, missing values of the contributions dataset most frequently appear in columns including <code>contributor_employer</code>, <code>contributor_zip</code>, and <code>contributor_occupation</code>.</p>
 <p>The most popular pattern of missingness is only missing the contributor employer information, which 143 entries share this pattern. Besides there are also 35 entries missing both occupation and employer information, and 34 entries missing zip code information.</p>
 

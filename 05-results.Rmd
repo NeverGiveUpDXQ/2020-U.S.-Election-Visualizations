@@ -26,6 +26,7 @@ library(dplyr)
 library(plyr)
 library(socviz)
 library(ggrepel)
+library(gridExtra)
 library(ggthemes)
 library(grid)
 library(lubridate)
@@ -543,7 +544,7 @@ knitr::kable(disbursement_summary, caption = "Disbursement Summary by Candidate"
              format.args = list(big.mark = ",", scientific = FALSE),
              digits = 2,align = "l",full_width = T)
 ```
-Every expenditure made by Trump Committee are evenly spread out from 0 to less than a million. The distribution is a little left skewed. There are more outliers clustering at the higher expenditure level than lower expenditure level. On the other hand, Biden Committee has their expenditure distribution centered symmetrically around their median. The range of Biden Committee's single expenditure is wider than Trump Committee. There are more outliers clustering at the higher expenditure level, which means Biden Committee's made more large transactions than Trump Committee. 
+Every expenditure made by Trump Committee are evenly spread out from 0 to less than a million. The distribution is a little left skewed. There are more outliers clustering at the higher expenditure level than lower expenditure level. On the other hand, Biden Committee has their expenditure distribution centered symmetrically around their median. The range of Biden Committee's single expenditure is wider than Trump Committee. There are more outliers densely clustering at the higher expenditure level, which means Biden Committee's made more large transactions than Trump Committee. 
 
 
 ### Top 5 Presidential Campaign Made the Most Disbursement
@@ -562,8 +563,8 @@ com_exp$PoliticalParty <- c('D', 'D', 'R', 'D', 'D')
 
 # Factorize the Political Party Column
 com_exp$PoliticalParty <- factor(com_exp$PoliticalParty, 
-                              levels=c("D", "R", "I", "L"), 
-                              labels=c("Democratic", "Republican", "Independent", "Libertarian"))
+                              levels=c("D", "R"), 
+                              labels=c("Democratic", "Republican"))
 
 # Store the top 5 Committee and their party into a variable
 top5_pp <- com_exp %>% select(c("committee_name", "PoliticalParty"))
@@ -573,11 +574,9 @@ ggplot(com_exp, aes(x = total, y = reorder(committee_name, total), color=Politic
   geom_point() + 
   geom_text(hjust=-0.2, size = 3) +
   scale_x_continuous(limits=c(1,1000)) +
-  scale_color_manual(name = "Political Party", values = c("dodgerblue3", "firebrick2","mediumorchid4","gold2"), 
-                    labels = c("Democratic","Republican", "Independent", "Libertarian")) +
-  scale_y_discrete(labels=c('Kamala Harris','Jo Jorgensen','Brock Pierce','Roque De La Fuente','Cory Booker',
-                            'Kanye West','John Delaney','Andrew Yang','Amy Klobuchar', 'Elizabeth Warren', 
-                            'Bernie Sanders', 'Tom Steyer', 'Donald Trump', 'Joe Biden', 'Mike Bloomberg')) +
+  scale_color_manual(name = "Political Party", values = c("dodgerblue3", "firebrick2"), 
+                    labels = c("Democratic","Republican")) +
+  scale_y_discrete(labels=c('Bernie Sanders', 'Tom Steyer', 'Donald Trump', 'Joe Biden', 'Mike Bloomberg')) +
   labs(x = "Total Expenditure (Million $)", y = "Candidate", caption = "Source: fec.gov", 
        title ="Top 5 Presidential Campaign Made the Most Disbursement", 
        subtitle = "2020 Presidential Election (Rounded to 2 Digits)") + 
@@ -588,10 +587,10 @@ ggplot(com_exp, aes(x = total, y = reorder(committee_name, total), color=Politic
         legend.position="bottom")
 ```
 
-The above graph shows 5 committees with the most disbursement made. Among these 5 committees, 4 of them are Democratics, 1 of them is Republican. One fact that might lead to this result could be that the Democratic party is receiving more contributions than the Republican party in this election. One interesting finding is that Mike Bloomberg's Committee spend the most among all of the committees. This is not expected since Bloomberg quit the election race early in March 2020. Joe Biden's committee and Donald Trump's committee gets the second and third place on the list, and this is what is expected since they are the main candidates in this election. We can see that this distribution is following an exponential trend. Each committee spends about twice more than the committee that is ranked after it. 
+The above graph shows 5 committees with the most disbursement made. Among these 5 committees, 4 of them are Democratics, 1 of them is Republican. One fact that might lead to this result could be that the Democratic parties are receiving more contributions than the Republican party in this election. One interesting finding is that Mike Bloomberg's Committee spend the most among all of the committees. This is not expected since Bloomberg quit the election race early in March 2020. According to the article from [The Guardian](https://www.theguardian.com/us-news/2019/nov/23/michael-bloomberg-refuse-donations-presidential-bid), all of those expenditures are from Bloomberg's personal fortune, and not from campaign contribution. Therefore, the spending made by Mike Bloomberg's campaign is definitely an outlier. Next, Joe Biden's committee and Donald Trump's committee gets the second and third place on the list, and this is what is expected since they are the main candidates in this election. We can see that this distribution is following an exponential trend. Each committee spends about twice more than the committee that is ranked after it. 
 
 ### Disbursement Details
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, fig.width=10, fig.height=8}
 exp_perc <- exp_df %>% 
   filter(exp_df$committee_name %in% com_exp$committee_name & exp_df$disbursement_purpose_category != "REFUNDS") %>% 
   dplyr::group_by(committee_name, disbursement_purpose_category) %>% 
@@ -606,25 +605,44 @@ exp_perc <- pivot_wider(exp_perc,
 exp_perc$committee_name <- factor(exp_perc$committee_name)
 exp_perc[is.na(exp_perc)] <- 0
 
-exp_perc %>%
-  ggparcoord(columns = c(2,3,5,9,11),
+g1 <- exp_perc %>%
+  ggparcoord(columns = c(2,3,5,7,9,11),
+             groupColumn = 1,
+             showPoints = T,
+             scale = "globalminmax",
+             mapping=aes(color=committee_name)
+             ) + 
+  scale_color_viridis_d("Committee",labels=levels(exp_perc$committee_name)) +
+  labs(x = "Expenditure Category", y = "% of Total Expenditure", caption = "* data does not add up to 100% since it only contains categories contribute signiticantly to the total amount\n Source: fec.gov", 
+       title ="2020 Presidential Election Disbursement Break Down",
+       subtitle="on Significant Categories (Excluding Refunds)") + 
+  theme_bw() +
+  theme(plot.title = element_text(face = "bold"),
+        plot.subtitle = element_text(face = "bold", color = "grey35"),
+        plot.caption = element_text(color = "grey68"),
+        legend.position="bottom")
+
+g2 <- exp_perc %>%
+  ggparcoord(columns = c(2,3,5,7,9,11),
              groupColumn = 1,
              showPoints = T,
              scale = "uniminmax",
              mapping=aes(color=committee_name)
              ) + 
   scale_color_viridis_d("Committee",labels=levels(exp_perc$committee_name)) +
-  labs(x = "Expenditure Category", y = "Percentage of Total Expenditure", caption = "Source: fec.gov", 
+  labs(x = "Expenditure Category", y = "% of Total Expenditure on a Relative Scale", caption = "Source: fec.gov", 
        title ="2020 Presidential Election Disbursement Break Down",
-       subtitle="Excluding Refunds") + 
+       subtitle="on Significant Categories (Excluding Refunds)") + 
   theme_bw() +
   theme(plot.title = element_text(face = "bold"),
         plot.subtitle = element_text(face = "bold", color = "grey35"),
         plot.caption = element_text(color = "grey68"),
         legend.position="bottom")
+
+grid.arrange(g1, g2, ncol=1)
 ```
 
-The three areas that most of the committees focus on are Administrative, Advertising, and Consulting. Those categories are which the services could be provided virtually. Compare to those categories, disbursements in Travel, Events, and Materials are relatively low. Since those categories require in-person meetings and activities, this trend could be caused by the COVID pandemics this year. After investigating the above graph in an interactive plot, there is no obvious correlation between each pair of the disbursement categories listed above. So we will not include the interactive parallel plot explicitly here. 
+The graph on the top shows the percent of total disbursement per campaign that goes to each category. The three areas that most of the committees focus on more are Administrative, Advertising, and Consulting. Those categories are which the services could be provided virtually. Compare to those categories, disbursements in Travel, Events, and Materials are relatively low. Since those categories require in-person meetings and activities, this trend could be caused by the COVID pandemics this year. There are also other categories such as banking, contributions, transfers, etc, which do not constitutes a majority part of the expenditure and are related to each campaign's unique financial management activities. Since those categories are not in the scope of this research, we will not discuss those categories in detail here. The graph on the bottom shows the same graph on the top, but in a uniminmax scale. Compare to the above graph, this shows each campaign's different focus across different expenditure categories relative to the rest of the campaign. We can see that Biden's committee focus more on advertising, and they even spend a larger porportion of money on this category than Bloomberg. On the other hand, Trump's committee focus more on physical advertisement such as purchasing Campaign Materials for physical events. After investigating the above graph in an interactive plot, there is no obvious correlation between each pair of the disbursement categories listed above. So we will not include the interactive parallel plot explicitly here. 
 
 ### When does those committee spend the most?
 #### Spending Trend of Two Major Committees
@@ -725,11 +743,11 @@ hc_title(text = "Total Disbursements By All Presidential Candidates 2020 By Stat
       valueSuffix = " USD"
      )
    ) %>%
-   hc_colorAxis(minColor = "white", maxColor = "red") %>%
+   hc_colorAxis(minColor = "white", maxColor = "red", min=1e6, type="logarithmic", endOnTick=FALSE) %>%
    hc_legend(valueDecimals = 0, valueSuffix = "%") %>%
    hc_mapNavigation(enabled = TRUE)
 ```
-Disbursement mainly goes towards the companies on the Southern and Northern-East Side of the United States. This result is consistent to [2019 Q4 U.S Real GDP data](https://apps.bea.gov/iTable/iTable.cfm?reqid=70&step=30&isuri=1&major_area=0&area=xx&year=2019&tableid=532&category=5532&area_type=0&year_end=-1&classification=non-industry&state=0&statistic=1&yearbegin=-1&unit_of_measure=levels) reported by the Bureau of Economic Analysis.Those states that are highlighted in dark blue are the states that contribute the most to the U.S's GDP. Compare to the 2020 election result, all of these states that contributes the most to the U.S total GDP, besides Taxas, voted for Joe Biden. Such pattern discontinued as we move down along the GDP level. Since the graph above includes a majority of social media and network companies, which their services can be done remotely, it would not reflect which state the candidates are focusing on to perform actions that help win the votes. On the other hand, there are two disbursement categories called `MATERIALS` and `EVENTS` that consists of the physical materials that are purchased and used locally for this presidential election, such as posters, staging materials, delivery fee, etc. If we look at the disbursement distribution across the 50 U.S. states on those categories, we might get a better idea on our previous question. In corresponding to the voting result analysis, let's focus on the two main candidates' committees.
+Disbursement mainly goes towards the companies on the Southern and Northern-East Side of the United States. This result is consistent to [2019 Q4 U.S Real GDP data](https://apps.bea.gov/iTable/iTable.cfm?reqid=70&step=30&isuri=1&major_area=0&area=xx&year=2019&tableid=532&category=5532&area_type=0&year_end=-1&classification=non-industry&state=0&statistic=1&yearbegin=-1&unit_of_measure=levels) reported by the Bureau of Economic Analysis.Those states that are highlighted in darker red are the states that contribute more to the U.S's GDP. For example: California, Texas, New York, Washington, Georgia. Compare to the 2020 election result, all of these states that contributes the most to the U.S total GDP, besides Taxas, voted for Joe Biden. Such pattern discontinued as we move down along the GDP level. Since the graph above includes a majority of social media and network companies, which their services can be done remotely, it would not reflect which state the candidates are focusing on to perform actions that help win the votes. On the other hand, there are two disbursement categories called `MATERIALS` and `EVENTS` that consists of the physical materials that are purchased and used locally for this presidential election, such as posters, staging materials, delivery fee, etc. If we look at the disbursement distribution across the 50 U.S. states on those categories, we might get a better idea on our previous question. In corresponding to the voting result analysis, let's focus on the two main candidates' committees.
 
 ```{r, message=FALSE, warning=FALSE,fig.width=20, fig.height=6}
 # Disbursement Flow for Joe Biden's Main Committee
@@ -767,7 +785,7 @@ hc_title(text = "Total Disbursements By 2020 Joe Biden Committee By State") %>%
       valueSuffix = " USD"
      )
    ) %>%
-   hc_colorAxis(min=1, max=max(exp_flow_T$value), minColor = "white", maxColor = "red",type="logarithmic", endOnTick=FALSE) %>%
+   hc_colorAxis(min=1e3, max=max(exp_flow_T$value), minColor = "white", maxColor = "red",type="logarithmic", endOnTick=FALSE) %>%
    hc_legend(valueDecimals = 0, valueSuffix = "%") %>%
    hc_mapNavigation(enabled = TRUE)
 ```
@@ -791,10 +809,11 @@ hc_title(text = "Total Disbursements By 2020 Donald Trump Committee By State") %
       valueSuffix = " USD"
      )
    ) %>%
-   hc_colorAxis(min=1, max=max(exp_flow_T$value), minColor = "white", maxColor = "red",type="logarithmic", endOnTick=FALSE) %>%
+   hc_colorAxis(min=1e3, max=max(exp_flow_T$value), minColor = "white", maxColor = "red",type="logarithmic", endOnTick=FALSE) %>%
    hc_legend(valueDecimals = 0, valueSuffix = "%") %>%
    hc_mapNavigation(enabled = TRUE)
 ```
 
-There are not a lot of physical events going on and propaganda passing out for this year's election. Partly it could due to the COVID pandemic. From the above graph, the location where Trump's committee held physical events are more widely spread out across U.S than Biden's committee, while the recipients of material and event fee made by Biden's committee mainly clustered in the east half of the U.S. and West Coast. As shown previously in the parallel axis graph, both of the committees spent less than 1% of their total expenditure in Materials and Events. Compare both maps above, we can see more regions colored in bright red in the second map, but not that much on the first map. Those bright colors represent that those regions are receiving more of such committee's total disbursement. The two maps are colored based on the same color scale. Since we have found that Biden's committee spent more than Trump's Committee, and Trump's committee is spending more in the above two categories, it is not difficult to conclude that Trump's committee spent a larger percent of their total expenditure in physical events. This could be one of the campaign's strategy. Also, Trump's committee is spending significantly more on some of the states where they win compare to the expenditure of Biden's committee on those states. There is such a trend in the election result this year, but to answer whether there is truly a correlation between expenditure and the voting results would need further investigations on more data sets from previous years.
+There are not a lot of physical events going on and propaganda passing out for this year's election. Partly it could due to the COVID pandemic. From the above graph, the location where Trump's committee held physical events are more widely spread out across U.S than Biden's committee, especially in the middle part of the U.S. Meanwhile, the recipients of material and event fee made by Biden's committee mainly clustered in the east half of the U.S. and West Coast. As shown previously in the parallel axis graph, both of the committees spent less than 5% of their total expenditure in Materials and Events in total. Compare both maps above, we can see more regions colored in bright red in the second map, but not that much on the first map. Those bright colors represent that those regions are receiving more of such committee's total disbursement. The two maps are colored based on the same color scale. Since we have found that Biden's committee spent more than Trump's Committee, and Trump's committee is spending more in the above two categories, it is not difficult to conclude that Trump's committee spent a larger percent of their total expenditure in physical events. This could be one of the campaign's strategy, since there are many states that Trump invested for physical events turned out voting Trump this year. But such strategy does not necessarily guarantee them to win the election under this year's circumstance. Among the five flipped states that voted for Biden this year, Biden's committee spend more in physical events in two of them: Michigan and Georgia, and Trump's committee spend more in physical events in the rest three states: Pennsylvania, Wisconsin, and Arizona. Also, Biden did not spend as much as Trump did on physical events this year overall. So we raised an hypothesis that people's expectations toward future government in this year's election might be very dichotomize: there are states that have an absolute favor in Trump's policy and his action toward situations happening this year, while also a group of states that counted as the majority of the vote in the election that favor Biden's policy.
 
+Since this year is very special, we might not be able to conclude whether the expenditure data could normally have the ability to project the final voting results. In order to consolidate such hypothesis, we would need further investigations into previous expenditure and voting result. 

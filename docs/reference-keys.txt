@@ -1,11 +1,11 @@
 tab:unnamed-chunk-4
 tab:unnamed-chunk-5
 tab:unnamed-chunk-6
-tab:unnamed-chunk-21
-tab:unnamed-chunk-27
-tab:unnamed-chunk-40
-fig:unnamed-chunk-41
-tab:unnamed-chunk-48
+tab:unnamed-chunk-19
+tab:unnamed-chunk-25
+tab:unnamed-chunk-38
+fig:unnamed-chunk-39
+tab:unnamed-chunk-46
 introduction
 data-sources
 u.s.-county-level-voting-results-of-2020-presidential-election
@@ -20,7 +20,6 @@ contribution-receipt-dataset
 results
 election-vote-results-visualizations
 state-level
-county-level
 time-level
 contribution-receipts-data-analysis
 contributions-overview
@@ -32,7 +31,7 @@ contributor-occupations
 most-popular-occupations-of-contributors-who-supported-joe-biden-vs.-donald-trump
 disbursement-data-analysis
 disbursement-distribution
-top-15-presidential-campaign-made-the-most-disbursement
+top-5-presidential-campaign-made-the-most-disbursement
 disbursement-details
 when-does-those-committee-spend-the-most
 spending-trend-of-two-major-committees
@@ -42,10 +41,7 @@ interactive-component
 link-to-the-interactive-map
 descriptions
 instructions-for-using-the-map
-election-result-interactive-plot
-disbursement-data-interactive-plot
 conclusion
 tab:unnamed-chunk-14
 fig:unnamed-chunk-15
 tab:unnamed-chunk-22
-top-5-presidential-campaign-made-the-most-disbursement
