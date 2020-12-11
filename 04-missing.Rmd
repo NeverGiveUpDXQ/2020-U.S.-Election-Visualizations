@@ -10,7 +10,7 @@ library(naniar)
 ```
 
 ## Contribution Receipt Dataset
-The election voting results and the disbursements datasets do not have missing values, however, the contribution receipts dataset have 275 values missed in some columns.
+The election voting results and the disbursements datasets do not have missing values, however, the contribution receipts dataset has 275 values missed in some columns.
 
 ```{r, echo = F, message=F}
 # Import data from csv
@@ -22,7 +22,8 @@ contribution_processed <- readr::read_csv(here::here("./data/clean/contribution_
 
 knitr::kable(colSums(is.na(contribution_processed)) %>% sort(decreasing = TRUE) %>% head(), caption = "Missing values",align = "l",full_width = F,table.attr = "style='width:30%;'")
 
-gg_miss_upset(contribution_processed)
+m1<- gg_miss_upset(contribution_processed)
+m1
 ```
 
 In the processed contributions dataset, missing values only take 0.21% of the entire dataset with 946,704 observations of 14 attributes. As shown in the table and the upset plot above, missing values of the contributions dataset most frequently appear in columns including `contributor_employer`, `contributor_zip`, and `contributor_occupation`.
