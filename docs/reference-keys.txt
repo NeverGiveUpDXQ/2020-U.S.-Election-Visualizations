@@ -45,4 +45,3 @@ instructions-for-using-the-map
 election-result-interactive-plot
 disbursement-data-interactive-plot
 conclusion
-tab:unnamed-chunk-16

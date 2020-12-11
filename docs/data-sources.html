@@ -244,7 +244,7 @@
 <div id="contribution-receipts" class="section level2">
 <h2><span class="header-section-number">2.2</span> Contribution Receipts</h2>
 <p><strong>Dataset: contribution_bind.csv</strong></p>
-<p>The contribution receipts data on <a href="fec.gov">fec.gov</a> includes all receipts filed by election candidates and committees with records of contributions made by individuals, organizations, and committees.</p>
+<p>The contribution receipts data on <a href="https://www.fec.gov/">fec.gov</a> includes all receipts filed by election candidates and committees with records of contributions made by individuals, organizations, and committees.</p>
 <p>Since contributions made in the election year seem to better reflect people’s support on their favorite candidate, we applied a date filter to select records with the receipt date falling between 01/01/2020 and 11/03/2020. Due to a huge data volume, we limited data exported to only the contributions with an amount over or equal to 200 dollars and raised by the committees of two final presidential candidates of 2020 Election. The filtered dataset was retrieved from <a href="https://www.fec.gov/data/receipts/?recipient_committee_type=P&amp;data_type=processed&amp;committee_id=C00580100&amp;committee_id=C00703975&amp;two_year_transaction_period=2020&amp;min_date=01%2F01%2F2020&amp;max_date=11%2F03%2F2020&amp;is_individual=true&amp;min_amount=200">here</a>.</p>
 <p>The exported dataset has 79 columns and 984,824 records in total. There are 302,731 entries for <strong>Donald J. Trump for President committee</strong> and 682,093 entries for <strong>Biden for President committee</strong>.</p>
 <table>
@@ -333,7 +333,7 @@
 <div id="the-disbursements-data" class="section level2">
 <h2><span class="header-section-number">2.3</span> The Disbursements data</h2>
 <p><strong>Dataset: schedule_b-2020-11-08T16_10_30.csv</strong></p>
-<p>The Disbursements data from <a href="fec.gov">fec.gov</a> includes the operating expenditure records of House and Senate election committees, Presidential election committees, and PAC and Party committees since 2003.</p>
+<p>The Disbursements data from <a href="https://www.fec.gov/">fec.gov</a> includes the operating expenditure records of House and Senate election committees, Presidential election committees, and PAC and Party committees since 2003.</p>
 <p>For this project, we filtered the data to focus on the spending of presidential election committees of 2020 US Election, which the disbursement dates are from 01/01/2020 to 11/03/2020, consistent with the scope of the contribution receipt dataset. The dataset with filters applied was exported from <a href="https://www.fec.gov/data/disbursements/?spender_committee_type=P&amp;data_type=processed&amp;min_date=01%2F01%2F2020&amp;max_date=11%2F03%2F2020">FEC Official Database</a>. The retrieved dataset has 260,587 records and 78 columns.</p>
 <table>
 <caption><span id="tab:unnamed-chunk-6">Table 2.3: </span>Major columns used</caption>
