@@ -40,7 +40,7 @@ library(jsonlite)
 ### State level
 
 ```{r}
-president2020 <- read_csv('./data/raw/Popular vote backend - Sheet1_1210.csv') %>%
+president2020 <- read_csv('./data/raw/Popular vote backend_1211.csv') %>%
   filter(state %in% usmap::statepop$full)%>%
   # make column `state` consistent & don't consider ("Maine 2nd District"    "Nebraska 2nd District" "Maine 1st District"  "Nebraska 1st District" "Nebraska 3rd District")
   select(stateid,state,dem_this_margin,dem_votes,rep_votes) %>%

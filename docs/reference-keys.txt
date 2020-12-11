@@ -21,14 +21,14 @@ results
 election-vote-results-visualizations
 state-level
 time-level
-contribution-receipts-data-analysis
-contributions-overview
+contribution-receipts-data
+overview
 total-contributions-by-state
 contributions-per-registered-voter-by-state
 contributions-distribution-and-details
 contributions-by-date-time-series
 contributor-occupations
-most-popular-occupations-of-contributors-who-supported-joe-biden-vs.-donald-trump
+most-popular-contributor-occupations-joe-biden-vs.-donald-trump
 disbursement-data-analysis
 disbursement-distribution
 top-5-presidential-campaign-made-the-most-disbursement
@@ -42,4 +42,3 @@ link-to-the-interactive-map
 descriptions
 instructions-for-using-the-map
 conclusion
-tab:unnamed-chunk-14
