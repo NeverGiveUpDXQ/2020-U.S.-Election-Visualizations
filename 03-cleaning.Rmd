@@ -121,32 +121,6 @@ elections_historic_new <- rbind(elections_historic_new,data2020)
 write.csv(elections_historic_new, file = here::here("data", "clean", "elections_historic_new.csv"),row.names=FALSE)
 ```
 
-Also, to make comparison of the share of electoral college vote between *Dem.* and *Rep.* more convenience, we mutated and filterd the dataset to the following one:
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(data.frame(
-                description = c('Year','Votes_PERCEN','Party'),
-                category = c("Which election year?", "Votes percentage for president","Winner. Dem or Rep?")
-              ), 
-             col.names = c('Column','Description'),
-             row.names = F,font_size = 10)
-```
-
-```{r}
-t_win <- elections_historic_full %>%
-  filter(win_party %in% c("Dem.","Rep.")) %>%
-  select(year,ec_pct,win_party)
-
-t_los <- t_win %>%
-  mutate(ec_pct = 1 - ec_pct) %>%
-  mutate(win_party = ifelse(t_win$win_party == 'Dem.', 'Rep.', 'Dem.')) %>%
-  select(year,ec_pct,win_party)
-
-compare <- rbind(t_win,t_los) 
-names(compare) <- c('Year','Votes_PERCEN','Party')
-
-write.csv(compare, file = here::here("data", "clean", "compare.csv"),row.names=FALSE)
-```
 
 ## Contribution Data Transformation
 

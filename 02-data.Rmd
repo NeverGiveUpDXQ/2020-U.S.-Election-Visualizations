@@ -6,14 +6,14 @@ library(here)
 
 The primary data sources of this project are [*Federal Election Commission*](http://fec.gov/data/) (FEC) and [*Fox News*](https://cookpolitical.com/). FEC gathers and processes campaign finance data and discloses information about the public funding of US presidential elections. Fox News collects and verifies the election returns across the country and is an authoritative source for 2020 Presidential Election votes results.
 
-We used three major datasets: the [2020 Presidential Election Results dataset](https://www.foxnews.com/elections/2020/general-results) from Fox News, as well as the Contribution Receipts dataset and the Campaign Disbursements dataset from FEC. We each was responsible for downloading one dataset from its data source. More details of the datasets are as following:
+We used three major datasets: the [2020 Presidential Election Results dataset](https://www.foxnews.com/elections/2020/general-results) from Fox News, as well as the Contribution Receipts dataset and the Campaign Disbursements dataset from FEC. We each were responsible for downloading one dataset from its data source. More details of the datasets are as following:
 
 
 ## U.S. County Level Voting Results of 2020 Presidential Election
 
 **Dataset: 2020_US_County_Level_Presidential_Results.csv**
 
-The dataset contains 10 columns and 3159 records covering the voting results of 2020 presidential election by US county. Since the county level data was not downloadable from the website, we exported this dataset from the github repo [* 2020_US_County_Level_Presidential_Results*](https://github.com/tonmcg/US_County_Level_Election_Results_08-20/blob/master/2020_US_County_Level_Presidential_Results.csv), which contains the latest voting data scraped by Tony McGovern from Fox News website.
+The dataset contains 10 columns and 3153 records covering the voting results of 2020 presidential election by US county. Since the county level data was not downloadable from the website, we exported this dataset from the github repo [* 2020_US_County_Level_Presidential_Results*](https://github.com/tonmcg/US_County_Level_Election_Results_08-20/blob/master/2020_US_County_Level_Presidential_Results.csv), which contains the latest voting data scraped by Tony McGovern from Fox News website.
 
 
 ```{r, echo=FALSE, results='asis'}
@@ -24,7 +24,7 @@ knitr::kable(DataDescription[1:10, ], caption = "Major columns used",
 
 **Issues with this dataset: **
 
-The election results data was retrieved on Dec. 5, 2020, which the results do not reflect on the latest results. The election votes counting and post-election processing are ongoing in several states, so individual statistics we used here might change.   
+This dataset is scraped from results published by from Fox News, Politico, and the New York Times. So, it is update in real time and some columns may be changed. Also, the election votes counting and post-election processing are ongoing in several states, so individual statistics we used here might change. 
 
 
 ## Contribution Receipts
