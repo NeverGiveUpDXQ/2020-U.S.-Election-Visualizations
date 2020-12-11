@@ -5,8 +5,7 @@ editor_options:
 ---
 # Results
 
-```{r, message=FALSE, warning=FALSE, echo=FALSE}
-library(gganimate)
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 library(GGally)
 library(gridExtra)
 library(here)
@@ -40,28 +39,72 @@ library(wordcloud2)
 ### State level
 
 ```{r}
+president2020 <- read_csv('./data/raw/Popular vote backend - Sheet1_1210.csv') %>%
+  filter(state %in% usmap::statepop$full)%>%
+  # make column `state` consistent & don't consider ("Maine 2nd District"    "Nebraska 2nd District" "Maine 1st District"  "Nebraska 1st District" "Nebraska 3rd District")
+  select(stateid,state,dem_this_margin,dem_votes,rep_votes) %>%
+  # we classfiy 3 levels: Dem. won, Rep. won and flipped states
+  mutate(class = ifelse(stateid %in% c('AZ', 'WI', 'MI', 'PA', 'GA'),'States that flipped from 2016',ifelse(dem_votes>rep_votes,'Democratic win','Republican win')))
+
+write.csv(president2020, "./data/clean/president2020.csv",row.names = FALSE)
+#------
+
 # load cleaned dataset
 president2020 <- readr::read_csv(here::here("./data/clean/president2020.csv"))
 ```
 
-```{r}
-# final results (1205)
-# add (states that flipped from 2016)
 
-president2020 %>%
-    mutate(value = ifelse(stateid %in% c('AZ', 'WI', 'MI', 'PA', 'GA'),'States that flipped from 2016',ifelse(dem_votes>rep_votes,'Democratic win','Republican win'))) %>%
-    statebins(
-        font_size=4, 
-        ggplot2_scale_function = scale_fill_manual,
-        values = c('Republican win' = "darkred", 'Democratic win' = "darkblue", 'States that flipped from 2016' = 'blue'),
-        round = TRUE, radius=grid::unit(16, "pt")
-    ) +
-    theme_statebins()+
-  labs(title = "2020 US Election Results by State",caption = "Source: cookpolitical", fill = NULL)+
-  theme(plot.title = element_text(face = "bold"),
-        plot.caption = element_text(color = "grey68"),
-        legend.position="bottom",
-        axis.text.y = element_blank())
+
+```{r}
+attach(president2020)
+president2020 <- readr::read_csv(here::here("./data/clean/president2020.csv"))
+
+president2020$dem_this_margin[stateid %in% c('AZ', 'WI', 'MI', 'PA', 'GA')] = NA
+
+president2020<- president2020%>%
+  select(state,dem_this_margin)
+
+colors = c("darkred","white","darkblue")
+
+highchart() %>%
+  hc_title(text = "2020 Election Result Margin By State (w/o filpped state)") %>%
+  hc_subtitle(text = "Double click the state area to zoom in") %>%
+  hc_add_series_map(usgeojson, president2020,
+    name = "Margin",
+    value = "dem_this_margin", joinBy = c("name", "state"),
+    dataLabels = list(
+       enabled = TRUE,
+       format = "{point.properties.postalcode}"
+     )
+   ) %>%
+   hc_colorAxis(min = -1, max = 1,
+                stops = color_stops(n=3, colors=colors)) %>%
+   hc_mapNavigation(enabled = TRUE) 
+```
+
+```{r}
+attach(president2020)
+president2020 <- readr::read_csv(here::here("./data/clean/president2020.csv"))
+
+president2020$dem_this_margin[!(stateid %in% c('AZ', 'WI', 'MI', 'PA', 'GA'))] = NA
+
+president2020<- president2020%>%
+  select(state,dem_this_margin)
+
+highchart() %>%
+  hc_title(text = "2020 Election Result Margin By Filpped State") %>%
+  hc_subtitle(text = "Double click the state area to zoom in") %>%
+  hc_add_series_map(usgeojson, president2020,
+    name = "Margin",
+    value = "dem_this_margin", joinBy = c("name", "state"),
+    dataLabels = list(
+       enabled = TRUE,
+       format = "{point.properties.postalcode}"
+     )
+   ) %>%
+   hc_colorAxis(min = min(president2020$dem_this_margin), max = max(president2020$dem_this_margin),
+                minColor = 'powderblue', maxColor = 'blue') %>%
+   hc_mapNavigation(enabled = TRUE) 
 ```
 
 
@@ -72,9 +115,6 @@ Also, in state-level, if we compare election results between 2016 and 2020, we c
 
 - Joe Biden enlarge the margin of **Minnesoda**(1.52%D -> 7.11%D) and **New Hampshire**(0.37%D -> 7.35%D) that Hillary Clinton won in 2016.
 
-```{r}
-
-```
 
 
 ### Time level
@@ -99,9 +139,9 @@ history_election <- readr::read_csv(here::here("./data/clean/1976-2016election.c
 history_election_ds = history_election %>%
     group_by(state) %>%
     do(item = list(
-        state = first(.$state),
+        state = last(.$state),
         sequence = .$ratio,
-        value = first(.$ratio)
+        value = last(.$ratio)
     ))%>%
     .$item
 
@@ -125,7 +165,7 @@ highchart(type = "map") %>%
   hc_motion(
     enabled = TRUE,
     axisLabel = "year",
-    labels = as.character(sort(unique(history_election$year))),
+    labels = as.character(sort(unique(history_election$year),decreasing = TRUE)),
     #updateIterval = 50, #Specifies or returns the time interval (in milliseconds) between screen updates
     magnet = list(
       round = "floor" 
