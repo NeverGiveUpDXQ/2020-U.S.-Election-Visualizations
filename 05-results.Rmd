@@ -36,7 +36,7 @@ library(wordcloud2)
 ```
 
 ## Election Vote Results Visualizations
-### State-level
+### State level
 
 ```{r}
 # load cleaned dataset
@@ -76,7 +76,7 @@ Also, in state-level, if we compare election results between 2016 and 2020, we c
 ```
 
 
-### Time-level: 1976-2016 Election Result Interactive Plot
+### Time level
 
 [**Instructions to Use the Graph**](https://github.com/TorsteinHonsi/Motion-Highcharts-Plugin/wiki)
 
@@ -173,41 +173,6 @@ From this plot, we can see:
 - Adams 1824 may be regarded as an outlier. However, after looking up Wiki, He is actually from Democratic-Republican Party.
 
 - Finally, we can regard Roosevelt as an outstanding candidate since his electoral vote and popular vote are very high.
-
-\n
-Finally, we compare the share of electoral college vote between *Dem.* and *Rep.*.
-
-```{r, message=FALSE}
-compare <- readr::read_csv(here::here("./data/clean/compare.csv"))
-
-# plot
-p <- ggplot(compare, aes(Year, Votes_PERCEN, 
-                         frame = Year, 
-                         size = Votes_PERCEN, 
-                         group = Party,
-                         colour = Party)) +
-  geom_point()+
-  scale_color_manual(values=c("#19609F","#CB1C2A"))+
-  transition_time(Year) +
-  shadow_wake(wake_length = 0.05, alpha = FALSE) +
-  labs(x = "year", y = "share", 
-      title = "Presidential Elections:The Share of Electoral Votes for Dem. and Rep.", 
-      subtitle = "Year : {frame_time} (Data for 2020 are provisional)",
-       caption = "Source: socviz & Cook Political", fill = NULL)+
-  #coord_cartesian(clip = 'off') + 
-  #ease_aes('cubic-in-out')+
-  theme_bw() +
-  theme(plot.title = element_text(face = "bold"),
-        plot.subtitle = element_text(face = "bold", color = "grey35"),
-        plot.caption = element_text(color = "grey68"),
-        axis.text.x = element_text(angle = 45, hjust = 1),
-        legend.position="bottom")
-
-animate(p, fps = 3)
-```
-
-
-From this plot, we can see: Excluding year ftom 1875-1900, the votes percentage difference is relatively huge. At the same time, we can also see that no party has long been dominant. The share of the two parties is approximately cyclical.
 
 ## Contribution Receipts Data Analysis
 ### Contributions Overview
