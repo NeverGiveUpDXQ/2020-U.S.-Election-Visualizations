@@ -33,12 +33,14 @@ library(tidytext)
 #library(devtools)
 #devtools::install_github("lchiffon/wordcloud2")
 library(wordcloud2)
+library(jsonlite)
 ```
 
 ## Election Vote Results Visualizations
 ### State level
 
-```{r}
+```{r, eval=FALSE, echo=FALSE}
+# data-preprocessing
 president2020 <- read_csv('./data/raw/Popular vote backend - Sheet1_1210.csv') %>%
   filter(state %in% usmap::statepop$full)%>%
   # make column `state` consistent & don't consider ("Maine 2nd District"    "Nebraska 2nd District" "Maine 1st District"  "Nebraska 1st District" "Nebraska 3rd District")
@@ -47,18 +49,12 @@ president2020 <- read_csv('./data/raw/Popular vote backend - Sheet1_1210.csv') %
   mutate(class = ifelse(stateid %in% c('AZ', 'WI', 'MI', 'PA', 'GA'),'States that flipped from 2016',ifelse(dem_votes>rep_votes,'Democratic win','Republican win')))
 
 write.csv(president2020, "./data/clean/president2020.csv",row.names = FALSE)
-#------
-
-# load cleaned dataset
-president2020 <- readr::read_csv(here::here("./data/clean/president2020.csv"))
 ```
 
 
-
 ```{r}
-attach(president2020)
 president2020 <- readr::read_csv(here::here("./data/clean/president2020.csv"))
-
+attach(president2020)
 president2020$dem_this_margin[stateid %in% c('AZ', 'WI', 'MI', 'PA', 'GA')] = NA
 
 president2020<- president2020%>%
@@ -83,8 +79,8 @@ highchart() %>%
 ```
 
 ```{r}
-attach(president2020)
 president2020 <- readr::read_csv(here::here("./data/clean/president2020.csv"))
+attach(president2020)
 
 president2020$dem_this_margin[!(stateid %in% c('AZ', 'WI', 'MI', 'PA', 'GA'))] = NA
 
@@ -111,9 +107,10 @@ highchart() %>%
 From this plot, it's easy to see that Biden won most of the votes in the eastern and western regions of the United States, while Trump's votes are mainly from the central region. In terms of the number of winning states, they are not much different, but we need to consider that the number of electoral votes is different.
 
 Also, in state-level, if we compare election results between 2016 and 2020, we could find:
-- Joe Biden flipped 5 states from Donald Trump. i.e **Michigan**(0.23%R -> 2.78%D), **Pennsylvania**(0.72%R -> 1.16%D), **Wisconsin**(0.77%R -> 0.63D), **Arizona**(3.55%R -> 0.31%D), **Georgia**(5.13%R -> 0.24%D).
 
-- Joe Biden enlarge the margin of **Minnesoda**(1.52%D -> 7.11%D) and **New Hampshire**(0.37%D -> 7.35%D) that Hillary Clinton won in 2016.
+- Joe Biden flipped 5 states from Donald Trump. i.e **Michigan**, **Pennsylvania**, **Wisconsin**, **Arizona**, **Georgia**.
+
+- Joe Biden enlarge the margin of **Minnesoda** and **New Hampshire** that Hillary Clinton won in 2016.
 
 
 
@@ -130,17 +127,13 @@ Also, in state-level, if we compare election results between 2016 and 2020, we c
 # help file: https://api.highcharts.com/highcharts/labels.items
 # reference : RPubs: William Green(https://rpubs.com/wbgreen405/249838)
 
-library(highcharter)
-library(tidyverse)
-library(jsonlite)
-
 history_election <- readr::read_csv(here::here("./data/clean/1976-2016election.csv"))
 
 history_election_ds = history_election %>%
     group_by(state) %>%
     do(item = list(
         state = last(.$state),
-        sequence = .$ratio,
+        sequence = rev(.$ratio),
         value = last(.$ratio)
     ))%>%
     .$item
@@ -158,7 +151,7 @@ highchart(type = "map") %>%
                maxColor = 'darkred',
                min = 0,
                max = 1 ) %>%  
-  hc_title(text = "Share of Popular Votes for the Republican from 1976 to 2016") %>% 
+  hc_title(text = "Share of Popular Votes for the Republican from 2016 to 1976") %>% 
   hc_legend(layout = "vertical", 
             align = "right") %>% 
   hc_add_theme(hc_theme_smpl()) %>%
