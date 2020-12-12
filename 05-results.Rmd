@@ -301,9 +301,10 @@ hc_title(text = "Total Contributions to All Presidential Candidates 2020 By Stat
      )
    ) %>%
    hc_colorAxis(minColor = "white", maxColor = "orange") %>%
-   hc_legend(valueDecimals = 0, valueSuffix = "%") %>%
+   hc_legend(title = list(text = "US Dollar Amount"), valueDecimals = 0, valueSuffix = "%") %>%
    hc_mapNavigation(enabled = TRUE) %>%
-   hc_add_theme(thm)
+   hc_add_theme(thm) %>% 
+  hc_exporting(enabled = TRUE)
 ```
 
 As shown in the map above, California has contributed the most to all presidential candidates in 2020 US Election, which exceeded 260 million US dollars. Contributions from New York, Texas, and Florida were also significant. On the other hand, North Dakota, South Dakota, and Wyoming have made the least contributions to all presidential candidates, probably because of their small populations.
@@ -486,7 +487,8 @@ ts1 <- ts %>%
            max = 14000000) %>%
   hc_title(text = "<b>Individual Contributions to US Presidential Candidates 2020</b>") %>%
   hc_subtitle(text = "Click and drag in the plot area to zoom in on a time span") %>%
-  hc_plotOptions(area = list(lineWidth = 0.5))
+  hc_plotOptions(area = list(lineWidth = 0.5)) %>% 
+  hc_exporting(enabled = TRUE)
 
 ts1 %>%
   hc_add_annotation(
@@ -826,7 +828,8 @@ dout <- data_to_hierarchical(data = top10_recipients,
 hchart(dout, type="treemap", allowTraversingTree=TRUE) %>%
   hc_title(text = "<b>Major Disbursement Recipients in Each Category</b>") %>%
   hc_tooltip(pointFormat = "<b>{point.name}</b>:<br>
-                            Total (US Dollar): {point.value:,.0f}")
+                            Total (US Dollar): {point.value:,.0f}") %>% 
+  hc_exporting(enabled = TRUE)
 ```
 This graph matches what we have discovered before. Most of the committees focus on advertising to help them win the election. Media Assembly and Media Buying & Analytics.LLC are two major companies that provides media advertising services to the 2020 election. As expected, there are also some large tech companies like Google and Facebook in this section. There are also many disbursements for administrative and consulting purposes. Administrative and consulting are the next two largest sectors. They get about equal share of the total disbursements. Zenefits, Vensure HR.LLC, ADP.LLC are three major recipients in the Administrative section. All of these three companies provides Human Resource supports such as H.R. Management software system. In the Consulting section, we see data analytics and financial consulting companies such as Hawkfish.LLC and Geller & Company.LLC. In Other section, there are banks, tech service companies, as well as Vensure HR.LLC and Hawkfish.LLC that we have seen earlier. Though we are unable to specify which purpose those disbursements are for, it is highly likely that those disbursements would be related to financial and other minor transactions regarding the services committees purchased from those supporting companies. 
 
@@ -861,7 +864,8 @@ hc_title(text = "Total Disbursements By All Presidential Candidates 2020 By Stat
    ) %>%
    hc_colorAxis(minColor = "white", maxColor = "red", min=1e6, type="logarithmic", endOnTick=FALSE, stops = color_stops(n=length(colors), colors = colors)) %>%
    hc_legend(valueDecimals = 0, valueSuffix = "%") %>%
-   hc_mapNavigation(enabled = TRUE)
+   hc_mapNavigation(enabled = TRUE) %>% 
+  hc_exporting(enabled = TRUE)
 ```
 Disbursement mainly goes towards the companies on the Southern and Northern-East Side of the United States. This result is consistent to [2019 Q4 U.S Real GDP data](https://apps.bea.gov/iTable/iTable.cfm?reqid=70&step=30&isuri=1&major_area=0&area=xx&year=2019&tableid=532&category=5532&area_type=0&year_end=-1&classification=non-industry&state=0&statistic=1&yearbegin=-1&unit_of_measure=levels) reported by the Bureau of Economic Analysis.Those states that are highlighted in darker red are the states that contribute more to the U.S's GDP. For example: California, Texas, New York, Washington, Georgia. Compare to the 2020 election result, all of these states that contributes the most to the U.S total GDP, besides Taxas, voted for Joe Biden. Such pattern discontinued as we move down along the GDP level. Since the graph above includes a majority of social media and network companies, which their services can be done remotely, it would not reflect which state the candidates are focusing on to perform actions that help win the votes. On the other hand, there are two disbursement categories called `MATERIALS` and `EVENTS` that consists of the physical materials that are purchased and used locally for this presidential election, such as posters, staging materials, delivery fee, etc. If we look at the disbursement distribution across the 50 U.S. states on those categories, we might get a better idea on our previous question. In corresponding to the voting result analysis, let's focus on the two main candidates' committees.
 
@@ -903,7 +907,8 @@ hc_title(text = "Total Disbursements By 2020 Joe Biden Committee By State") %>%
    ) %>%
    hc_colorAxis(min=1e3, max=max(exp_flow_T$value), minColor = "white", maxColor = "red",type="logarithmic", stops = color_stops(n=length(colors), colors = colors), endOnTick=FALSE) %>%
    hc_legend(valueDecimals = 0, valueSuffix = "%") %>%
-   hc_mapNavigation(enabled = TRUE)
+   hc_mapNavigation(enabled = TRUE) %>% 
+  hc_exporting(enabled = TRUE)
 ```
 
 
@@ -927,7 +932,8 @@ hc_title(text = "Total Disbursements By 2020 Donald Trump Committee By State") %
    ) %>%
    hc_colorAxis(min=1e3, max=max(exp_flow_T$value), minColor = "white", maxColor = "red",type="logarithmic",stops = color_stops(n=length(colors), colors = colors), endOnTick=FALSE) %>%
    hc_legend(valueDecimals = 0, valueSuffix = "%") %>%
-   hc_mapNavigation(enabled = TRUE)
+   hc_mapNavigation(enabled = TRUE) %>% 
+  hc_exporting(enabled = TRUE)
 ```
 
 There are not a lot of physical events going on and propaganda passing out for this year's election. Partly it could due to the COVID pandemic. From the above graph, the location where Trump's committee held physical events are more widely spread out across U.S than Biden's committee, especially in the middle part of the U.S. Meanwhile, the recipients of material and event fee made by Biden's committee mainly clustered in the east half of the U.S. and West Coast. As shown previously in the parallel axis graph, both of the committees spent less than 5% of their total expenditure in Materials and Events in total. Compare both maps above, we can see more regions colored in bright red in the second map, but not that much on the first map. Those bright colors represent that those regions are receiving more of such committee's total disbursement. The two maps are colored based on the same color scale. Since we have found that Biden's committee spent more than Trump's Committee, and Trump's committee is spending more in the above two categories, it is not difficult to conclude that Trump's committee spent a larger percent of their total expenditure in physical events. This could be one of the campaign's strategy, since there are many states that Trump invested for physical events turned out voting Trump this year. But such strategy does not necessarily guarantee them to win the election under this year's circumstance. Among the five flipped states that voted for Biden this year, Biden's committee spend more in physical events in two of them: Michigan and Georgia, and Trump's committee spend more in physical events in the rest three states: Pennsylvania, Wisconsin, and Arizona. Also, Biden did not spend as much as Trump did on physical events this year overall. So we raised an hypothesis that people's expectations toward future government in this year's election might be very dichotomize: there are states that have an absolute favor in Trump's policy and his action toward situations happening this year, while also a group of states that counted as the majority of the vote in the election that favor Biden's policy.
