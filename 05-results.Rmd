@@ -475,7 +475,7 @@ ts <- contribution_by_date[order(contribution_by_date$contribution_receipt_date,
 
 # Interactive time series plot with highcharter
 ts1 <- ts %>%
-  hchart("area",hcaes(x = contribution_receipt_date, y = Total, 
+  hchart("line",hcaes(x = contribution_receipt_date, y = Total, 
                       group = committee_name)) %>%
   hc_chart(zoomType = "x") %>%
   hc_colors(c("#0015BC", "#FF0000")) %>%
@@ -485,7 +485,7 @@ ts1 <- ts %>%
   hc_yAxis(title = list(text = "Contribution Amount (US Dollars)"),
            tickInterval = 2000000,
            max = 14000000) %>%
-  hc_title(text = "<b>Individual Contributions to US Presidential Candidates 2020</b>") %>%
+  hc_title(text = "<b>Individual Contributions to US Presidential Candidates 2020 by Date</b>") %>%
   hc_subtitle(text = "Click and drag in the plot area to zoom in on a time span") %>%
   hc_plotOptions(area = list(lineWidth = 0.5)) %>% 
   hc_exporting(enabled = TRUE)
