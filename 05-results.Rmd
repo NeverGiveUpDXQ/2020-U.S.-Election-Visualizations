@@ -36,29 +36,37 @@ library(wordcloud2)
 library(jsonlite)
 ```
 
-## Election Vote Results Visualizations
-### State level
+## US Presidential Election
+
+In the U.S., a presidential candidate needs to [receive a minimum of 270 out of 538 electoral votes to win the election](https://apnews.com/article/electoral-college-popular-vote-explained-f9ba69cbbe0493e0248603065790efad), therefore every state matters in determining the election results. Also, with a ["winner takes all" system](https://ballotpedia.org/Winner-take-all) implemented in all states except for Nebraska and Maine, popular votes are important since all the electoral votes of a state go to the candidate with the most popular votes. Based on the published voting results, we carried out extensive analysis on 2020 US Presidential Election to take a closer look at the popular votes received by two candidates on the state level. You can also go to [Fox News](https://www.foxnews.com/elections/2020/general-results) to see detailed electoral vote results.
+
+### 2020 Election Margins by State
 
 ```{r, eval = FALSE, echo=FALSE}
 president2020 <- read_csv('./data/raw/Popular vote backend_1211.csv') %>%
   filter(state %in% usmap::statepop$full)%>%
-  # make column `state` consistent & don't consider ("Maine 2nd District"    "Nebraska 2nd District" "Maine 1st District"  "Nebraska 1st District" "Nebraska 3rd District")
+  # Make column `state` consistent & we don't consider Maine/Nebraska districts
   select(stateid,state,dem_this_margin,dem_votes,rep_votes) %>%
   # we classfiy 3 levels: Dem. won, Rep. won and flipped states
-  mutate(class = ifelse(stateid %in% c('AZ', 'WI', 'MI', 'PA', 'GA'),'States that flipped from 2016',ifelse(dem_votes>rep_votes,'Democratic win','Republican win')))
+  mutate(class = ifelse(stateid %in% c('AZ', 'WI', 'MI', 'PA', 'GA'),'States that flipped from 2016',ifelse(dem_votes>rep_votes,'Democrats won','Republicans won')))
 
 write.csv(president2020, "./data/clean/president2020.csv",row.names = FALSE)
 ```
 
 
-
 ```{r}
 president2020 <- readr::read_csv(here::here("./data/clean/president2020.csv"))
 
+# Flipped states
+flipped <- president2020[president2020$stateid %in% c('AZ', 'WI', 'MI', 'PA', 'GA'),]
+
+# Select columns
 president2020<- president2020%>%
-  select(state,dem_this_margin)
+  select(stateid,state,dem_this_margin)
 
 colors = c("darkred","white","darkblue")
+
+# Highchart map
 highchart() %>%
   hc_title(text = "2020 Election Result Margin By State") %>%
   hc_subtitle(text = "Double click the state area to zoom in") %>%
@@ -74,18 +82,24 @@ highchart() %>%
    hc_colorAxis(min = -0.5, max = 0.5,
                 stops = color_stops(n=3, colors=colors)) %>%
    hc_mapNavigation(enabled = TRUE) %>%
-   hc_legend(title = list(text = "Dem'20 Margin"),
-              enabled = TRUE)
+   hc_legend(title = list(text = "Vote Share Margin of Dem."),
+              enabled = TRUE) %>% 
+  hc_exporting(enabled = TRUE)
 ```
+The first map displayed Democrats' presidential margins, i.e. difference between Dem. vote shares and Rep. vote shares, in each state. We cut the margins by -0.5 and 0.5, but if zooming in to the Virginia-Maryland region, we can see Biden's margin in **D.C** was larger than 0.5 (equal to 86.75%). Besides winning a landslide victory in **D.C.**, Biden also won **Vermont**, **Massachusetts**, and **Maryland** with a margin larger than 30%, whereas Trump won **Wyoming**, **West Virginia**, **North Dakota**, and **Oklahoma** with absolute advantages. These states are clearly either blue or red, but there are also several states with a very narrow margin that are shown in the middle white color. Hot races took place in **Florida**, **North Carolina**, **Georgia**, **Arizona**, **Wisconsin**, **Pennsylvania**, **Nevada**, and **Michigan** where the margins of the winning party were less than 5%. 
+
+In general, we can see Biden's advantage in the West Coast and the Northeast of the US while Trump's advantage in the Southwest and the Central America. In terms of the number of states won, Biden won 26 states and Trump won 25 states, but the number of electoral votes made a big difference in the final results.
+
+Comparing election results between 2016 and 2020, we found:
+- There were noticeable margin shifts in many states, which most of these states voted for Hillary Clinton in 2016 and futher expanded Democrat's margin in 2020. The margins in **Vermont** and **Colorado** shifted the most by 9% (26.41% Dem -> 35.40% Dem) and 8.6% (4.91% Dem -> 13.5% Dem) respectively. 
+- Joe Biden enlarged the margins in a couple of battlegrounds that Hillary Clinton won in 2016: **Minnesoda** (1.52% Dem -> 7.11% Dem) and **New Hampshire** (0.37% Dem -> 7.35% Dem).
+- Joe Biden flipped 5 states that Donald Trump won in 2016, which are displayed in the plot below. 
 
 ```{r}
-president2020$dem_this_margin[!(stateid %in% c('AZ', 'WI', 'MI', 'PA', 'GA'))] = NA
 
-president2020<- president2020%>%
-  select(state,dem_this_margin)
-
+# Highchart map: flipped states only
 highchart() %>%
-  hc_title(text = "2020 Election Result Margin By Filpped State") %>%
+  hc_title(text = "2020 Election Result Margin: Filpped States") %>%
   hc_subtitle(text = "Double click the state area to zoom in") %>%
   hc_add_series_map(usgeojson, president2020,
     name = "Margin",
@@ -95,25 +109,25 @@ highchart() %>%
        format = "{point.properties.postalcode}"
      )
    ) %>%
-   hc_colorAxis(min = min(president2020$dem_this_margin), max = max(president2020$dem_this_margin),
+  hc_add_series_map(usgeojson, flipped,
+    name = "Margin",
+    value = "dem_this_margin", joinBy = c("name", "state"),
+    dataLabels = list(
+       enabled = TRUE,
+       format = "{point.properties.postalcode}"
+     )
+   ) %>%
+   hc_colorAxis(min = min(flipped$dem_this_margin), max = max(flipped$dem_this_margin),
                 minColor = 'powderblue', maxColor = 'blue') %>%
    hc_mapNavigation(enabled = TRUE) %>%
-   hc_legend(title = list(text = "Dem'20 Margin"),
-              enabled = TRUE)
+   hc_legend(title = list(text = "Vote Share Margin of Dem."),
+              enabled = TRUE) %>% 
+  hc_exporting(enabled = TRUE)
 ```
 
+We filtered the five flipped states, and the changes in popular margins are: **Michigan** (0.23% Rep -> 2.78% Dem), **Pennsylvania** (0.72% Rep -> 1.16% Dem), **Wisconsin** (0.77% Rep -> 0.63% Dem), **Arizona** (3.55% Rep -> 0.31% Dem), and **Georgia** (5.13% Rep -> 0.24% Dem). Among them, Georgia had the most margin shift. 
 
-From this plot, it's easy to see that Biden won most of the votes in the eastern and western regions of the United States, while Trump's votes are mainly from the central region. In terms of the number of winning states, they are not much different, but we need to consider that the number of electoral votes is different.
-
-Also, we compared election results between 2016 and 2020 on the state level, and we found:
-
-- Joe Biden flipped 5 states from Donald Trump. i.e **Michigan**(0.23%R -> 2.78%D), **Pennsylvania**(0.72%R -> 1.16%D), **Wisconsin**(0.77%R -> 0.63D), **Arizona**(3.55%R -> 0.31%D), **Georgia**(5.13%R -> 0.24%D).
-
-- Joe Biden enlarged the margin of **Minnesoda**(1.52%D -> 7.11%D) and **New Hampshire**(0.37%D -> 7.35%D) that Hillary Clinton won in 2016.
-
-
-
-### Time level
+### Historical Timeline
 
 [**Instructions to Use the Graph**](https://github.com/TorsteinHonsi/Motion-Highcharts-Plugin/wiki)
 
@@ -139,7 +153,7 @@ history_election_ds = history_election %>%
 
 highchart(type = "map") %>% 
   hc_add_series(data = history_election_ds,
-                name = "Popular Votes for Rep.",
+                name = "Popular Vote Shares for Rep.",
                 mapData = usgeojson,
                 joinBy = c("name","state"),
                 borderWidth = 0.05,
@@ -166,7 +180,7 @@ highchart(type = "map") %>%
 ```
 
 
-In this part, I will compare popular vote and electoral college vote from 1824 to 2020. *It's possible the candidate with the most votes from the public won't be the winner. This is because the president is not chosen directly by the voters, but what's known as the electoral college. (This explained by [BBC](https://www.bbc.com/news/world-us-canada-53558176) )*
+In this part, we compared popular vote share and electoral college vote share from 1824 to 2020. *It is possible the candidate with the most votes from the public won't be the winner. This is because the president is not chosen directly by the voters, but what's known as the electoral college. (This is explained by [BBC](https://www.bbc.com/news/world-us-canada-53558176) )*
 
 ```{r}
 # Code reference: https://socviz.co/workgeoms.html#workgeoms
@@ -185,10 +199,10 @@ ggplot(elections_historic_new, aes(x = popular_pct,
   scale_x_continuous(labels = scales::percent) +
   scale_y_continuous(labels = scales::percent) +
   annotate(geom = "rect", xmin = 0.37, xmax = 0.497, ymin = 0.51, ymax = 0.85, fill = "red", alpha = 0.2) + 
-  annotate(geom = "text", x = 0.35, y = 0.9, label = "Electoral vote is high \nbut with low share of popular vote", hjust = 0)+
-  labs(x = "Winner's share of popular vote", 
-       y = "Winner's share of electoral college vote", 
-       title = "Presidential Elections: Popular & Electoral College Margins", subtitle = "From 1824 to 2020",
+  annotate(geom = "text", x = 0.35, y = 0.9, label = "High electoral vote share\nbut low popular vote share", hjust = 0)+
+  labs(x = "Winner's share of popular votes", 
+       y = "Winner's share of electoral college votes", 
+       title = "Presidential Elections: Popular vs. Electoral College Margins", subtitle = "From 1824 to 2020",
        caption = "Source: socviz & Cook Political", fill = "Party affiliation of winner")+
   theme_bw() +
   theme(plot.title = element_text(face = "bold"),
