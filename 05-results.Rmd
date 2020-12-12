@@ -53,18 +53,14 @@ write.csv(president2020, "./data/clean/president2020.csv",row.names = FALSE)
 
 
 ```{r}
-attach(president2020)
 president2020 <- readr::read_csv(here::here("./data/clean/president2020.csv"))
-
-president2020$dem_this_margin[stateid %in% c('AZ', 'WI', 'MI', 'PA', 'GA')] = NA
 
 president2020<- president2020%>%
   select(state,dem_this_margin)
 
 colors = c("darkred","white","darkblue")
-
 highchart() %>%
-  hc_title(text = "2020 Election Result Margin By State (w/o filpped state)") %>%
+  hc_title(text = "2020 Election Result Margin By State") %>%
   hc_subtitle(text = "Double click the state area to zoom in") %>%
   hc_add_series_map(usgeojson, president2020,
     name = "Margin",
@@ -75,7 +71,7 @@ highchart() %>%
      )
    ) %>%
    hc_legend(title = '2020 Margin')%>%
-   hc_colorAxis(min = -1, max = 1,
+   hc_colorAxis(min = -0.5, max = 0.5,
                 stops = color_stops(n=3, colors=colors)) %>%
    hc_mapNavigation(enabled = TRUE) %>%
    hc_legend(title = list(text = "Dem'20 Margin"),
@@ -83,9 +79,6 @@ highchart() %>%
 ```
 
 ```{r}
-attach(president2020)
-president2020 <- readr::read_csv(here::here("./data/clean/president2020.csv"))
-
 president2020$dem_this_margin[!(stateid %in% c('AZ', 'WI', 'MI', 'PA', 'GA'))] = NA
 
 president2020<- president2020%>%
@@ -113,6 +106,7 @@ highchart() %>%
 From this plot, it's easy to see that Biden won most of the votes in the eastern and western regions of the United States, while Trump's votes are mainly from the central region. In terms of the number of winning states, they are not much different, but we need to consider that the number of electoral votes is different.
 
 Also, we compared election results between 2016 and 2020 on the state level, and we found:
+
 - Joe Biden flipped 5 states from Donald Trump. i.e **Michigan**(0.23%R -> 2.78%D), **Pennsylvania**(0.72%R -> 1.16%D), **Wisconsin**(0.77%R -> 0.63D), **Arizona**(3.55%R -> 0.31%D), **Georgia**(5.13%R -> 0.24%D).
 
 - Joe Biden enlarged the margin of **Minnesoda**(1.52%D -> 7.11%D) and **New Hampshire**(0.37%D -> 7.35%D) that Hillary Clinton won in 2016.
@@ -131,10 +125,6 @@ Also, we compared election results between 2016 and 2020 on the state level, and
 ```{r}
 # help file: https://api.highcharts.com/highcharts/labels.items
 # reference : RPubs: William Green(https://rpubs.com/wbgreen405/249838)
-
-library(highcharter)
-library(tidyverse)
-library(jsonlite)
 
 history_election <- readr::read_csv(here::here("./data/clean/1976-2016election.csv"))
 
@@ -157,7 +147,7 @@ highchart(type = "map") %>%
                 ) %>% 
   hc_colorAxis(
                minColor = 'white',
-               maxColor = 'red',
+               maxColor = 'darkred',
                min = 0,
                max = 1 ) %>%  
   hc_title(text = "Share of Popular Votes for the Republican from 2016 to 1976") %>%
@@ -173,7 +163,6 @@ highchart(type = "map") %>%
       round = "floor" 
     )
   )
-
 ```
 
 
