@@ -18,9 +18,9 @@ disbursement-data-transformation
 missing-values
 contribution-receipt-dataset
 results
-election-vote-results-visualizations
-state-level
-time-level
+us-presidential-election
+election-margins-by-state
+historical-timeline
 contribution-receipts-data
 overview
 total-contributions-by-state
@@ -42,3 +42,4 @@ link-to-the-interactive-map
 descriptions
 instructions-for-using-the-map
 conclusion
+tab:unnamed-chunk-14
