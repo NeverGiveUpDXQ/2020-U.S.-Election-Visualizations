@@ -3,9 +3,9 @@ tab:unnamed-chunk-5
 tab:unnamed-chunk-6
 tab:unnamed-chunk-19
 tab:unnamed-chunk-25
-tab:unnamed-chunk-38
-fig:unnamed-chunk-39
-tab:unnamed-chunk-46
+tab:unnamed-chunk-39
+fig:unnamed-chunk-40
+tab:unnamed-chunk-47
 introduction
 data-sources
 u.s.-county-level-voting-results-of-2020-presidential-election
@@ -42,4 +42,3 @@ link-to-the-interactive-map
 descriptions
 instructions-for-using-the-map
 conclusion
-tab:unnamed-chunk-14
