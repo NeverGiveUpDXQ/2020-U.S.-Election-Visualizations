@@ -269,7 +269,7 @@ statepop1 <- statepop1 %>%
 # https://rstudio-pubs-static.s3.amazonaws.com/10130_e7ab01469cdf4ddb85e3510b0844885e.html
 # https://rdrr.io/cran/micromapST/man/panelDesc.html
 library(micromapST)
-popular_vote <- readr::read_csv(here::here("Popular vote backend_1211.csv"))
+popular_vote <- readr::read_csv(here::here("./data/raw/Popular vote backend_1211.csv"))
 statepop1 <- readr::read_csv(here::here("statepop1.csv"))
 statepop2 <- statepop1 %>%
   left_join(popular_vote[,c(2:14,20,21)],by = c("abbr" = "stateid" ))
