@@ -187,7 +187,8 @@ In this part, we compared popular vote share and electoral college vote share fr
 # HIGHLY recommended this book!! Really APPRECIATE:)
 
 elections_historic_new <- readr::read_csv(here::here("./data/clean/elections_historic_new.csv"))
-
+# Start plotting from year 1900
+elections_historic_new<- elections_historic_new[-c(1:20),]
 # plot
 ggplot(elections_historic_new, aes(x = popular_pct, 
                                    y = ec_pct,
@@ -263,6 +264,55 @@ statepop1 <- statepop1 %>%
 ```
 
 #### Total Contributions by State
+
+```{r, fig.height=15,fig.width=12,message=FALSE, echo=FALSE}
+# https://rstudio-pubs-static.s3.amazonaws.com/10130_e7ab01469cdf4ddb85e3510b0844885e.html
+# https://rdrr.io/cran/micromapST/man/panelDesc.html
+library(micromapST)
+popular_vote <- readr::read_csv(here::here("Popular vote backend_1211.csv"))
+statepop1 <- readr::read_csv(here::here("statepop1.csv"))
+statepop2 <- statepop1 %>%
+  left_join(popular_vote[,c(2:14,20,21)],by = c("abbr" = "stateid" ))
+row.names(statepop2) <- statepop2$abbr
+
+# column formats
+statepop2$dem_this_margin <- round(statepop2$dem_this_margin,2)
+statepop2$`2016 Margin`<- round(statepop2$`2016 Margin`,2)
+statepop2$BIDEN_C_PERC <- round(statepop2$BIDEN_RECEIPT_AMOUNT/statepop2$ALL_RECEIPT_AMOUNT,2)
+statepop2$TRUMP_C_PERC <- round(statepop2$TRUMP_RECEIPT_AMOUNT/statepop2$ALL_RECEIPT_AMOUNT,2)
+
+
+#popular_vote_battlegrounds <- popular_vote[5:19,]
+#popular_vote_flipped <- popular_vote[popular_vote$stateid %in% c('AZ', 'WI', 'MI', 'PA', 'GA'),]
+
+
+#df<- as.data.frame(statepop2[statepop2$abbr %in% popular_vote_battlegrounds$stateid,])
+#rownames(df) <- df[,1]
+#df$zero <- round(df$ALL_RECEIPT_AMOUNT/10000000000000,0)
+
+df1<- as.data.frame(statepop2)
+rownames(df1) <- df1[,1]
+df1$zero <- round(df1$ALL_RECEIPT_AMOUNT/10000000000000,0)
+df1$BIDEN_C <- round(df1$BIDEN_RECEIPT_AMOUNT/1000000,0)
+df1$TRUMP_C <- round(df1$TRUMP_RECEIPT_AMOUNT/1000000,0)
+
+panelDesc = data.frame(type = c("mapmedian", "id", "dot","arrow", "ctrbar", "normbar"), 
+            lab1 = c("","","Dem's Margin","Margin Shift","Contributions To","Contributions Per Voter"), 
+            lab2 = c("", "", "2020","2016 to 2020","Biden vs. Trump (2020)","Biden vs. Trump (2020)"),
+            lab3 = c("", "", "Democrats' Margin", "Democrats' Margin", "Million Dollars", "Percent"),
+            col1 = c(NA, NA, 20, 28, 29, 10), 
+            col2 = c(NA, NA, NA, 21, 30, 11))
+            #colSize = c(NA,NA,22,22,28,28))
+
+#micromapST(df, panelDesc, sortVar = 20, ascend = FALSE)#, title = c("Title","sub"))
+
+
+
+micromapST(df1, panelDesc, sortVar = 20, ascend = FALSE, title = c("2020 US Presidential Election Results by State","Margins, Margin shifts, and Contributions"))
+
+
+```
+
 As an overview, we plotted the total amounts of contributions made by each state this year that were received by all presidential candidates of 2020 US election. 
 
 ```{r, echo=FALSE}
