@@ -270,7 +270,7 @@ statepop1 <- statepop1 %>%
 # https://rdrr.io/cran/micromapST/man/panelDesc.html
 library(micromapST)
 popular_vote <- readr::read_csv(here::here("./data/raw/Popular vote backend_1211.csv"))
-statepop1 <- readr::read_csv(here::here("statepop1.csv"))
+statepop1 <- readr::read_csv(here::here("./data/d3csv/statepop1.csv"))
 statepop2 <- statepop1 %>%
   left_join(popular_vote[,c(2:14,20,21)],by = c("abbr" = "stateid" ))
 row.names(statepop2) <- statepop2$abbr
@@ -913,7 +913,7 @@ hc_title(text = "Total Disbursements By All Presidential Candidates 2020 By Stat
      )
    ) %>%
    hc_colorAxis(minColor = "white", maxColor = "red", min=1e6, type="logarithmic", endOnTick=FALSE, stops = color_stops(n=length(colors), colors = colors)) %>%
-   hc_legend(valueDecimals = 0, valueSuffix = "%") %>%
+   hc_legend(title = list(text = "US Dollar Amount"), valueDecimals = 0, valueSuffix = "%") %>%
    hc_mapNavigation(enabled = TRUE) %>% 
   hc_exporting(enabled = TRUE)
 ```
@@ -956,7 +956,7 @@ hc_title(text = "Total Disbursements By 2020 Joe Biden Committee By State") %>%
      )
    ) %>%
    hc_colorAxis(min=1e3, max=max(exp_flow_T$value), minColor = "white", maxColor = "red",type="logarithmic", stops = color_stops(n=length(colors), colors = colors), endOnTick=FALSE) %>%
-   hc_legend(valueDecimals = 0, valueSuffix = "%") %>%
+   hc_legend(title = list(text = "US Dollar Amount"), valueDecimals = 0, valueSuffix = "%") %>%
    hc_mapNavigation(enabled = TRUE) %>% 
   hc_exporting(enabled = TRUE)
 ```
@@ -981,7 +981,7 @@ hc_title(text = "Total Disbursements By 2020 Donald Trump Committee By State") %
      )
    ) %>%
    hc_colorAxis(min=1e3, max=max(exp_flow_T$value), minColor = "white", maxColor = "red",type="logarithmic",stops = color_stops(n=length(colors), colors = colors), endOnTick=FALSE) %>%
-   hc_legend(valueDecimals = 0, valueSuffix = "%") %>%
+   hc_legend(title = list(text = "US Dollar Amount"), valueDecimals = 0, valueSuffix = "%") %>%
    hc_mapNavigation(enabled = TRUE) %>% 
   hc_exporting(enabled = TRUE)
 ```

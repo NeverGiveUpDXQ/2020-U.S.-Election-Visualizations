@@ -13,6 +13,7 @@ This interactive map shows the number of votes obtained by each party/presidenti
 ### Instructions for using the map:
 
 The plot is initialized with a mapping of 2020 US Presidential Election votes with no default county specified. The color of each county reflects the winning party's margin of victory, as scaled on the legend. 
+
 1. Users can scroll up or down to manually zoom in or out the full map. 
 2. Users can click and drag to move the map.
 3. Users can hover the mouse over a county to see county name, vote counts for each party, and the margin. 

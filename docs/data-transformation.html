@@ -33,7 +33,7 @@
   
 <link rel="prev" href="data-sources.html"/>
 <link rel="next" href="missing-values.html"/>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/jquery-3.5.0/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -51,6 +51,48 @@
 
 
 <script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<script src="libs/htmlwidgets-1.5.2/htmlwidgets.js"></script>
+<script src="libs/proj4js-2.3.15/proj4.js"></script>
+<link href="libs/highcharts-8.1.2/css/motion.css" rel="stylesheet" />
+<script src="libs/highcharts-8.1.2/highcharts.js"></script>
+<script src="libs/highcharts-8.1.2/highcharts-3d.js"></script>
+<script src="libs/highcharts-8.1.2/highcharts-more.js"></script>
+<script src="libs/highcharts-8.1.2/modules/stock.js"></script>
+<script src="libs/highcharts-8.1.2/modules/map.js"></script>
+<script src="libs/highcharts-8.1.2/modules/annotations.js"></script>
+<script src="libs/highcharts-8.1.2/modules/data.js"></script>
+<script src="libs/highcharts-8.1.2/modules/drilldown.js"></script>
+<script src="libs/highcharts-8.1.2/modules/item-series.js"></script>
+<script src="libs/highcharts-8.1.2/modules/offline-exporting.js"></script>
+<script src="libs/highcharts-8.1.2/modules/overlapping-datalabels.js"></script>
+<script src="libs/highcharts-8.1.2/modules/exporting.js"></script>
+<script src="libs/highcharts-8.1.2/modules/export-data.js"></script>
+<script src="libs/highcharts-8.1.2/modules/funnel.js"></script>
+<script src="libs/highcharts-8.1.2/modules/heatmap.js"></script>
+<script src="libs/highcharts-8.1.2/modules/treemap.js"></script>
+<script src="libs/highcharts-8.1.2/modules/sankey.js"></script>
+<script src="libs/highcharts-8.1.2/modules/dependency-wheel.js"></script>
+<script src="libs/highcharts-8.1.2/modules/organization.js"></script>
+<script src="libs/highcharts-8.1.2/modules/solid-gauge.js"></script>
+<script src="libs/highcharts-8.1.2/modules/streamgraph.js"></script>
+<script src="libs/highcharts-8.1.2/modules/sunburst.js"></script>
+<script src="libs/highcharts-8.1.2/modules/vector.js"></script>
+<script src="libs/highcharts-8.1.2/modules/wordcloud.js"></script>
+<script src="libs/highcharts-8.1.2/modules/xrange.js"></script>
+<script src="libs/highcharts-8.1.2/modules/tilemap.js"></script>
+<script src="libs/highcharts-8.1.2/modules/venn.js"></script>
+<script src="libs/highcharts-8.1.2/modules/gantt.js"></script>
+<script src="libs/highcharts-8.1.2/modules/timeline.js"></script>
+<script src="libs/highcharts-8.1.2/modules/parallel-coordinates.js"></script>
+<script src="libs/highcharts-8.1.2/modules/bullet.js"></script>
+<script src="libs/highcharts-8.1.2/modules/coloraxis.js"></script>
+<script src="libs/highcharts-8.1.2/modules/dumbbell.js"></script>
+<script src="libs/highcharts-8.1.2/modules/lollipop.js"></script>
+<script src="libs/highcharts-8.1.2/modules/series-label.js"></script>
+<script src="libs/highcharts-8.1.2/plugins/motion.js"></script>
+<script src="libs/highcharts-8.1.2/custom/reset.js"></script>
+<script src="libs/highcharts-8.1.2/modules/boost.js"></script>
+<script src="libs/highchart-binding-0.8.2/highchart.js"></script>
 
 
 
@@ -216,10 +258,10 @@ Finally, the counts for each unique word were calculated and saved in a separate
 <div id="disbursement-data-transformation" class="section level2">
 <h2><span class="header-section-number">3.3</span> Disbursement Data Transformation</h2>
 <p>The first step we did is to extract the necessary columns that are mentioned in the previous chapter. Then we noticed that in the <code>disbursement_purpose_category</code>, there is a <code>OTHER</code> top coding is dominant the dataset, hence it would not provide us lots of interesting information to analyze. Below is the original data distribution for the <code>disbursement_purpose_category</code> column:
-<img src="finalproj_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<img src="finalproj_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
 <p>But since we have another column which is the disbursement_description, we can use this information to decode this top code. We examined the frequently mentioned terms in <code>disbursement_description</code> among those marked as <code>OTHER</code> and manually categorize them into existing or new categories that would fit the record type better. Below is a conversion table that we used to convert the columns. The pattern we are looking for in the description ar based on high frequent terms as well as their word stems and abbreviations. The conversion are done based on the order of this list.</p>
 <table>
-<caption><span id="tab:unnamed-chunk-14">Table 3.1: </span>Disbursement Description to Category Conversion Table</caption>
+<caption><span id="tab:unnamed-chunk-19">Table 3.1: </span>Disbursement Description to Category Conversion Table</caption>
 <colgroup>
 <col width="87%" />
 <col width="12%" />
@@ -270,7 +312,7 @@ Finally, the counts for each unique word were calculated and saved in a separate
 </tbody>
 </table>
 <p>Here is the distribution after undo the top coding:
-<img src="finalproj_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<img src="finalproj_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
 <p>Now, the top coding category is less significant than before. We perform our further analysis based on this cleaned data set.</p>
 
 </div>
