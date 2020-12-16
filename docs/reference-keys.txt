@@ -29,8 +29,7 @@ election-margins-by-state
 historical-timeline
 trace-election-margin-shifts-over-years
 contribution-receipts-data
-overview
-total-contributions-by-state
+overview-total-contributions-by-state
 contributions-per-registered-voter-by-state
 contributions-distribution-and-details
 contributions-by-date-time-series
@@ -38,7 +37,7 @@ contributor-occupations
 most-popular-contributor-occupations-joe-biden-vs.-donald-trump
 disbursement-data-analysis
 disbursement-distribution
-top-5-presidential-campaign-made-the-most-disbursement
+top-5-presidential-campaigns-spent-the-most
 disbursement-details
 when-does-those-committee-spend-the-most
 spending-trend-of-two-major-committees
