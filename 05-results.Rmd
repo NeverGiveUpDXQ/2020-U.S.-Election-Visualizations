@@ -91,6 +91,7 @@ The first map displayed Democrats' presidential margins, i.e. difference between
 In general, we can see Biden's advantage in the West Coast and the Northeast of the US while Trump's advantage in the Southwest and the Central America. In terms of the number of states won, Biden won 26 states and Trump won 25 states, but the number of electoral votes made a big difference in the final results.
 
 Comparing election results between 2016 and 2020, we found:
+
 - There were noticeable margin shifts in many states, which most of these states voted for Hillary Clinton in 2016 and futher expanded Democrat's margin in 2020. The margins in **Vermont** and **Colorado** shifted the most by 9% (26.41% Dem -> 35.40% Dem) and 8.6% (4.91% Dem -> 13.5% Dem) respectively. 
 - Joe Biden enlarged the margins in a couple of battlegrounds that Hillary Clinton won in 2016: **Minnesoda** (1.52% Dem -> 7.11% Dem) and **New Hampshire** (0.37% Dem -> 7.35% Dem).
 - Joe Biden flipped 5 states that Donald Trump won in 2016, which are displayed in the plot below. 
@@ -129,12 +130,15 @@ We filtered the five flipped states, and the changes in popular margins are: **M
 
 ### Historical Timeline
 
-[**Instructions to Use the Graph**](https://github.com/TorsteinHonsi/Motion-Highcharts-Plugin/wiki)
+#### Trace Election Margin Shifts Over Years
+We compared how vote shares have shifted in elections from 1976 to 2016
+**Instructions to use the graph:**
 
-1. play/pause clicking the play/pause button
-2. play/pause by hitting space
-3. navigating the motion slider by dragging the slider thumb
-4. navigating the motion slider by hitting the left and right arrow keys
+1. Play/pause clicking the play/pause button
+2. Play/pause by hitting space
+3. Navigate the motion slider by dragging the slider thumb
+4. Navigate the motion slider by hitting the left and right arrow keys
+Please refer to [the wiki here](https://github.com/TorsteinHonsi/Motion-Highcharts-Plugin/wiki) for more information about motion highcharts.
 
 ```{r}
 # help file: https://api.highcharts.com/highcharts/labels.items
@@ -164,7 +168,7 @@ highchart(type = "map") %>%
                maxColor = 'darkred',
                min = 0,
                max = 1 ) %>%  
-  hc_title(text = "Share of Popular Votes for the Republican from 2016 to 1976") %>%
+  hc_title(text = "Share of Popular Votes for the Republican from 1976 to 2016") %>%
   hc_legend(layout = "vertical", 
             align = "right",
             title = list(text = 'Share')) %>% 
@@ -172,15 +176,17 @@ highchart(type = "map") %>%
   hc_motion(
     enabled = TRUE,
     axisLabel = "year",
-    labels = as.character(sort(unique(history_election$year),decreasing = TRUE)),
+    labels = as.character(sort(unique(history_election$year),decreasing = FALSE)),
     magnet = list(
       round = "floor" 
     )
   )
 ```
 
+This motion map shows...
 
-In this part, we compared popular vote share and electoral college vote share from 1824 to 2020. *It is possible the candidate with the most votes from the public won't be the winner. This is because the president is not chosen directly by the voters, but what's known as the electoral college. (This is explained by [BBC](https://www.bbc.com/news/world-us-canada-53558176) )*
+
+However, pesidential candidates of the US winning more popular votes did not always win the election. *"It is possible the candidate with the most votes from the public won't be the winner. This is because the president is not chosen directly by the voters, but what's known as the electoral college."* (This is explained by [BBC](https://www.bbc.com/news/world-us-canada-53558176).) Thus, In this part, we compared popular vote shares vs. electoral college vote shares in US elections since 1900. 
 
 ```{r}
 # Code reference: https://socviz.co/workgeoms.html#workgeoms
@@ -188,7 +194,7 @@ In this part, we compared popular vote share and electoral college vote share fr
 
 elections_historic_new <- readr::read_csv(here::here("./data/clean/elections_historic_new.csv"))
 # Start plotting from year 1900
-elections_historic_new<- elections_historic_new[-c(1:20),]
+elections_historic_new<- elections_historic_new[-c(1:19),]
 # plot
 ggplot(elections_historic_new, aes(x = popular_pct, 
                                    y = ec_pct,
@@ -197,27 +203,28 @@ ggplot(elections_historic_new, aes(x = popular_pct,
   geom_vline(xintercept = 0.5, size = 1.4, color = "gray80")+
   geom_point(aes(colour = factor(win_party))) +
   geom_text_repel(size = 2) + # deal with overlapping labels
+  scale_color_manual(values=c("dodgerblue3", "firebrick2")) + #manual colors
   scale_x_continuous(labels = scales::percent) +
   scale_y_continuous(labels = scales::percent) +
-  annotate(geom = "rect", xmin = 0.37, xmax = 0.497, ymin = 0.51, ymax = 0.85, fill = "red", alpha = 0.2) + 
-  annotate(geom = "text", x = 0.35, y = 0.9, label = "High electoral vote share\nbut low popular vote share", hjust = 0)+
+  annotate(geom = "rect", xmin = 0.37, xmax = 0.498, ymin = 0.502, ymax = 0.85, fill = "red", alpha = 0.2) + 
+  annotate(geom = "text", x = 0.37, y = 0.9, label = "High electoral vote share\nbut low popular vote share", hjust = 0)+
   labs(x = "Winner's share of popular votes", 
        y = "Winner's share of electoral college votes", 
-       title = "Presidential Elections: Popular vs. Electoral College Margins", subtitle = "From 1824 to 2020",
-       caption = "Source: socviz & Cook Political", fill = "Party affiliation of winner")+
+       title = "Presidential Elections: Popular vs. Electoral College Margins", subtitle = "From 1900 to 2020",
+       caption = "Source: socviz & Cook Political", colour = "Party affiliation of winner")+
   theme_bw() +
   theme(plot.title = element_text(face = "bold"),
         plot.subtitle = element_text(face = "bold", color = "grey35"),
         plot.caption = element_text(color = "grey68"),
         axis.text.x = element_text(angle = 45, hjust = 1),
-        legend.position="bottom")
+        legend.position="bottom",
+        legend.title = element_text(face="bold"))
 ```
 
-From this plot, we can see: 
+Note: axes of the plot do not start from 0 as usual since we want to reduce point overlapping and zoom in to the area that contains all points of interest. 
+From the plot above, we can see: 
 
-- Ideally, we may think the president also have high share of popular vote. Those data in the red rectangular shows not this case. This can be explained by [how the US presidential election works](https://en.wikipedia.org/wiki/United_States_presidential_election).
-
-- Adams 1824 may be regarded as an outlier. However, after looking up Wiki, He is actually from Democratic-Republican Party.
+- Ideally, we hope the president-elect also had high share of popular vote, however, the data points falling in the red rectangular were not this case. This can be explained by [how the US presidential election works](https://en.wikipedia.org/wiki/United_States_presidential_election).
 
 - Finally, we can regard Roosevelt as an outstanding candidate since his electoral vote and popular vote are very high.
 
