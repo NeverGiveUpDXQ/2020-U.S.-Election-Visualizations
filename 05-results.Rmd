@@ -210,7 +210,7 @@ ggplot(elections_historic_new, aes(x = popular_pct,
   annotate(geom = "text", x = 0.37, y = 0.9, label = "High electoral vote share\nbut low popular vote share", hjust = 0)+
   labs(x = "Winner's share of popular votes", 
        y = "Winner's share of electoral college votes", 
-       title = "Presidential Elections: Popular vs. Electoral College Margins", subtitle = "From 1900 to 2020",
+       title = "US Presidential Elections: Popular vs. Electoral College Shares", subtitle = "From 1900 to 2020",
        caption = "Source: socviz & Cook Political", colour = "Party affiliation of winner")+
   theme_bw() +
   theme(plot.title = element_text(face = "bold"),
@@ -224,12 +224,59 @@ ggplot(elections_historic_new, aes(x = popular_pct,
 Note: axes of the plot do not start from 0 as usual since we want to reduce point overlapping and zoom in to the area that contains all points of interest. 
 From the plot above, we can see: 
 
-- Ideally, we hope the president-elect also had high share of popular vote, however, the data points falling in the red rectangular were not this case. This can be explained by [how the US presidential election works](https://en.wikipedia.org/wiki/United_States_presidential_election).
-
-- Finally, we can regard Roosevelt as an outstanding candidate since his electoral vote and popular vote are very high.
+- Each point in the plot represents a winner of the US Presidential Election and the axes show the popular and electoral vote shares of the winner in the respective election year. All points fall above the horizontal line y = 50% since every president-elect obtained more than half of the electoral votes to win the election.
+- Ideally, we hope the president-elect also had high share of popular vote. However, the data points falling in the red rectangle were not this case. There were outliers in the plot, for example, in the years 1912 and 1992, Wilson and Clinton won the election of the time with high electoral vote shares, but their popular votes shares were lower than 45%. Trump in 2016 also won the election with more electoral votes but fewer popular votes.
+- Additionally, we can see **Reagan** in 1984, **Roosevelt** in 1936, and **Nixon** in 1972 won the elections with overwhelming support that their shares in both electoral votes and popular votes were very high.
 
 ## Contribution Receipts Data
-### Overview
+
+```{r, fig.height=15,fig.width=12,message=FALSE, echo=FALSE}
+# Reference
+# https://rstudio-pubs-static.s3.amazonaws.com/10130_e7ab01469cdf4ddb85e3510b0844885e.html
+# https://rdrr.io/cran/micromapST/man/panelDesc.html
+library(micromapST)
+popular_vote <- readr::read_csv(here::here("./data/raw/Popular vote backend_1211.csv"))
+statepop1 <- readr::read_csv(here::here("./data/d3csv/statepop1.csv"))
+statepop2 <- statepop1 %>%
+  left_join(popular_vote[,c(2:14,20,21)],by = c("abbr" = "stateid" ))
+row.names(statepop2) <- statepop2$abbr
+
+# column formats
+statepop2$dem_this_margin <- round(statepop2$dem_this_margin,2)
+statepop2$`2016 Margin`<- round(statepop2$`2016 Margin`,2)
+statepop2$BIDEN_C_PERC <- round(statepop2$BIDEN_RECEIPT_AMOUNT/statepop2$ALL_RECEIPT_AMOUNT,2)
+statepop2$TRUMP_C_PERC <- round(statepop2$TRUMP_RECEIPT_AMOUNT/statepop2$ALL_RECEIPT_AMOUNT,2)
+
+
+#popular_vote_battlegrounds <- popular_vote[5:19,]
+#popular_vote_flipped <- popular_vote[popular_vote$stateid %in% c('AZ', 'WI', 'MI', 'PA', 'GA'),]
+
+#df<- as.data.frame(statepop2[statepop2$abbr %in% popular_vote_battlegrounds$stateid,])
+#rownames(df) <- df[,1]
+#df$zero <- round(df$ALL_RECEIPT_AMOUNT/10000000000000,0)
+
+df1<- as.data.frame(statepop2)
+rownames(df1) <- df1[,1]
+df1$zero <- round(df1$ALL_RECEIPT_AMOUNT/10000000000000,0)
+df1$BIDEN_C <- round(df1$BIDEN_RECEIPT_AMOUNT/1000000,0)
+df1$TRUMP_C <- round(df1$TRUMP_RECEIPT_AMOUNT/1000000,0)
+
+panelDesc = data.frame(type = c("mapmedian", "id", "dot","arrow", "ctrbar", "normbar"), 
+            lab1 = c("","","Dem's Margin","Margin Shift","Contributions To","Contributions Per Voter"), 
+            lab2 = c("", "", "2020","2016 to 2020","Biden vs. Trump (2020)","Biden vs. Trump (2020)"),
+            lab3 = c("", "", "Democrats' Margin", "Democrats' Margin", "Million Dollars", "Percent"),
+            col1 = c(NA, NA, 20, 28, 29, 10), 
+            col2 = c(NA, NA, NA, 21, 30, 11))
+            #colSize = c(NA,NA,22,22,28,28))
+
+micromapST(df1, panelDesc, sortVar = 20, ascend = FALSE, title = c("2020 US Presidential Election Results by State","Margins, Margin shifts, and Contributions"))
+
+
+```
+
+### Overview: Total Contributions by State
+As an overview, we plotted the total amounts of contributions made by each state this year that were received by all presidential candidates of 2020 US election. 
+
 ```{r, echo=FALSE}
 # Read the datasets
   # Contribution summary by state
@@ -270,58 +317,6 @@ statepop1 <- statepop1 %>%
 #remove(voters_state, statepop, df_trump, df_biden, df_all)
 ```
 
-#### Total Contributions by State
-
-```{r, fig.height=15,fig.width=12,message=FALSE, echo=FALSE}
-# https://rstudio-pubs-static.s3.amazonaws.com/10130_e7ab01469cdf4ddb85e3510b0844885e.html
-# https://rdrr.io/cran/micromapST/man/panelDesc.html
-library(micromapST)
-popular_vote <- readr::read_csv(here::here("./data/raw/Popular vote backend_1211.csv"))
-statepop1 <- readr::read_csv(here::here("./data/d3csv/statepop1.csv"))
-statepop2 <- statepop1 %>%
-  left_join(popular_vote[,c(2:14,20,21)],by = c("abbr" = "stateid" ))
-row.names(statepop2) <- statepop2$abbr
-
-# column formats
-statepop2$dem_this_margin <- round(statepop2$dem_this_margin,2)
-statepop2$`2016 Margin`<- round(statepop2$`2016 Margin`,2)
-statepop2$BIDEN_C_PERC <- round(statepop2$BIDEN_RECEIPT_AMOUNT/statepop2$ALL_RECEIPT_AMOUNT,2)
-statepop2$TRUMP_C_PERC <- round(statepop2$TRUMP_RECEIPT_AMOUNT/statepop2$ALL_RECEIPT_AMOUNT,2)
-
-
-#popular_vote_battlegrounds <- popular_vote[5:19,]
-#popular_vote_flipped <- popular_vote[popular_vote$stateid %in% c('AZ', 'WI', 'MI', 'PA', 'GA'),]
-
-
-#df<- as.data.frame(statepop2[statepop2$abbr %in% popular_vote_battlegrounds$stateid,])
-#rownames(df) <- df[,1]
-#df$zero <- round(df$ALL_RECEIPT_AMOUNT/10000000000000,0)
-
-df1<- as.data.frame(statepop2)
-rownames(df1) <- df1[,1]
-df1$zero <- round(df1$ALL_RECEIPT_AMOUNT/10000000000000,0)
-df1$BIDEN_C <- round(df1$BIDEN_RECEIPT_AMOUNT/1000000,0)
-df1$TRUMP_C <- round(df1$TRUMP_RECEIPT_AMOUNT/1000000,0)
-
-panelDesc = data.frame(type = c("mapmedian", "id", "dot","arrow", "ctrbar", "normbar"), 
-            lab1 = c("","","Dem's Margin","Margin Shift","Contributions To","Contributions Per Voter"), 
-            lab2 = c("", "", "2020","2016 to 2020","Biden vs. Trump (2020)","Biden vs. Trump (2020)"),
-            lab3 = c("", "", "Democrats' Margin", "Democrats' Margin", "Million Dollars", "Percent"),
-            col1 = c(NA, NA, 20, 28, 29, 10), 
-            col2 = c(NA, NA, NA, 21, 30, 11))
-            #colSize = c(NA,NA,22,22,28,28))
-
-#micromapST(df, panelDesc, sortVar = 20, ascend = FALSE)#, title = c("Title","sub"))
-
-
-
-micromapST(df1, panelDesc, sortVar = 20, ascend = FALSE, title = c("2020 US Presidential Election Results by State","Margins, Margin shifts, and Contributions"))
-
-
-```
-
-As an overview, we plotted the total amounts of contributions made by each state this year that were received by all presidential candidates of 2020 US election. 
-
 ```{r, echo=FALSE}
 # Define highcharter theme
 thm <- hc_theme(
@@ -343,7 +338,7 @@ thm <- hc_theme(
 data("usgeojson", package = "highcharter")
 highchart() %>%
 hc_title(text = "Total Contributions to All Presidential Candidates 2020 By State") %>%
-  hc_subtitle(text = "Double click the state area to zoom in") %>%
+  hc_subtitle(text = "Double click on the state area to zoom in") %>%
   hc_add_series_map(usgeojson, statepop1,
     name = "Total Contributions",
     value = "ALL_RECEIPT_AMOUNT", joinBy = c("postalcode", "abbr"),
@@ -364,46 +359,28 @@ hc_title(text = "Total Contributions to All Presidential Candidates 2020 By Stat
   hc_exporting(enabled = TRUE)
 ```
 
-As shown in the map above, California has contributed the most to all presidential candidates in 2020 US Election, which exceeded 260 million US dollars. Contributions from New York, Texas, and Florida were also significant. On the other hand, North Dakota, South Dakota, and Wyoming have made the least contributions to all presidential candidates, probably because of their small populations.
+As shown in the map above, **California** has contributed the most to all presidential candidates in 2020 US Election, which exceeded 260 million US dollars. Contributions from **New York**, **Texas**, and **Florida** were also significant. On the other hand, **North Dakota**, **South Dakota**, and **Wyoming** have made the least contributions to all presidential candidates, probably because of their small populations.
 
 
-```{r, echo=FALSE}
-# Biden
-p1<- statepop1 %>% arrange(desc(BIDEN_RECEIPT_AMOUNT)) %>% head(5) %>% 
-  mutate(BIDEN_RECEIPT_AMOUNT = round(BIDEN_RECEIPT_AMOUNT/1000000,3)) %>%
-  ggplot(aes(x=reorder(abbr, BIDEN_RECEIPT_AMOUNT, median), y=BIDEN_RECEIPT_AMOUNT)) +
-    geom_bar(stat="identity", fill="dodgerblue3") +
-    geom_text(aes(label=BIDEN_RECEIPT_AMOUNT), hjust=1.2, color="white", size=3.5) +
-    coord_flip() +
-    # formatting
-    ggtitle("Joe Biden") +
-    labs(y = "Contribution Amount (Million $)", x = "State",caption = " ") +
-    theme_minimal() +
-    theme(plot.title = element_text(size = 11,face = "bold", color = "grey35"),
-        plot.caption = element_text(color = "grey68"))
-
-# Trump
-p2<- statepop1 %>% arrange(desc(TRUMP_RECEIPT_AMOUNT)) %>% head(5) %>% 
-  mutate(TRUMP_RECEIPT_AMOUNT = round(TRUMP_RECEIPT_AMOUNT/1000000,3)) %>%
-  ggplot(aes(x=reorder(abbr, TRUMP_RECEIPT_AMOUNT, median), y=TRUMP_RECEIPT_AMOUNT)) +
-    geom_bar(stat="identity", fill="firebrick2") +
-    geom_text(aes(label=TRUMP_RECEIPT_AMOUNT), hjust=1.2, color="white",size=3.5) +
-    scale_y_continuous(limits = c(0, 130)) +
-    coord_flip() +
-    # formatting
-    ggtitle("Donald Trump") +
-    labs(y = "Contribution Amount (Million $)", x = " ",caption = "Source: fec.gov") +
-    theme_minimal() +
-    theme(plot.title = element_text(size = 11, face = "bold", color = "grey35"),
-        plot.caption = element_text(color = "grey68"))
-
-# Plot in a grid
-grid.arrange(p1, p2, ncol=2, nrow=1,
-     top = textGrob("Contributions to Presidential Candidates of 2020 US Election\nTotal Contributions Ranked by State",gp=gpar(fontsize=13, fontface = "bold")))
-
+```{r,echo=FALSE}
+d1 <- statepop1 %>% select(abbr, BIDEN_RECEIPT_AMOUNT,TRUMP_RECEIPT_AMOUNT) %>%
+  pivot_longer(!abbr, names_to = "Candidate", values_to = "Contribution")
+d1$Candidate <- as.factor(d1$Candidate)
+d1$Candidate <- fct_recode(d1$Candidate,TRUMP = "TRUMP_RECEIPT_AMOUNT",BIDEN = "BIDEN_RECEIPT_AMOUNT")
+d1 %>% arrange(desc(Contribution)) %>%
+  hchart('column', hcaes(x = 'abbr', y = 'Contribution', group = 'Candidate'),
+    stacking = "normal") %>%
+  hc_colors(c("#0015BC", "#FF0000"))%>%
+  hc_chart(zoomType = "x") %>%
+  hc_legend(align = "right", verticalAlign = "top",layout = "horizontal",floating=TRUE,y=80,x=-100) %>%
+  hc_xAxis(title = list(text = "State")) %>%
+  hc_yAxis(title = list(text = "Contribution Amount (US Dollars)")) %>%
+  hc_title(text = "<b>Contributions to Biden vs. Trump 2020 by State</b>") %>%
+  hc_subtitle(text = "Click on the legend to show selected candidates; click on a state and drag horizontally to zoom in.") %>%
+  hc_exporting(enabled = TRUE)
 ```
 
-The bar chart above focuses on the total amounts raised from each state by the final presidential candidates Joe Biden and Donald Trump, and it displays top 5 states that contributed the most to each candidate. Joe Biden received solid support from California and New York which contributed 127M dollars and 63M dollars respectively, more than twice as contributed to Donald Trump. Donald Trump raised significant amounts from Texas and Florida equal to 52M and 48M dollars respectively, much more than Biden. This is consistent with the voting results as Biden has won in both states with a margin larger than 20%. We found that these are consistent with the final voting results as Biden has won California and New York with a margin larger than 20% whereas Trump won Florida and Texas, two of the battleground states.
+The bar chart above displays how much Joe Biden and Donald Trump have raised in each state in 2020, and you can zoom in to see each state's contribution amounts in detail. Joe Biden received solid support from **California** and **New York** which contributed 127M dollars and 63M dollars respectively, more than twice as contributed to Donald Trump. Besides receiving 58M dollars from **California**, Donald Trump also raised significant amounts from **Texas** and **Florida** equal to 52M and 48M dollars respectively, much more than Biden. We found that these are consistent with the final voting results as Biden has won California and New York with a margin larger than 20% whereas Trump won Florida and Texas, two of the battleground states.
 
 #### Contributions Per Registered Voter by State
 ```{r, echo=FALSE}
@@ -448,16 +425,16 @@ p5<- statepop1 %>% arrange(desc(TRUMP_CONTRIB_PP)) %>% head(5) %>%
 
 
 # Plot in a grid
-grid.arrange(p3, p4, ncol=2, nrow=1,
-     top = textGrob("Contributions to Presidential Candidates of 2020 US Election\nContributions Per Registered Voter Ranked by State",gp=gpar(fontsize=13, fontface = "bold")))
+#grid.arrange(p3, p4, ncol=2, nrow=1,
+#     top = textGrob("Contributions to Presidential Candidates of 2020 US #Election\nContributions Per Registered Voter Ranked by #State",gp=gpar(fontsize=13, fontface = "bold")))
 
 grid.arrange(p3, p5, ncol=2, nrow=1,
      top = textGrob("Contributions to Presidential Candidates of 2020 US Election\nContributions Per Registered Voter Ranked by State",gp=gpar(fontsize=13, fontface = "bold")))
 
 ```
 
-If we instead take into account the registered voters in each state and calculate contributions per registered voter, we found that District of Columbia has the highest average contribution to Biden, which is 37 dollars per registered voter, way more than any other state. Remarkably, in the election Biden won 93% of total votes in DC. In addition, Wyoming surprisingly has contributed the most to Trump on an average level. Wyoming has the lowest percentage of registered voters among all states that only 47.4% of its population registered to vote, and its support for Trump was reflected on the voting results as Trump won the state with a margin over 40%.
-In fact, Biden has won all five states (DC, MA, DE, CA, and MD) listed on the left of the plot above which has made the most contributions per registered voter, and his margins of victory in these states were . Trump has won four of the five states (WY, FL, AZ, and TX) listed on the right of the plot above except for Nevada. Trump lost Nevada by 2.4% vote share.
+If we instead take into account the registered voters in each state and calculate contributions per registered voter, we can see **District of Columbia** is clearly an outlier. It has the highest average contribution to Biden equal to 37 dollars per registered voter, way more than any other state. Remarkably, in the election Biden won **93%** of total votes in DC. In addition, **Wyoming** surprisingly has contributed the most to Trump on an average level. After researching online, we found that Wyoming has the lowest percentage of registered voters among all states that only [47.4% of its population registered to vote](https://worldpopulationreview.com/state-rankings/number-of-registered-voters-by-state), and this explains Wyoming's higher average contribution. Its support for Trump was reflected on the voting results that Trump won the state with a margin **over 40%**.
+In fact, Biden has won all five states (**DC, MA, DE, CA, and MD**) listed on the left of the plot above which has made the most contributions per registered voter, and his margins of victory in these states were . Trump has won four of the five states (**WY, FL, AZ, and TX**) listed on the right of the plot above except for Nevada. Trump lost Nevada by 2.4% vote share.
 
 
 ### Contributions Distribution and Details
@@ -478,14 +455,14 @@ contr_sum <- contributions1 %>%
   select(committee_name,contribution_receipt_amount) %>%
   dplyr::group_by(committee_name) %>% 
   dplyr::summarise(number_of_contributions = n(),
-                   total_raised_amount = sum(contribution_receipt_amount),
+            total_raised_amount = round(sum(contribution_receipt_amount)/1000000,1),
             mean_contribution = mean(contribution_receipt_amount, na.rm = T),
             median_contribution = median(contribution_receipt_amount, na.rm = T))
 
 # Display in a table
 knitr::kable(contr_sum, caption = "Contributions Summary by Candidate",
              col.names = c('Candidate name','Number of contributions',
-                           'Total raised amount (US Dollars)',
+                           'Total raised amount (Million US Dollars)',
                            'Mean contribution (US Dollars)','Median contribution (US Dollars)'),
              format.args = list(big.mark = ",", scientific = FALSE),
              digits = 2,align = "l",full_width = T)
@@ -498,7 +475,7 @@ ggplot(contributions1, aes(x=contribution_receipt_amount, fill = committee_name)
   stat_boxplot(geom ='errorbar') +
   scale_x_log10(breaks = trans_breaks("log10", function(x) 10^x),
               labels = trans_format("log10", math_format(10^.x)))+
-  scale_fill_manual(name = "Committee name", values = c("dodgerblue3", "firebrick2"), 
+  scale_fill_manual(name = "Candidate name", values = c("dodgerblue3", "firebrick2"), 
                     labels = c("Joe Biden","Donald Trump")) +
   # formatting
   ggtitle("Contributions to Presidential Candidates of 2020 US Election",
@@ -513,7 +490,7 @@ ggplot(contributions1, aes(x=contribution_receipt_amount, fill = committee_name)
 
 ```
 
-To see more contribution details, we selected from the original data the domestic individual contributions with amounts higher than 200 dollars received by two presidential candidates. As shown in the contributions summary table, Biden received double the number of contributions and the total amounts of funds as Trump did, but the mean and median contributions to Trump are higher than to Biden. The log10 scaled boxplot above also demonstrates the difference in median contributions, and in addition, it shows that the contributions distributions for both candidates are largely right skewed with a good number of outliers. This makes sense as the majority of individuals contributed less than 500 dollars. 
+To see more contribution details, we selected from the original data the **domestic individual contributions with amounts higher than 200 dollars** received by two presidential candidates. As shown in the contributions summary table, Biden received double the number of contributions and the total amounts of funds as Trump did, but the mean and median contributions to Trump are higher than to Biden. The log10 scaled boxplot above also demonstrates the difference in median contributions, and in addition, it shows that the contributions distributions for both candidates are largely right skewed with a good number of outliers. This makes sense as the majority of individuals contributed less than 500 dollars. 
 
 
 ### Contributions by Date: Time Series
@@ -584,7 +561,7 @@ Although Donald Trump also received more funds in the second half year, the cont
 
 ### Contributor Occupations
 
-To obtain a better understanding about individual contributors, we extracted keywords from contributors occupations and separated them by candidate, so that we were able to draw word a cloud for each candidate.
+To obtain a better understanding about individual contributors, we extracted keywords from contributors occupations and separated them by candidate, so that we were able to draw a word cloud for each candidate.
 
 
 ```{r,echo=FALSE}
@@ -668,7 +645,7 @@ grid.arrange(g1, g2, ncol=2, nrow=1,
 
 ```
 
-Comparing the difference between two candidates, more than half of 10 top occupations of Joe Biden's contributors are legal or technical professional positions, whereas more than half of 10 top occupations of Donald Trump's contributors are jobs in business. 
+Comparing the difference between two candidates, more than half of 10 top occupations of Joe Biden's contributors are **legal or technical professional positions**, whereas more than half of 10 top occupations of Donald Trump's contributors are **positions in business**. 
 
 
 ## Disbursement Data Analysis
@@ -687,9 +664,9 @@ ggplot(disbursement_sum, aes(x=disbursement_amount, y= committee_name, fill=comm
   stat_boxplot(geom ='errorbar') + 
   scale_x_log10(breaks = trans_breaks("log10", function(x) 10^x),
               labels = trans_format("log10", math_format(10^.x)))+
-  scale_fill_manual(name = "Committee name", values = c("dodgerblue3", "firebrick2"), 
+  scale_fill_manual(name = "Candidate name", values = c("dodgerblue3", "firebrick2"), 
                     labels = c("Joe Biden","Donald Trump")) +
-  labs(y = "Candidate", x = "Disbursement Amount",caption = "Source: fec.gov", 
+  labs(y = "Candidate", x = "Disbursement Amount (USD)",caption = "Source: fec.gov", 
        title="Disbursement Made by Presidential Committees of 2020 US Election",
        subtitle = "in US Dollar (log10 scaled)") +
   theme_bw() +
@@ -706,22 +683,23 @@ disbursement_summary <- disbursement_sum %>%
   select(committee_name, disbursement_amount) %>%
   dplyr::group_by(committee_name) %>% 
   dplyr::summarise(number_of_records = n(),
-                   total_disbursed_amount = sum(disbursement_amount),
+            total_disbursed_amount = round(sum(disbursement_amount)/1000000,1),
             mean_disbursement = mean(disbursement_amount, na.rm = T),
             median_disbursement = median(disbursement_amount, na.rm = T))
 
 # Display in a table
 knitr::kable(disbursement_summary, caption = "Disbursement Summary by Candidate",
              col.names = c('Candidate name','Number of Records',
-                           'Total disbursed amount (US Dollars)',
-                           'Mean disbursement amount (US Dollars)','Median disbursement amount (US Dollars)'),
+                           'Total spending amount (Million US Dollars)',
+                           'Mean spending amount (US Dollars)',
+			   'Median spending amount (US Dollars)'),
              format.args = list(big.mark = ",", scientific = FALSE),
              digits = 2,align = "l",full_width = T)
 ```
-Every expenditure made by Trump Committee are evenly spread out from 0 to less than a million. The distribution is a little left skewed. There are more outliers clustering at the higher expenditure level than lower expenditure level. On the other hand, Biden Committee has their expenditure distribution centered symmetrically around their median. The range of Biden Committee's single expenditure is wider than Trump Committee. There are more outliers densely clustering at the higher expenditure level, which means Biden Committee's made more large transactions than Trump Committee. 
+In the boxplot above, we used the log10 scaled x-axis to reduce skewness of the disbursement distribution. There are outliers on both ends, but more outliers clustering at the higher expenditure level rather than lower expenditure level, making the distributions a little right skewed. The median spending amounts are almost equal for two candidates.
 
 
-### Top 5 Presidential Campaign Made the Most Disbursement
+### Top 5 Presidential Campaigns Spent the Most
 ```{r, message=FALSE, warning=FALSE}
 # Calculate the total disbursement amount by committee (in million)
 # Get the top 5 committee
@@ -752,7 +730,7 @@ ggplot(com_exp, aes(x = total, y = reorder(committee_name, total), color=Politic
                     labels = c("Democratic","Republican")) +
   scale_y_discrete(labels=c('Bernie Sanders', 'Tom Steyer', 'Donald Trump', 'Joe Biden', 'Mike Bloomberg')) +
   labs(x = "Total Expenditure (Million $)", y = "Candidate", caption = "Source: fec.gov", 
-       title ="Top 5 Presidential Campaign Made the Most Disbursement", 
+       title ="Top 5 Presidential Campaigns Made the Most Disbursements", 
        subtitle = "2020 Presidential Election (Rounded to 2 Digits)") + 
   theme_bw() +
   theme(plot.title = element_text(face = "bold"),
@@ -761,7 +739,7 @@ ggplot(com_exp, aes(x = total, y = reorder(committee_name, total), color=Politic
         legend.position="bottom")
 ```
 
-The above graph shows 5 committees with the most disbursement made. Among these 5 committees, 4 of them are Democratics, 1 of them is Republican. One fact that might lead to this result could be that the Democratic parties are receiving more contributions than the Republican party in this election. One interesting finding is that Mike Bloomberg's Committee spend the most among all of the committees. This is not expected since Bloomberg quit the election race early in March 2020. According to the article from [The Guardian](https://www.theguardian.com/us-news/2019/nov/23/michael-bloomberg-refuse-donations-presidential-bid), all of those expenditures are from Bloomberg's personal fortune, and not from campaign contribution. Therefore, the spending made by Mike Bloomberg's campaign is definitely an outlier. Next, Joe Biden's committee and Donald Trump's committee gets the second and third place on the list, and this is what is expected since they are the main candidates in this election. We can see that this distribution is following an exponential trend. Each committee spends about twice more than the committee that is ranked after it. 
+Among 5 committees that spent the most during this year, 4 of them are Democratics, 1 of them is Republican. This might relate to a fact the Democratic party has received more contributions than the Republican party. One interesting finding is that Mike Bloomberg's Committee spend the most among all of the committees. This is not expected since Bloomberg quit the election race very early in March 2020. According to the article from [The Guardian](https://www.theguardian.com/us-news/2019/nov/23/michael-bloomberg-refuse-donations-presidential-bid), all of those expenditures came from Bloomberg's personal fortune instead of campaign contributions. Therefore, Mike Bloomberg's campaign is an outlier. Joe Biden's committee and Donald Trump's committee were as expected the next most-spending campaigns, but Biden has spent 300 Million dollars more than Trump.
 
 ### Disbursement Details
 ```{r, message=FALSE, warning=FALSE, fig.width=10, fig.height=8}
