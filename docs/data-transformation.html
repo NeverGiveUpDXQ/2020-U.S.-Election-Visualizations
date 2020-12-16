@@ -24,7 +24,7 @@
 <meta name="author" content="GROUP 10: Jin Qian, Wenjie Zhu, Yibai Liu" />
 
 
-<meta name="date" content="2020-12-14" />
+<meta name="date" content="2020-12-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -114,9 +114,14 @@
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
 <li class="chapter" data-level="2" data-path="data-sources.html"><a href="data-sources.html"><i class="fa fa-check"></i><b>2</b> Data sources</a><ul>
-<li class="chapter" data-level="2.1" data-path="data-sources.html"><a href="data-sources.html#u.s.-county-level-voting-results-of-2020-presidential-election"><i class="fa fa-check"></i><b>2.1</b> U.S. County Level Voting Results of 2020 Presidential Election</a></li>
-<li class="chapter" data-level="2.2" data-path="data-sources.html"><a href="data-sources.html#contribution-receipts"><i class="fa fa-check"></i><b>2.2</b> Contribution Receipts</a></li>
-<li class="chapter" data-level="2.3" data-path="data-sources.html"><a href="data-sources.html#the-disbursements-data"><i class="fa fa-check"></i><b>2.3</b> The Disbursements data</a></li>
+<li class="chapter" data-level="2.1" data-path="data-sources.html"><a href="data-sources.html#u.s.-historical-voting-results-from-1976-to-2016"><i class="fa fa-check"></i><b>2.1</b> U.S. Historical Voting Results from 1976 to 2016</a></li>
+<li class="chapter" data-level="2.2" data-path="data-sources.html"><a href="data-sources.html#u.s.-state-level-popular-vote-results-of-2020-presidential-election"><i class="fa fa-check"></i><b>2.2</b> U.S. State Level Popular Vote Results of 2020 Presidential Election</a></li>
+<li class="chapter" data-level="2.3" data-path="data-sources.html"><a href="data-sources.html#contribution-receipts"><i class="fa fa-check"></i><b>2.3</b> Contribution Receipts</a></li>
+<li class="chapter" data-level="2.4" data-path="data-sources.html"><a href="data-sources.html#the-disbursements-data"><i class="fa fa-check"></i><b>2.4</b> The Disbursements data</a></li>
+<li class="chapter" data-level="2.5" data-path="data-sources.html"><a href="data-sources.html#other-datasets-used"><i class="fa fa-check"></i><b>2.5</b> Other Datasets Used</a><ul>
+<li class="chapter" data-level="2.5.1" data-path="data-sources.html"><a href="data-sources.html#u.s.-county-level-voting-results-of-2020-presidential-election"><i class="fa fa-check"></i><b>2.5.1</b> U.S. County Level Voting Results of 2020 Presidential Election</a></li>
+<li class="chapter" data-level="2.5.2" data-path="data-sources.html"><a href="data-sources.html#us-presidential-election-vote-shares"><i class="fa fa-check"></i><b>2.5.2</b> US Presidential Election vote shares</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="data-transformation.html"><a href="data-transformation.html"><i class="fa fa-check"></i><b>3</b> Data transformation</a><ul>
 <li class="chapter" data-level="3.1" data-path="data-transformation.html"><a href="data-transformation.html#election-result-data-transformation"><i class="fa fa-check"></i><b>3.1</b> Election Result Data Transformation</a></li>
@@ -147,10 +152,9 @@
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="interactive-component.html"><a href="interactive-component.html"><i class="fa fa-check"></i><b>6</b> Interactive component</a><ul>
-<li class="chapter" data-level="6.1" data-path="interactive-component.html"><a href="interactive-component.html#link-to-the-interactive-map"><i class="fa fa-check"></i><b>6.1</b> Link to the interactive map</a><ul>
-<li class="chapter" data-level="6.1.1" data-path="interactive-component.html"><a href="interactive-component.html#descriptions"><i class="fa fa-check"></i><b>6.1.1</b> Descriptions</a></li>
-<li class="chapter" data-level="6.1.2" data-path="interactive-component.html"><a href="interactive-component.html#instructions-for-using-the-map"><i class="fa fa-check"></i><b>6.1.2</b> Instructions for using the map:</a></li>
-</ul></li>
+<li class="chapter" data-level="6.1" data-path="interactive-component.html"><a href="interactive-component.html#link-to-the-interactive-map"><i class="fa fa-check"></i><b>6.1</b> Link to the interactive map</a></li>
+<li class="chapter" data-level="6.2" data-path="interactive-component.html"><a href="interactive-component.html#descriptions"><i class="fa fa-check"></i><b>6.2</b> Descriptions</a></li>
+<li class="chapter" data-level="6.3" data-path="interactive-component.html"><a href="interactive-component.html#instructions-for-using-the-map"><i class="fa fa-check"></i><b>6.3</b> Instructions for using the map:</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>7</b> Conclusion</a></li>
 <li class="divider"></li>
@@ -176,6 +180,7 @@
 <h1><span class="header-section-number">Chapter 3</span> Data transformation</h1>
 <div id="election-result-data-transformation" class="section level2">
 <h2><span class="header-section-number">3.1</span> Election Result Data Transformation</h2>
+<p>In this step, we need to cleanup two election result data files: 1976-2016 historical election result and 2020 election popular vote share and vote margin. We began with cleaning the historical election result data file.</p>
 <p>First, to compare historical popular vote results for <strong>republicans</strong> on the state level, we cleaned this dataset in following steps:</p>
 <ul>
 <li>Select columns we needed. i.e. <code>year</code>, <code>state</code>, <code>party</code> and <code>candidatevotes</code>.</li>
@@ -241,6 +246,11 @@
 </tbody>
 </table>
 <p>Then, we used historical U.S. presidential election data provided in the <code>socviz</code> library, but since the data for 2016 was provisional, we updated the <a href="https://en.wikipedia.org/wiki/2016_United_States_presidential_election">2016 data</a> and also added the 2020 election data for our analysis.</p>
+<p>Next, we cleaned up the U.S. State Level Popular Vote Results of 2020 Presidential Election in following steps:</p>
+<ul>
+<li>Select columns we need. i.e. <code>stateid</code>, <code>state</code>, <code>dem_this_margin</code>, <code>dem_votes</code>, <code>rep_votes</code>.</li>
+<li>Add a new column <code>class</code> to indicate if it is <code>States that flipped from 2016</code> or <code>Democrats won</code>, or <code>Republicans won</code>. We define a state as <code>States that flipped from 2016</code> if it is one of <strong>Arizona</strong>, <strong>Wisconsin</strong>, <strong>Michigan</strong>, <strong>Pennsylvania</strong>, <strong>Georgia</strong>. Otherwise, we compared their vote for Democrats and vote for Republicans to determine their class.</li>
+</ul>
 </div>
 <div id="contribution-data-transformation" class="section level2">
 <h2><span class="header-section-number">3.2</span> Contribution Data Transformation</h2>
@@ -258,10 +268,10 @@ Finally, the counts for each unique word were calculated and saved in a separate
 <div id="disbursement-data-transformation" class="section level2">
 <h2><span class="header-section-number">3.3</span> Disbursement Data Transformation</h2>
 <p>The first step we did is to extract the necessary columns that are mentioned in the previous chapter. Then we noticed that in the <code>disbursement_purpose_category</code>, there is a <code>OTHER</code> top coding is dominant the dataset, hence it would not provide us lots of interesting information to analyze. Below is the original data distribution for the <code>disbursement_purpose_category</code> column:
-<img src="finalproj_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<img src="finalproj_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
 <p>But since we have another column which is the disbursement_description, we can use this information to decode this top code. We examined the frequently mentioned terms in <code>disbursement_description</code> among those marked as <code>OTHER</code> and manually categorize them into existing or new categories that would fit the record type better. Below is a conversion table that we used to convert the columns. The pattern we are looking for in the description ar based on high frequent terms as well as their word stems and abbreviations. The conversion are done based on the order of this list.</p>
 <table>
-<caption><span id="tab:unnamed-chunk-19">Table 3.1: </span>Disbursement Description to Category Conversion Table</caption>
+<caption><span id="tab:unnamed-chunk-22">Table 3.1: </span>Disbursement Description to Category Conversion Table</caption>
 <colgroup>
 <col width="87%" />
 <col width="12%" />
@@ -312,7 +322,7 @@ Finally, the counts for each unique word were calculated and saved in a separate
 </tbody>
 </table>
 <p>Here is the distribution after undo the top coding:
-<img src="finalproj_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<img src="finalproj_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
 <p>Now, the top coding category is less significant than before. We perform our further analysis based on this cleaned data set.</p>
 
 </div>

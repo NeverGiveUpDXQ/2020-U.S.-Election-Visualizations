@@ -10,7 +10,7 @@ library(naniar)
 ```
 
 ## Contribution Receipt Dataset
-The election voting results and the disbursements datasets do not have missing values, however, the contribution receipts dataset has 275 values missed in some columns.
+The historical and current election voting outcome and the disbursements datasets do not have missing values, however, the contribution receipts dataset has 275 values missed in some columns.
 
 ```{r, echo = F, message=F}
 # Import data from csv

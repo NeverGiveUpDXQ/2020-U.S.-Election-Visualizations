@@ -24,7 +24,7 @@
 <meta name="author" content="GROUP 10: Jin Qian, Wenjie Zhu, Yibai Liu" />
 
 
-<meta name="date" content="2020-12-14" />
+<meta name="date" content="2020-12-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -114,9 +114,14 @@
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
 <li class="chapter" data-level="2" data-path="data-sources.html"><a href="data-sources.html"><i class="fa fa-check"></i><b>2</b> Data sources</a><ul>
-<li class="chapter" data-level="2.1" data-path="data-sources.html"><a href="data-sources.html#u.s.-county-level-voting-results-of-2020-presidential-election"><i class="fa fa-check"></i><b>2.1</b> U.S. County Level Voting Results of 2020 Presidential Election</a></li>
-<li class="chapter" data-level="2.2" data-path="data-sources.html"><a href="data-sources.html#contribution-receipts"><i class="fa fa-check"></i><b>2.2</b> Contribution Receipts</a></li>
-<li class="chapter" data-level="2.3" data-path="data-sources.html"><a href="data-sources.html#the-disbursements-data"><i class="fa fa-check"></i><b>2.3</b> The Disbursements data</a></li>
+<li class="chapter" data-level="2.1" data-path="data-sources.html"><a href="data-sources.html#u.s.-historical-voting-results-from-1976-to-2016"><i class="fa fa-check"></i><b>2.1</b> U.S. Historical Voting Results from 1976 to 2016</a></li>
+<li class="chapter" data-level="2.2" data-path="data-sources.html"><a href="data-sources.html#u.s.-state-level-popular-vote-results-of-2020-presidential-election"><i class="fa fa-check"></i><b>2.2</b> U.S. State Level Popular Vote Results of 2020 Presidential Election</a></li>
+<li class="chapter" data-level="2.3" data-path="data-sources.html"><a href="data-sources.html#contribution-receipts"><i class="fa fa-check"></i><b>2.3</b> Contribution Receipts</a></li>
+<li class="chapter" data-level="2.4" data-path="data-sources.html"><a href="data-sources.html#the-disbursements-data"><i class="fa fa-check"></i><b>2.4</b> The Disbursements data</a></li>
+<li class="chapter" data-level="2.5" data-path="data-sources.html"><a href="data-sources.html#other-datasets-used"><i class="fa fa-check"></i><b>2.5</b> Other Datasets Used</a><ul>
+<li class="chapter" data-level="2.5.1" data-path="data-sources.html"><a href="data-sources.html#u.s.-county-level-voting-results-of-2020-presidential-election"><i class="fa fa-check"></i><b>2.5.1</b> U.S. County Level Voting Results of 2020 Presidential Election</a></li>
+<li class="chapter" data-level="2.5.2" data-path="data-sources.html"><a href="data-sources.html#us-presidential-election-vote-shares"><i class="fa fa-check"></i><b>2.5.2</b> US Presidential Election vote shares</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="data-transformation.html"><a href="data-transformation.html"><i class="fa fa-check"></i><b>3</b> Data transformation</a><ul>
 <li class="chapter" data-level="3.1" data-path="data-transformation.html"><a href="data-transformation.html#election-result-data-transformation"><i class="fa fa-check"></i><b>3.1</b> Election Result Data Transformation</a></li>
@@ -147,10 +152,9 @@
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="interactive-component.html"><a href="interactive-component.html"><i class="fa fa-check"></i><b>6</b> Interactive component</a><ul>
-<li class="chapter" data-level="6.1" data-path="interactive-component.html"><a href="interactive-component.html#link-to-the-interactive-map"><i class="fa fa-check"></i><b>6.1</b> Link to the interactive map</a><ul>
-<li class="chapter" data-level="6.1.1" data-path="interactive-component.html"><a href="interactive-component.html#descriptions"><i class="fa fa-check"></i><b>6.1.1</b> Descriptions</a></li>
-<li class="chapter" data-level="6.1.2" data-path="interactive-component.html"><a href="interactive-component.html#instructions-for-using-the-map"><i class="fa fa-check"></i><b>6.1.2</b> Instructions for using the map:</a></li>
-</ul></li>
+<li class="chapter" data-level="6.1" data-path="interactive-component.html"><a href="interactive-component.html#link-to-the-interactive-map"><i class="fa fa-check"></i><b>6.1</b> Link to the interactive map</a></li>
+<li class="chapter" data-level="6.2" data-path="interactive-component.html"><a href="interactive-component.html#descriptions"><i class="fa fa-check"></i><b>6.2</b> Descriptions</a></li>
+<li class="chapter" data-level="6.3" data-path="interactive-component.html"><a href="interactive-component.html#instructions-for-using-the-map"><i class="fa fa-check"></i><b>6.3</b> Instructions for using the map:</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>7</b> Conclusion</a></li>
 <li class="divider"></li>
@@ -177,30 +181,34 @@
 <div id="link-to-the-interactive-map" class="section level2">
 <h2><span class="header-section-number">6.1</span> Link to the interactive map</h2>
 <p>Click <a href="https://bl.ocks.org/ybliu9/raw/8d43f3f08508aa7bc70d6dcc40c57f68/11c5476acb05ffe563cdbd156d4fb3ed86f71fe0/">here</a> or copy the url: <a href="https://bl.ocks.org/ybliu9/raw/8d43f3f08508aa7bc70d6dcc40c57f68/11c5476acb05ffe563cdbd156d4fb3ed86f71fe0/" class="uri">https://bl.ocks.org/ybliu9/raw/8d43f3f08508aa7bc70d6dcc40c57f68/11c5476acb05ffe563cdbd156d4fb3ed86f71fe0/</a></p>
-<p>It may take a couple of seconds to load all features.</p>
-<div id="descriptions" class="section level3">
-<h3><span class="header-section-number">6.1.1</span> Descriptions</h3>
-<p>The interactive part of our analysis was built with D3 version 6, which the original code has been uploaded to <a href="blockbuilder.org"></a>. You can also find code <a href="https://github.com/NeverGiveUpDXQ/2020-U.S.-Election-Visualizations/blob/main/interactive-map-2020-election.html">here</a> in our github repo.
-This interactive map shows the number of votes obtained by each party/presidential candidate, their shares of votes, and <a href="https://ballotpedia.org/Margin-of-victory_(MOV)">margins of victory (MOV)</a> on US county level during 2020 Presidential Election. We used the same voting results data retrieved from Fox News as described in previous sections, but formats of certain columns were changed to adapt to the plot. You can find the data <a href="https://github.com/NeverGiveUpDXQ/2020-U.S.-Election-Visualizations/blob/main/data/d3csv/2020_map_d3.csv">here</a> under the <code>data</code> folder of our repo.</p>
 </div>
-<div id="instructions-for-using-the-map" class="section level3">
-<h3><span class="header-section-number">6.1.2</span> Instructions for using the map:</h3>
+<div id="descriptions" class="section level2">
+<h2><span class="header-section-number">6.2</span> Descriptions</h2>
+<p>The interactive part of our analysis was built with D3 version 6, which the code has been uploaded to <a href="blockbuilder.org"></a>. You can also find code <a href="https://github.com/NeverGiveUpDXQ/2020-U.S.-Election-Visualizations/blob/main/interactive-map-2020-election.html">here</a> in our github repo.
+This zoomable cloropleth map shows the number of votes obtained by each party/presidential candidate, their shares of votes, and <a href="https://ballotpedia.org/Margin-of-victory_(MOV)">margins of victory (MOV)</a> on US county level during 2020 Presidential Election. We used the same voting results data retrieved from Fox News as described in previous sections, but formats of certain columns were changed to adapt to the plot. You can find the data <a href="https://github.com/NeverGiveUpDXQ/2020-U.S.-Election-Visualizations/blob/main/data/d3csv/2020_map_d3.csv">here</a> under the <code>data</code> folder of our repo.</p>
+</div>
+<div id="instructions-for-using-the-map" class="section level2">
+<h2><span class="header-section-number">6.3</span> Instructions for using the map:</h2>
 <p>The plot is initialized with a mapping of 2020 US Presidential Election votes with no default county specified. The color of each county reflects the winning party’s margin of victory, as scaled on the legend.</p>
 <ol style="list-style-type: decimal">
 <li>Users can scroll up or down to manually zoom in or out the full map.</li>
 <li>Users can click and drag to move the map.</li>
 <li>Users can hover the mouse over a county to see county name, vote counts for each party, and the margin.</li>
-<li>Users can select the county of interest by clicking the county on the map. The map will then automatically zoom in on the selected area.
-Notes:
-Since the post-election processing is onging and vote counting is not 100% completed in several states, the vote counts are subject to change. Alaska did not return voting results by county, so the data is reported on the state level.</li>
+<li>Users can click the county of interest, and the map will then automatically zoom in on the selected area.</li>
 </ol>
+<p>Notes:
+- Since the post-election processing is onging and vote counting is not 100% completed in several states, the vote counts are subject to change. Alaska returned voting results by district but not county, so the data is reported on the state level.</p>
+<ul>
+<li>It may take a couple of seconds to load all features. You should be able to see a map like shown in the screenshot below. If the map does not load properly, please refresh the page a couple of times until you get a map like this.
+<img src="https://raw.githubusercontent.com/NeverGiveUpDXQ/2020-U.S.-Election-Visualizations/main/_bookdown_files/finalproj_files/figure-html/demo.PNG" style="width:80.0%" /></li>
+</ul>
 <p>References:</p>
 <ol style="list-style-type: decimal">
-<li>Tony McGovern: US County Level Election Results (<a href="https://github.com/tonmcg/US_County_Level_Election_Results_08-20/blob/master/index.html" class="uri">https://github.com/tonmcg/US_County_Level_Election_Results_08-20/blob/master/index.html</a>)</li>
-<li>Observable: d3-6.0 Migration Guide(<a href="https://observablehq.com/@d3/d3v6-migration-guide#events" class="uri">https://observablehq.com/@d3/d3v6-migration-guide#events</a>)</li>
+<li>Tony McGovern: US County Level Election Results with d3.v4 (<a href="https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-20/master/index.html" class="uri">https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-20/master/index.html</a>)
+Result image(<a href="https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-20/master/img/us_election_results.png" class="uri">https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-20/master/img/us_election_results.png</a>)</li>
+<li>Observable: d3-6.0 Migration Guide (<a href="https://observablehq.com/@d3/d3v6-migration-guide#events" class="uri">https://observablehq.com/@d3/d3v6-migration-guide#events</a>)</li>
 </ol>
 
-</div>
 </div>
 </div>
             </section>

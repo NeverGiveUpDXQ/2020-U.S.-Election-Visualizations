@@ -24,7 +24,7 @@
 <meta name="author" content="GROUP 10: Jin Qian, Wenjie Zhu, Yibai Liu" />
 
 
-<meta name="date" content="2020-12-14" />
+<meta name="date" content="2020-12-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -114,9 +114,14 @@
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
 <li class="chapter" data-level="2" data-path="data-sources.html"><a href="data-sources.html"><i class="fa fa-check"></i><b>2</b> Data sources</a><ul>
-<li class="chapter" data-level="2.1" data-path="data-sources.html"><a href="data-sources.html#u.s.-county-level-voting-results-of-2020-presidential-election"><i class="fa fa-check"></i><b>2.1</b> U.S. County Level Voting Results of 2020 Presidential Election</a></li>
-<li class="chapter" data-level="2.2" data-path="data-sources.html"><a href="data-sources.html#contribution-receipts"><i class="fa fa-check"></i><b>2.2</b> Contribution Receipts</a></li>
-<li class="chapter" data-level="2.3" data-path="data-sources.html"><a href="data-sources.html#the-disbursements-data"><i class="fa fa-check"></i><b>2.3</b> The Disbursements data</a></li>
+<li class="chapter" data-level="2.1" data-path="data-sources.html"><a href="data-sources.html#u.s.-historical-voting-results-from-1976-to-2016"><i class="fa fa-check"></i><b>2.1</b> U.S. Historical Voting Results from 1976 to 2016</a></li>
+<li class="chapter" data-level="2.2" data-path="data-sources.html"><a href="data-sources.html#u.s.-state-level-popular-vote-results-of-2020-presidential-election"><i class="fa fa-check"></i><b>2.2</b> U.S. State Level Popular Vote Results of 2020 Presidential Election</a></li>
+<li class="chapter" data-level="2.3" data-path="data-sources.html"><a href="data-sources.html#contribution-receipts"><i class="fa fa-check"></i><b>2.3</b> Contribution Receipts</a></li>
+<li class="chapter" data-level="2.4" data-path="data-sources.html"><a href="data-sources.html#the-disbursements-data"><i class="fa fa-check"></i><b>2.4</b> The Disbursements data</a></li>
+<li class="chapter" data-level="2.5" data-path="data-sources.html"><a href="data-sources.html#other-datasets-used"><i class="fa fa-check"></i><b>2.5</b> Other Datasets Used</a><ul>
+<li class="chapter" data-level="2.5.1" data-path="data-sources.html"><a href="data-sources.html#u.s.-county-level-voting-results-of-2020-presidential-election"><i class="fa fa-check"></i><b>2.5.1</b> U.S. County Level Voting Results of 2020 Presidential Election</a></li>
+<li class="chapter" data-level="2.5.2" data-path="data-sources.html"><a href="data-sources.html#us-presidential-election-vote-shares"><i class="fa fa-check"></i><b>2.5.2</b> US Presidential Election vote shares</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="data-transformation.html"><a href="data-transformation.html"><i class="fa fa-check"></i><b>3</b> Data transformation</a><ul>
 <li class="chapter" data-level="3.1" data-path="data-transformation.html"><a href="data-transformation.html#election-result-data-transformation"><i class="fa fa-check"></i><b>3.1</b> Election Result Data Transformation</a></li>
@@ -147,10 +152,9 @@
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="interactive-component.html"><a href="interactive-component.html"><i class="fa fa-check"></i><b>6</b> Interactive component</a><ul>
-<li class="chapter" data-level="6.1" data-path="interactive-component.html"><a href="interactive-component.html#link-to-the-interactive-map"><i class="fa fa-check"></i><b>6.1</b> Link to the interactive map</a><ul>
-<li class="chapter" data-level="6.1.1" data-path="interactive-component.html"><a href="interactive-component.html#descriptions"><i class="fa fa-check"></i><b>6.1.1</b> Descriptions</a></li>
-<li class="chapter" data-level="6.1.2" data-path="interactive-component.html"><a href="interactive-component.html#instructions-for-using-the-map"><i class="fa fa-check"></i><b>6.1.2</b> Instructions for using the map:</a></li>
-</ul></li>
+<li class="chapter" data-level="6.1" data-path="interactive-component.html"><a href="interactive-component.html#link-to-the-interactive-map"><i class="fa fa-check"></i><b>6.1</b> Link to the interactive map</a></li>
+<li class="chapter" data-level="6.2" data-path="interactive-component.html"><a href="interactive-component.html#descriptions"><i class="fa fa-check"></i><b>6.2</b> Descriptions</a></li>
+<li class="chapter" data-level="6.3" data-path="interactive-component.html"><a href="interactive-component.html#instructions-for-using-the-map"><i class="fa fa-check"></i><b>6.3</b> Instructions for using the map:</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>7</b> Conclusion</a></li>
 <li class="divider"></li>
@@ -174,18 +178,14 @@
             <section class="normal" id="section-">
 <div id="data-sources" class="section level1">
 <h1><span class="header-section-number">Chapter 2</span> Data sources</h1>
-<p>The primary data sources of this project are <a href="http://fec.gov/data/"><em>Federal Election Commission</em></a> (FEC) and <a href="https://cookpolitical.com/"><em>Fox News</em></a>. FEC gathers and processes campaign finance data and discloses information about the public funding of US presidential elections. Fox News collects and verifies the election returns across the country and is an authoritative source for 2020 Presidential Election votes results.</p>
-<p>We used three major datasets: the <a href="https://www.foxnews.com/elections/2020/general-results">2020 Presidential Election Results dataset</a> from Fox News, as well as the Contribution Receipts dataset and the Campaign Disbursements dataset from FEC. We each were responsible for downloading one dataset from its data source. More details of the datasets are as following:</p>
-<div id="u.s.-county-level-voting-results-of-2020-presidential-election" class="section level2">
-<h2><span class="header-section-number">2.1</span> U.S. County Level Voting Results of 2020 Presidential Election</h2>
-<p><strong>Dataset: 2020_US_County_Level_Presidential_Results.csv</strong></p>
-<p>The dataset contains 10 columns and 3153 records covering the voting results of 2020 presidential election by US county. Since the county level data was not downloadable from the website, we exported this dataset from the github repo <a href="https://github.com/tonmcg/US_County_Level_Election_Results_08-20/blob/master/2020_US_County_Level_Presidential_Results.csv">* 2020_US_County_Level_Presidential_Results*</a>, which contains the latest voting data scraped by Tony McGovern from Fox News website.</p>
+<p>The primary data sources of this project are <a href="https://cookpolitical.com/"><em>Cook Political</em></a>, <a href="https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/42MVDX"><em>Harvard Dataverse</em></a>, and <a href="http://fec.gov/data/"><em>Federal Election Commission</em></a> (FEC). Cook Political gathered and reported the 2020 election state-level popular vote share between the two major presidential candidates: Joe Biden and Donald Trump. Harvard Dataverse archived the state-level voting outcomes across candidates from 1976 to 2016. FEC gathers and processes campaign finance data and discloses information about the public funding of US presidential elections.</p>
+<p>From the above data sources, we collected and used four major datasets: 1976-2016 Presidential Election Results from Harvard Dataverse, 2020 Presidential Election Results dataset from Cook Political, as well as the Contribution Receipts dataset and the Campaign Disbursements dataset from FEC. Each member on our team was responsible for downloading one to two datasets from corresponding data sources. More details of the datasets are as following:</p>
+<div id="u.s.-historical-voting-results-from-1976-to-2016" class="section level2">
+<h2><span class="header-section-number">2.1</span> U.S. Historical Voting Results from 1976 to 2016</h2>
+<p><strong>Dataset: 1976-2016-president.csv</strong></p>
+<p>The dataset downloaded from <a href="https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/42MVDX">Harvard Dataverse</a> contains 14 columns and 3740 records about the voting results of presidential election by US state from 1976 to 2016. We used 4 columns from this dataset: <code>year</code>, <code>state</code>, <code>party</code> and <code>candidatevotes</code>.</p>
 <table>
 <caption><span id="tab:unnamed-chunk-4">Table 2.1: </span>Major columns used</caption>
-<colgroup>
-<col width="18%" />
-<col width="81%" />
-</colgroup>
 <thead>
 <tr class="header">
 <th align="left">Column Name</th>
@@ -194,58 +194,81 @@
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">state_name</td>
-<td align="left">State name (chr)</td>
+<td align="left">year</td>
+<td align="left">Election Year</td>
 </tr>
 <tr class="even">
-<td align="left">county_fips</td>
-<td align="left">The 5-digit FIPS code corresponding to the county (chr)</td>
+<td align="left">state</td>
+<td align="left">State Name</td>
 </tr>
 <tr class="odd">
-<td align="left">county_name</td>
-<td align="left">County name (chr)</td>
+<td align="left">party</td>
+<td align="left">Party Name</td>
 </tr>
 <tr class="even">
-<td align="left">votes_gop</td>
-<td align="left">Votes for Trump (num)</td>
-</tr>
-<tr class="odd">
-<td align="left">votes_dem</td>
-<td align="left">Votes for Biden (num)</td>
-</tr>
-<tr class="even">
-<td align="left">total_votes</td>
-<td align="left">Total Votes (num)</td>
-</tr>
-<tr class="odd">
-<td align="left">diff</td>
-<td align="left">Difference between votes for Trump and Biden (num)</td>
-</tr>
-<tr class="even">
-<td align="left">per_gop</td>
-<td align="left">Percentage of votes for Trump (num)</td>
-</tr>
-<tr class="odd">
-<td align="left">per_dem</td>
-<td align="left">Percentage of votes for Biden (num)</td>
-</tr>
-<tr class="even">
-<td align="left">per_point_diff</td>
-<td align="left">Difference between percentages of votes for Trump and Biden (num)</td>
+<td align="left">candidatevotes</td>
+<td align="left">Popular Votes</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Issues with this dataset: </strong></p>
-<p>This dataset is scraped from results published by from Fox News, Politico, and the New York Times. So, it is update in real time and some columns may be changed. Also, the election votes counting and post-election processing are ongoing in several states, so individual statistics we used here might change.</p>
+<ol style="list-style-type: decimal">
+<li>Among the four columns that we need, the <code>party</code> column has a mixture of String and Boolean data. Thus we might need to do some pre-processing to uniform the data type of this column.</li>
+</ol>
+</div>
+<div id="u.s.-state-level-popular-vote-results-of-2020-presidential-election" class="section level2">
+<h2><span class="header-section-number">2.2</span> U.S. State Level Popular Vote Results of 2020 Presidential Election</h2>
+<p><strong>Dataset : Popular vote backend_1216.csv</strong></p>
+<p>The dataset downloaded from <a href="https://cookpolitical.com/2020-national-popular-vote-tracker">Cook Political</a> contains the 2020 Presidential Election State-Level Popular Vote Share and Result Margin.</p>
+<table>
+<caption><span id="tab:unnamed-chunk-5">Table 2.2: </span>Major columns used</caption>
+<thead>
+<tr class="header">
+<th align="left">Column Name</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">stateid</td>
+<td align="left">State Postal Codes</td>
+</tr>
+<tr class="even">
+<td align="left">state</td>
+<td align="left">State Name</td>
+</tr>
+<tr class="odd">
+<td align="left">dem_votes</td>
+<td align="left">Votes for Biden</td>
+</tr>
+<tr class="even">
+<td align="left">rep_votes</td>
+<td align="left">Votes for Trump</td>
+</tr>
+<tr class="odd">
+<td align="left">dem_percent</td>
+<td align="left">Vote Percentage for Biden</td>
+</tr>
+<tr class="even">
+<td align="left">rep_percent</td>
+<td align="left">Vote Percentage for Trump</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Issues with this dataset: </strong></p>
+<ol style="list-style-type: decimal">
+<li>Only the 2020 election popular voting count per candidate per state in this table are considered as the raw data. The rest of the columns in this file such as the vote margin and margin shift are calculated by Cook Political Report based on the past voting result dataset that is not published on their website. So we are not able to verify these numbers exactly using the dataset they provided. But, if necessary, we can collect the historical election popular vote outcome from other data sources (such as Harvard Dataverse) by ourselves and verify those numbers. However, since this Cook Political is a reliable data source, we would consider those values to be trustworthy and leave such verification process for future investigations.</li>
+<li>Cook Political updates their data report every day. We have updated the dataset pulled from their website on December 16th to get an up-to-date version. All of the results on the table are shown as certified and finalized. So there should be no more updates that would affect our analysis outcome.</li>
+</ol>
 </div>
 <div id="contribution-receipts" class="section level2">
-<h2><span class="header-section-number">2.2</span> Contribution Receipts</h2>
+<h2><span class="header-section-number">2.3</span> Contribution Receipts</h2>
 <p><strong>Dataset: contribution_bind.csv</strong></p>
 <p>The contribution receipts data on <a href="https://www.fec.gov/">fec.gov</a> includes all receipts filed by election candidates and committees with records of contributions made by individuals, organizations, and committees.</p>
 <p>Since contributions made in the election year seem to better reflect people’s support on their favorite candidate, we applied a date filter to select records with the receipt date falling between 01/01/2020 and 11/03/2020. Due to a huge data volume, we limited data exported to only the contributions with an amount over or equal to 200 dollars and raised by the committees of two final presidential candidates of 2020 Election. The filtered dataset was retrieved from <a href="https://www.fec.gov/data/receipts/?recipient_committee_type=P&amp;data_type=processed&amp;committee_id=C00580100&amp;committee_id=C00703975&amp;two_year_transaction_period=2020&amp;min_date=01%2F01%2F2020&amp;max_date=11%2F03%2F2020&amp;is_individual=true&amp;min_amount=200">here</a>.</p>
 <p>The exported dataset has 79 columns and 984,824 records in total. There are 302,731 entries for <strong>Donald J. Trump for President committee</strong> and 682,093 entries for <strong>Biden for President committee</strong>.</p>
 <table>
-<caption><span id="tab:unnamed-chunk-5">Table 2.2: </span>Major columns used</caption>
+<caption><span id="tab:unnamed-chunk-6">Table 2.3: </span>Major columns used</caption>
 <colgroup>
 <col width="33%" />
 <col width="66%" />
@@ -328,12 +351,12 @@
 </ol>
 </div>
 <div id="the-disbursements-data" class="section level2">
-<h2><span class="header-section-number">2.3</span> The Disbursements data</h2>
+<h2><span class="header-section-number">2.4</span> The Disbursements data</h2>
 <p><strong>Dataset: schedule_b-2020-11-08T16_10_30.csv</strong></p>
 <p>The Disbursements data from <a href="https://www.fec.gov/">fec.gov</a> includes the operating expenditure records of House and Senate election committees, Presidential election committees, and PAC and Party committees since 2003.</p>
 <p>For this project, we filtered the data to focus on the spending of presidential election committees of 2020 US Election, which the disbursement dates are from 01/01/2020 to 11/03/2020, consistent with the scope of the contribution receipt dataset. The dataset with filters applied was exported from <a href="https://www.fec.gov/data/disbursements/?spender_committee_type=P&amp;data_type=processed&amp;min_date=01%2F01%2F2020&amp;max_date=11%2F03%2F2020">FEC Official Database</a>. The retrieved dataset has 260,587 records and 78 columns.</p>
 <table>
-<caption><span id="tab:unnamed-chunk-6">Table 2.3: </span>Major columns used</caption>
+<caption><span id="tab:unnamed-chunk-7">Table 2.4: </span>Major columns used</caption>
 <thead>
 <tr class="header">
 <th align="left">Column Name</th>
@@ -385,7 +408,80 @@
 </table>
 <p><strong>Issues with this dataset: </strong></p>
 <p>The disbursement data is still getting updated with additive filings of previous disbursements being archived. The total number of records is subject to change, but the change will be trivial compared to the size of the entire dataset. Although this will not affect our analysis or overall conclusion, it is worth attention to the data incompleteness here.</p>
+</div>
+<div id="other-datasets-used" class="section level2">
+<h2><span class="header-section-number">2.5</span> Other Datasets Used</h2>
+<p>We also used other auxiliary datasets to help us develop more comprehensive analysis and visualization.</p>
+<div id="u.s.-county-level-voting-results-of-2020-presidential-election" class="section level3">
+<h3><span class="header-section-number">2.5.1</span> U.S. County Level Voting Results of 2020 Presidential Election</h3>
+<p><strong>Dataset: 2020_US_County_Level_Presidential_Results.csv</strong></p>
+<p>The dataset contains 10 columns and 3153 records covering the voting results of 2020 presidential election by US county. Since the county level data was not downloadable from the website, we exported this dataset from the github repo <a href="https://github.com/tonmcg/US_County_Level_Election_Results_08-20/blob/master/2020_US_County_Level_Presidential_Results.csv"><em>2020_US_County_Level_Presidential_Results</em></a>, which contains the latest voting data scraped by Tony McGovern from Fox News website.</p>
+<table>
+<caption><span id="tab:unnamed-chunk-8">Table 2.5: </span>Major columns used</caption>
+<colgroup>
+<col width="18%" />
+<col width="81%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Column Name</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">state_name</td>
+<td align="left">State name (chr)</td>
+</tr>
+<tr class="even">
+<td align="left">county_fips</td>
+<td align="left">The 5-digit FIPS code corresponding to the county (chr)</td>
+</tr>
+<tr class="odd">
+<td align="left">county_name</td>
+<td align="left">County name (chr)</td>
+</tr>
+<tr class="even">
+<td align="left">votes_gop</td>
+<td align="left">Votes for Trump (num)</td>
+</tr>
+<tr class="odd">
+<td align="left">votes_dem</td>
+<td align="left">Votes for Biden (num)</td>
+</tr>
+<tr class="even">
+<td align="left">total_votes</td>
+<td align="left">Total Votes (num)</td>
+</tr>
+<tr class="odd">
+<td align="left">diff</td>
+<td align="left">Difference between votes for Trump and Biden (num)</td>
+</tr>
+<tr class="even">
+<td align="left">per_gop</td>
+<td align="left">Percentage of votes for Trump (num)</td>
+</tr>
+<tr class="odd">
+<td align="left">per_dem</td>
+<td align="left">Percentage of votes for Biden (num)</td>
+</tr>
+<tr class="even">
+<td align="left">per_point_diff</td>
+<td align="left">Difference between percentages of votes for Trump and Biden (num)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Issues with this dataset: </strong></p>
+<p>This dataset is scraped from results published by from Fox News, Politico, and the New York Times. So, it is update in real time and some columns may be changed. Also, the election votes counting and post-election processing are ongoing in several states, so individual statistics we used here might change.</p>
+</div>
+<div id="us-presidential-election-vote-shares" class="section level3">
+<h3><span class="header-section-number">2.5.2</span> US Presidential Election vote shares</h3>
+<p><strong>Dataset: elections_historic</strong></p>
+<p>This dataset is contained in the <code>socviz</code> library in R. It is a dataset of US presidential elections from 1824 to 2016, with information on the winner, runner up, and various measures of vote share.</p>
+<p><strong>Issues with this dataset</strong></p>
+<p>As claimed in the <code>elections_historic {socviz}</code> documentation, the data for 2016 are provisional as of early December 2016. So we would need to update that data to include the final result of 2016 election for this project.</p>
 
+</div>
 </div>
 </div>
             </section>
