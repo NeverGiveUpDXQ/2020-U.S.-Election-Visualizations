@@ -13,7 +13,7 @@ We used three major datasets: the [2020 Presidential Election Results dataset](h
 
 **Dataset: 2020_US_County_Level_Presidential_Results.csv**
 
-The dataset contains 10 columns and 3153 records covering the voting results of 2020 presidential election by US county. Since the county level data was not downloadable from the website, we exported this dataset from the github repo [* 2020_US_County_Level_Presidential_Results*](https://github.com/tonmcg/US_County_Level_Election_Results_08-20/blob/master/2020_US_County_Level_Presidential_Results.csv), which contains the latest voting data scraped by Tony McGovern from Fox News website.
+The dataset contains 10 columns and 3153 records covering the voting results of 2020 presidential election by US county. Since the county level data was not downloadable from the website, we exported this dataset from the github repo [*2020_US_County_Level_Presidential_Results*](https://github.com/tonmcg/US_County_Level_Election_Results_08-20/blob/master/2020_US_County_Level_Presidential_Results.csv), which contains the latest voting data scraped by Tony McGovern from Fox News website.
 
 
 ```{r, echo=FALSE, results='asis'}
