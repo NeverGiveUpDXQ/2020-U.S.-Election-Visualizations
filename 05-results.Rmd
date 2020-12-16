@@ -42,18 +42,6 @@ In the U.S., a presidential candidate needs to [receive a minimum of 270 out of 
 
 ### 2020 Election Margins by State
 
-```{r, eval = FALSE, echo=FALSE}
-president2020 <- read_csv('./data/raw/Popular vote backend_1211.csv') %>%
-  filter(state %in% usmap::statepop$full)%>%
-  # Make column `state` consistent & we don't consider Maine/Nebraska districts
-  select(stateid,state,dem_this_margin,dem_votes,rep_votes) %>%
-  # we classfiy 3 levels: Dem. won, Rep. won and flipped states
-  mutate(class = ifelse(stateid %in% c('AZ', 'WI', 'MI', 'PA', 'GA'),'States that flipped from 2016',ifelse(dem_votes>rep_votes,'Democrats won','Republicans won')))
-
-write.csv(president2020, "./data/clean/president2020.csv",row.names = FALSE)
-```
-
-
 ```{r}
 president2020 <- readr::read_csv(here::here("./data/clean/president2020.csv"))
 
@@ -235,7 +223,7 @@ From the plot above, we can see:
 # https://rstudio-pubs-static.s3.amazonaws.com/10130_e7ab01469cdf4ddb85e3510b0844885e.html
 # https://rdrr.io/cran/micromapST/man/panelDesc.html
 library(micromapST)
-popular_vote <- readr::read_csv(here::here("./data/raw/Popular vote backend_1211.csv"))
+popular_vote <- readr::read_csv(here::here("./data/raw/Popular vote backend_1216.csv"))
 statepop1 <- readr::read_csv(here::here("./data/d3csv/statepop1.csv"))
 statepop2 <- statepop1 %>%
   left_join(popular_vote[,c(2:14,20,21)],by = c("abbr" = "stateid" ))
@@ -765,14 +753,16 @@ g1 <- exp_perc %>%
              mapping=aes(color=committee_name)
              ) + 
   scale_color_viridis_d("Committee",labels=levels(exp_perc$committee_name)) +
-  labs(x = "Expenditure Category", y = "% of Total Expenditure", caption = "* data does not add up to 100% since it only contains categories contribute signiticantly to the total amount\n Source: fec.gov", 
+  labs(x = "", 
+       y = "% of Total Expenditure", 
        title ="2020 Presidential Election Disbursement Break Down",
        subtitle="on Significant Categories (Excluding Refunds)") + 
   theme_bw() +
-  theme(plot.title = element_text(face = "bold"),
+  theme(axis.text.x=element_blank(),
+        legend.position = "none",
+        plot.title = element_text(face = "bold"),
         plot.subtitle = element_text(face = "bold", color = "grey35"),
-        plot.caption = element_text(color = "grey68"),
-        legend.position="bottom")
+        plot.caption = element_text(color = "grey68"))
 
 g2 <- exp_perc %>%
   ggparcoord(columns = c(2,3,5,7,9,11),
@@ -782,9 +772,9 @@ g2 <- exp_perc %>%
              mapping=aes(color=committee_name)
              ) + 
   scale_color_viridis_d("Committee",labels=levels(exp_perc$committee_name)) +
-  labs(x = "Expenditure Category", y = "% of Total Expenditure on a Relative Scale", caption = "Source: fec.gov", 
-       title ="2020 Presidential Election Disbursement Break Down",
-       subtitle="on Significant Categories (Excluding Refunds)") + 
+  labs(x = "Expenditure Category", 
+       y = "% of Total Expenditure on a Relative Scale", 
+       caption = "* data in the top table does not add up to 100% since it only contains categories contribute signiticantly to the total amount\nSource: fec.gov") + 
   theme_bw() +
   theme(plot.title = element_text(face = "bold"),
         plot.subtitle = element_text(face = "bold", color = "grey35"),

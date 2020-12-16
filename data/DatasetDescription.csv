@@ -39,3 +39,17 @@ recipient_zip,Zip code of disbursement recipient's address (chr)
 recipient_state,State of disbursement recipient's address (chr)
 recipient_name,Entity name of disbursement recipient (chr)
 … (Omit 70 unused columns),
+,
+Column Name,Description
+stateid,State Postal Codes
+state,State Name 
+dem_votes,Votes for Biden
+rep_votes,Votes for Trump
+dem_percent,Vote Percentage for Biden
+rep_percent,Vote Percentage for Trump
+,
+Column Name,Description
+year,Election Year
+state,State Name
+party,Party Name
+candidatevotes,Popular Votes

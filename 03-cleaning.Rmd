@@ -8,6 +8,7 @@ library(socviz)
 ```
 
 ## Election Result Data Transformation 
+In this step, we need to cleanup two election result data files: 1976-2016 historical election result and 2020 election popular vote share and vote margin. We began with cleaning the historical election result data file. 
 
 First, to compare historical popular vote results for **republicans** on the state level, we cleaned this dataset in following steps:
 
@@ -119,6 +120,22 @@ data2020 <- data.frame(win_party = 'Dem.',popular_pct = 0.514,ec_pct = 306/(306+
 elections_historic_new <- rbind(elections_historic_new,data2020)
 
 write.csv(elections_historic_new, file = here::here("data", "clean", "elections_historic_new.csv"),row.names=FALSE)
+```
+
+Next, we cleaned up the U.S. State Level Popular Vote Results of 2020 Presidential Election in following steps:
+
+- Select columns we need. i.e. `stateid`, `state`, `dem_this_margin`, `dem_votes`, `rep_votes`.
+- Add a new column `class` to indicate if it is `States that flipped from 2016` or `Democrats won`, or `Republicans won`. We define a state as `States that flipped from 2016` if it is one of **Arizona**, **Wisconsin**, **Michigan**, **Pennsylvania**, **Georgia**. Otherwise, we compared their vote for Democrats and vote for Republicans to determine their class.
+
+```{r, eval = FALSE, echo=FALSE}
+president2020 <- read_csv('./data/raw/Popular vote backend_1216.csv') %>%
+  filter(state %in% usmap::statepop$full)%>%
+  # Make column `state` consistent & we don't consider Maine/Nebraska districts
+  select(stateid,state,dem_this_margin,dem_votes,rep_votes) %>%
+  # we classfiy 3 levels: Dem. won, Rep. won and flipped states
+  mutate(class = ifelse(stateid %in% c('AZ', 'WI', 'MI', 'PA', 'GA'),'States that flipped from 2016',ifelse(dem_votes>rep_votes,'Democrats won','Republicans won')))
+
+write.csv(president2020, "./data/clean/president2020.csv",row.names = FALSE)
 ```
 
 
