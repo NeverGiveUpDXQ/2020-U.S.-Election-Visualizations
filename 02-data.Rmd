@@ -16,6 +16,7 @@ From the above data sources, we collected and used three major datasets: 2020 Pr
 The dataset downloaded from [Cook Political](https://cookpolitical.com/2020-national-popular-vote-tracker) contains the 2020 Presidential Election State-Level Popular Vote Share and Result Margin.
 
 ```{r, echo=FALSE, results='asis'}
+DataDescription<- readr::read_csv(here::here("./data/DatasetDescription.csv"))
 knitr::kable(DataDescription[41:46, ], caption = "Major columns used",
              row.names = F,font_size = 10)
 ```
@@ -76,7 +77,6 @@ We also used other auxiliary datasets to develop more comprehensive analysis and
 The dataset downloaded from [Harvard Dataverse](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/42MVDX) contains 14 columns and 3740 records about the state level voting results of presidential elections from 1976 to 2016. We used 4 columns from this dataset: `year`, `state`, `party` and `candidatevotes`.
 
 ```{r, echo=FALSE, results='asis'}
-DataDescription<- readr::read_csv(here::here("./data/DatasetDescription.csv"))
 knitr::kable(DataDescription[49:52, ], caption = "Major columns used",
              row.names = F,font_size = 10)
 ```
