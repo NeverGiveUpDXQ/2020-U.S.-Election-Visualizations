@@ -383,7 +383,7 @@ d1 %>%
 The bar chart above displays how much Joe Biden and Donald Trump have raised in each state in 2020, and it is sorted by the amounts of Joe Biden's raisings. You can zoom in to see each state's contribution amounts in detail. Joe Biden received solid support from **California** and **New York** which contributed 127M dollars and 63M dollars respectively, more than twice as contributed to Donald Trump. Besides receiving 58M dollars from **California**, Donald Trump also raised significant amounts from **Texas** and **Florida** equal to 52M and 48M dollars respectively, much more than Biden. We found that these are consistent with the final voting results as Biden has won California and New York with a margin larger than 20% whereas Trump won Florida and Texas, two of the battleground states.
 
 #### Biden vs. Trump: Contributions Per Registered Voter by State
-```{r, echo=FALSE}
+```{r, echo=FALSE, fig.width=10}
 # Biden
 p3<- statepop1 %>% arrange(desc(BIDEN_CONTRIB_PP)) %>% head(5) %>% 
   ggplot(aes(x=reorder(abbr, BIDEN_CONTRIB_PP, median), y=BIDEN_CONTRIB_PP)) +
@@ -787,6 +787,7 @@ hchart(dout, type="treemap", allowTraversingTree=TRUE) %>%
   hc_exporting(enabled = TRUE)
 ```
 Instructions to use this treemap:
+
 - Hover over a color to see spendings on a category.
 - Hover over a tag to see full recipient name.
 - Click on a color to select a spending category.
@@ -798,14 +799,6 @@ Going further from what we have discovered, we created the treemap above to find
 Focusing on the two final presidential candidates of 2020 US Election, we took a close look at their expenditure details. 
 ```{r}
 # Display in a table
-knitr::kable(disbursement_summary, caption = "Disbursement Summary by Candidate",
-             col.names = c('Committee name','Number of Records',
-                           'Total spending amount (Million US Dollars)',
-                           'Mean spending amount (US Dollars)',
-			   'Median spending amount (US Dollars)'),
-             format.args = list(big.mark = ",", scientific = FALSE),
-             digits = 2,align = "l",full_width = T)
-
 disbursement_summary <- disbursement_sum %>%
   select(committee_name, disbursement_amount) %>%
   dplyr::group_by(committee_name) %>% 
@@ -814,6 +807,13 @@ disbursement_summary <- disbursement_sum %>%
             mean_disbursement = mean(disbursement_amount, na.rm = T),
             median_disbursement = median(disbursement_amount, na.rm = T))
 
+knitr::kable(disbursement_summary, caption = "Disbursement Summary by Candidate",
+             col.names = c('Committee name','Number of Records',
+                           'Total spending amount (Million US Dollars)',
+                           'Mean spending amount (US Dollars)',
+			   'Median spending amount (US Dollars)'),
+             format.args = list(big.mark = ",", scientific = FALSE),
+             digits = 2,align = "l",full_width = T)
 ```
 From the table above, it is clear that Biden spent 300 million dollars more than Trump. In the boxplot, we used the log10 scaled x-axis to reduce skewness of the disbursement distribution, but there are still many outliers on the right tail. Also, there are single expenditure records for both candidates with an amount larger than 10 million dollars. The median expemditures were similar for two candidates.
 
