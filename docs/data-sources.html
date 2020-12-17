@@ -24,7 +24,7 @@
 <meta name="author" content="GROUP 10: Jin Qian, Wenjie Zhu, Yibai Liu" />
 
 
-<meta name="date" content="2020-12-16" />
+<meta name="date" content="2020-12-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,7 +33,7 @@
   
 <link rel="prev" href="index.html"/>
 <link rel="next" href="data-transformation.html"/>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/jquery-3.5.0/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -51,6 +51,48 @@
 
 
 <script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<script src="libs/htmlwidgets-1.5.2/htmlwidgets.js"></script>
+<script src="libs/proj4js-2.3.15/proj4.js"></script>
+<link href="libs/highcharts-8.1.2/css/motion.css" rel="stylesheet" />
+<script src="libs/highcharts-8.1.2/highcharts.js"></script>
+<script src="libs/highcharts-8.1.2/highcharts-3d.js"></script>
+<script src="libs/highcharts-8.1.2/highcharts-more.js"></script>
+<script src="libs/highcharts-8.1.2/modules/stock.js"></script>
+<script src="libs/highcharts-8.1.2/modules/map.js"></script>
+<script src="libs/highcharts-8.1.2/modules/annotations.js"></script>
+<script src="libs/highcharts-8.1.2/modules/data.js"></script>
+<script src="libs/highcharts-8.1.2/modules/drilldown.js"></script>
+<script src="libs/highcharts-8.1.2/modules/item-series.js"></script>
+<script src="libs/highcharts-8.1.2/modules/offline-exporting.js"></script>
+<script src="libs/highcharts-8.1.2/modules/overlapping-datalabels.js"></script>
+<script src="libs/highcharts-8.1.2/modules/exporting.js"></script>
+<script src="libs/highcharts-8.1.2/modules/export-data.js"></script>
+<script src="libs/highcharts-8.1.2/modules/funnel.js"></script>
+<script src="libs/highcharts-8.1.2/modules/heatmap.js"></script>
+<script src="libs/highcharts-8.1.2/modules/treemap.js"></script>
+<script src="libs/highcharts-8.1.2/modules/sankey.js"></script>
+<script src="libs/highcharts-8.1.2/modules/dependency-wheel.js"></script>
+<script src="libs/highcharts-8.1.2/modules/organization.js"></script>
+<script src="libs/highcharts-8.1.2/modules/solid-gauge.js"></script>
+<script src="libs/highcharts-8.1.2/modules/streamgraph.js"></script>
+<script src="libs/highcharts-8.1.2/modules/sunburst.js"></script>
+<script src="libs/highcharts-8.1.2/modules/vector.js"></script>
+<script src="libs/highcharts-8.1.2/modules/wordcloud.js"></script>
+<script src="libs/highcharts-8.1.2/modules/xrange.js"></script>
+<script src="libs/highcharts-8.1.2/modules/tilemap.js"></script>
+<script src="libs/highcharts-8.1.2/modules/venn.js"></script>
+<script src="libs/highcharts-8.1.2/modules/gantt.js"></script>
+<script src="libs/highcharts-8.1.2/modules/timeline.js"></script>
+<script src="libs/highcharts-8.1.2/modules/parallel-coordinates.js"></script>
+<script src="libs/highcharts-8.1.2/modules/bullet.js"></script>
+<script src="libs/highcharts-8.1.2/modules/coloraxis.js"></script>
+<script src="libs/highcharts-8.1.2/modules/dumbbell.js"></script>
+<script src="libs/highcharts-8.1.2/modules/lollipop.js"></script>
+<script src="libs/highcharts-8.1.2/modules/series-label.js"></script>
+<script src="libs/highcharts-8.1.2/plugins/motion.js"></script>
+<script src="libs/highcharts-8.1.2/custom/reset.js"></script>
+<script src="libs/highcharts-8.1.2/modules/boost.js"></script>
+<script src="libs/highchart-binding-0.8.2/highchart.js"></script>
 
 
 
@@ -79,6 +121,7 @@
 <li class="chapter" data-level="2.5" data-path="data-sources.html"><a href="data-sources.html#other-datasets-used"><i class="fa fa-check"></i><b>2.5</b> Other Datasets Used</a><ul>
 <li class="chapter" data-level="2.5.1" data-path="data-sources.html"><a href="data-sources.html#u.s.-county-level-voting-results-of-2020-presidential-election"><i class="fa fa-check"></i><b>2.5.1</b> U.S. County Level Voting Results of 2020 Presidential Election</a></li>
 <li class="chapter" data-level="2.5.2" data-path="data-sources.html"><a href="data-sources.html#us-presidential-election-vote-shares"><i class="fa fa-check"></i><b>2.5.2</b> US Presidential Election vote shares</a></li>
+<li class="chapter" data-level="2.5.3" data-path="data-sources.html"><a href="data-sources.html#number-of-registered-voters"><i class="fa fa-check"></i><b>2.5.3</b> Number of Registered Voters</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="data-transformation.html"><a href="data-transformation.html"><i class="fa fa-check"></i><b>3</b> Data transformation</a><ul>
@@ -95,18 +138,17 @@
 <li class="chapter" data-level="5.1.2" data-path="results.html"><a href="results.html#historical-timeline"><i class="fa fa-check"></i><b>5.1.2</b> Historical Timeline</a></li>
 </ul></li>
 <li class="chapter" data-level="5.2" data-path="results.html"><a href="results.html#contribution-receipts-data"><i class="fa fa-check"></i><b>5.2</b> Contribution Receipts Data</a><ul>
-<li class="chapter" data-level="5.2.1" data-path="results.html"><a href="results.html#overview-total-contributions-by-state"><i class="fa fa-check"></i><b>5.2.1</b> Overview: Total Contributions by State</a></li>
-<li class="chapter" data-level="5.2.2" data-path="results.html"><a href="results.html#contributions-distribution-and-details"><i class="fa fa-check"></i><b>5.2.2</b> Contributions Distribution and Details</a></li>
-<li class="chapter" data-level="5.2.3" data-path="results.html"><a href="results.html#contributions-by-date-time-series"><i class="fa fa-check"></i><b>5.2.3</b> Contributions by Date: Time Series</a></li>
-<li class="chapter" data-level="5.2.4" data-path="results.html"><a href="results.html#contributor-occupations"><i class="fa fa-check"></i><b>5.2.4</b> Contributor Occupations</a></li>
+<li class="chapter" data-level="5.2.1" data-path="results.html"><a href="results.html#where-contributions-came-from"><i class="fa fa-check"></i><b>5.2.1</b> Where Contributions Came from</a></li>
+<li class="chapter" data-level="5.2.2" data-path="results.html"><a href="results.html#individual-contribution-distribution"><i class="fa fa-check"></i><b>5.2.2</b> Individual Contribution Distribution</a></li>
+<li class="chapter" data-level="5.2.3" data-path="results.html"><a href="results.html#when-contributions-were-made"><i class="fa fa-check"></i><b>5.2.3</b> When Contributions Were Made</a></li>
+<li class="chapter" data-level="5.2.4" data-path="results.html"><a href="results.html#who-contributors-were"><i class="fa fa-check"></i><b>5.2.4</b> Who Contributors Were</a></li>
 </ul></li>
 <li class="chapter" data-level="5.3" data-path="results.html"><a href="results.html#disbursement-data-analysis"><i class="fa fa-check"></i><b>5.3</b> Disbursement Data Analysis</a><ul>
-<li class="chapter" data-level="5.3.1" data-path="results.html"><a href="results.html#disbursement-distribution"><i class="fa fa-check"></i><b>5.3.1</b> Disbursement Distribution</a></li>
-<li class="chapter" data-level="5.3.2" data-path="results.html"><a href="results.html#top-5-presidential-campaigns-spent-the-most"><i class="fa fa-check"></i><b>5.3.2</b> Top 5 Presidential Campaigns Spent the Most</a></li>
-<li class="chapter" data-level="5.3.3" data-path="results.html"><a href="results.html#disbursement-details"><i class="fa fa-check"></i><b>5.3.3</b> Disbursement Details</a></li>
-<li class="chapter" data-level="5.3.4" data-path="results.html"><a href="results.html#when-does-those-committee-spend-the-most"><i class="fa fa-check"></i><b>5.3.4</b> When does those committee spend the most?</a></li>
-<li class="chapter" data-level="5.3.5" data-path="results.html"><a href="results.html#disbursement-recipient-share"><i class="fa fa-check"></i><b>5.3.5</b> Disbursement Recipient Share</a></li>
-<li class="chapter" data-level="5.3.6" data-path="results.html"><a href="results.html#where-does-all-of-the-disbursement-money-go"><i class="fa fa-check"></i><b>5.3.6</b> Where Does All of The Disbursement Money Go?</a></li>
+<li class="chapter" data-level="5.3.1" data-path="results.html"><a href="results.html#who-spent-the-most"><i class="fa fa-check"></i><b>5.3.1</b> Who Spent the Most</a></li>
+<li class="chapter" data-level="5.3.2" data-path="results.html"><a href="results.html#what-they-spent-money-for"><i class="fa fa-check"></i><b>5.3.2</b> What They Spent Money for</a></li>
+<li class="chapter" data-level="5.3.3" data-path="results.html"><a href="results.html#biden-vs.-trump-disbursement-distribution"><i class="fa fa-check"></i><b>5.3.3</b> Biden vs. Trump: Disbursement Distribution</a></li>
+<li class="chapter" data-level="5.3.4" data-path="results.html"><a href="results.html#biden-vs.-trump-when-they-spent-the-most"><i class="fa fa-check"></i><b>5.3.4</b> Biden vs. Trump: When they spent the most</a></li>
+<li class="chapter" data-level="5.3.5" data-path="results.html"><a href="results.html#biden-vs.-trump-disbursements-by-state"><i class="fa fa-check"></i><b>5.3.5</b> Biden vs. Trump: Disbursements by State</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="interactive-component.html"><a href="interactive-component.html"><i class="fa fa-check"></i><b>6</b> Interactive component</a><ul>
@@ -153,19 +195,19 @@
 <tbody>
 <tr class="odd">
 <td align="left">year</td>
-<td align="left">Election Year</td>
+<td align="left">Election Year (num)</td>
 </tr>
 <tr class="even">
 <td align="left">state</td>
-<td align="left">State Name</td>
+<td align="left">State Name (chr)</td>
 </tr>
 <tr class="odd">
 <td align="left">party</td>
-<td align="left">Party Name</td>
+<td align="left">Party Name (chr)</td>
 </tr>
 <tr class="even">
 <td align="left">candidatevotes</td>
-<td align="left">Popular Votes</td>
+<td align="left">Popular Votes (num)</td>
 </tr>
 </tbody>
 </table>
@@ -189,27 +231,27 @@
 <tbody>
 <tr class="odd">
 <td align="left">stateid</td>
-<td align="left">State Postal Codes</td>
+<td align="left">State Postal Codes (chr)</td>
 </tr>
 <tr class="even">
 <td align="left">state</td>
-<td align="left">State Name</td>
+<td align="left">State Name (chr)</td>
 </tr>
 <tr class="odd">
 <td align="left">dem_votes</td>
-<td align="left">Votes for Biden</td>
+<td align="left">Votes for Biden (num)</td>
 </tr>
 <tr class="even">
 <td align="left">rep_votes</td>
-<td align="left">Votes for Trump</td>
+<td align="left">Votes for Trump (num)</td>
 </tr>
 <tr class="odd">
 <td align="left">dem_percent</td>
-<td align="left">Vote Percentage for Biden</td>
+<td align="left">Vote Percentage for Biden (num)</td>
 </tr>
 <tr class="even">
 <td align="left">rep_percent</td>
-<td align="left">Vote Percentage for Trump</td>
+<td align="left">Vote Percentage for Trump (num)</td>
 </tr>
 </tbody>
 </table>
@@ -224,7 +266,7 @@
 <p><strong>Dataset: contribution_bind.csv</strong></p>
 <p>The contribution receipts data on <a href="https://www.fec.gov/">fec.gov</a> includes all receipts filed by election candidates and committees with records of contributions made by individuals, organizations, and committees.</p>
 <p>Since contributions made in the election year seem to better reflect people’s support on their favorite candidate, we applied a date filter to select records with the receipt date falling between 01/01/2020 and 11/03/2020. Due to a huge data volume, we limited data exported to only the contributions with an amount over or equal to 200 dollars and raised by the committees of two final presidential candidates of 2020 Election. The filtered dataset was retrieved from <a href="https://www.fec.gov/data/receipts/?recipient_committee_type=P&amp;data_type=processed&amp;committee_id=C00580100&amp;committee_id=C00703975&amp;two_year_transaction_period=2020&amp;min_date=01%2F01%2F2020&amp;max_date=11%2F03%2F2020&amp;is_individual=true&amp;min_amount=200">here</a>.</p>
-<p>The exported dataset has 79 columns and 984,824 records in total. There are 302,731 entries for <strong>Donald J. Trump for President committee</strong> and 682,093 entries for <strong>Biden for President committee</strong>.</p>
+<p>The exported dataset has 78 columns and 984,824 records in total. There are 302,731 entries for <strong>Donald J. Trump for President committee</strong> and 682,093 entries for <strong>Biden for President committee</strong>.</p>
 <table>
 <caption><span id="tab:unnamed-chunk-6">Table 2.3: </span>Major columns used</caption>
 <colgroup>
@@ -263,24 +305,16 @@
 <td align="left">Last name of contributor (chr)</td>
 </tr>
 <tr class="odd">
-<td align="left">contributor_suffix</td>
-<td align="left">Suffix of contributor (chr)</td>
-</tr>
-<tr class="even">
 <td align="left">contributor_city</td>
 <td align="left">City of contributor’s address (chr)</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">contributor_state</td>
 <td align="left">State of contributor’s address(chr)</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">contributor_zip</td>
 <td align="left">Zip code of contributor’s address (chr)</td>
-</tr>
-<tr class="odd">
-<td align="left">contributor_employer</td>
-<td align="left">Name of contributor’s employer (chr)</td>
 </tr>
 <tr class="even">
 <td align="left">contributor_occupation</td>
@@ -323,42 +357,38 @@
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">Column Name</td>
-<td align="left">Description</td>
-</tr>
-<tr class="even">
 <td align="left">committee_name</td>
 <td align="left">Presidential Committee Name (chr)</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">disbursement_description</td>
 <td align="left">Details of the disbursement (chr)</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">disbursement_date</td>
 <td align="left">Date that disbursement is made (date).</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">disbursement_amount</td>
 <td align="left">Amount of the disbursement (num)</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">disbursement_purpose_category</td>
 <td align="left">Purpose of the disbursement (chr)</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">recipient_city</td>
 <td align="left">City of disbursement recipient’s address (chr)</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">recipient_zip</td>
 <td align="left">Zip code of disbursement recipient’s address (chr)</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">recipient_state</td>
 <td align="left">State of disbursement recipient’s address (chr)</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">recipient_name</td>
 <td align="left">Entity name of disbursement recipient (chr)</td>
 </tr>
@@ -436,8 +466,65 @@
 <h3><span class="header-section-number">2.5.2</span> US Presidential Election vote shares</h3>
 <p><strong>Dataset: elections_historic</strong></p>
 <p>This dataset is contained in the <code>socviz</code> library in R. It is a dataset of US presidential elections from 1824 to 2016, with information on the winner, runner up, and various measures of vote share.</p>
+<table>
+<caption><span id="tab:unnamed-chunk-9">Table 2.6: </span>Major columns used</caption>
+<thead>
+<tr class="header">
+<th align="left">Column Name</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">ec_pct</td>
+<td align="left">Winner’s share of elctoral college vote. (Range is 0 to 1. ) (num)</td>
+</tr>
+<tr class="even">
+<td align="left">popular_pct</td>
+<td align="left">Winner’s share of popular vote. (Range is 0 to 1. ) (num)</td>
+</tr>
+</tbody>
+</table>
 <p><strong>Issues with this dataset</strong></p>
 <p>As claimed in the <code>elections_historic {socviz}</code> documentation, the data for 2016 are provisional as of early December 2016. So we would need to update that data to include the final result of 2016 election for this project.</p>
+</div>
+<div id="number-of-registered-voters" class="section level3">
+<h3><span class="header-section-number">2.5.3</span> Number of Registered Voters</h3>
+<p><strong>Dataset: RegisteredVotersByState.csv</strong></p>
+<p>We collected the dataset from <a href="https://worldpopulationreview.com/state-rankings/number-of-registered-voters-by-state"><em>World Population Review</em></a>. This dataset contains the registered voter count and percentage per state. The records are all updated after June, 2020.</p>
+<table>
+<caption><span id="tab:unnamed-chunk-10">Table 2.7: </span>Major columns used</caption>
+<thead>
+<tr class="header">
+<th align="left">Column Name</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">state</td>
+<td align="left">State Name (chr)</td>
+</tr>
+<tr class="even">
+<td align="left">totalRegistered</td>
+<td align="left">Total number of people registered (num)</td>
+</tr>
+<tr class="odd">
+<td align="left">Pop</td>
+<td align="left">Total state population (num)</td>
+</tr>
+<tr class="even">
+<td align="left">registeredPerc</td>
+<td align="left">Percent of peoplewho are registered voters (num)</td>
+</tr>
+<tr class="odd">
+<td align="left">asOf</td>
+<td align="left">Last update date (date)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Issues with this dataset</strong></p>
+<p>The data records in this file were not all updated on the same day. No other known issues with this dataset.</p>
 
 </div>
 </div>

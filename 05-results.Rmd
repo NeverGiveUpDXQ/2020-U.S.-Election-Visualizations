@@ -720,6 +720,7 @@ ggplot(disbursement_sum, aes(x=disbursement_amount, y= committee_name, fill=comm
         legend.position="bottom",
         axis.text.y = element_blank())
 ```
+
 ### What They Spent Money for
 
 ```{r, message=FALSE, warning=FALSE, fig.width=10, fig.height=8}

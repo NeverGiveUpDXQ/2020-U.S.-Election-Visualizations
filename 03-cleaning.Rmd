@@ -7,6 +7,8 @@ library(tidyverse)
 library(socviz)
 ```
 
+Most of our small auxiliary datasets have been pre-processed by data providing authorities. Hence, we will only focus on preprocessing the major four datastes in this and the following chapter. 
+
 ## Election Result Data Transformation 
 In this step, we need to cleanup two election result data files: 1976-2016 historical election result and 2020 election popular vote share and vote margin. We began with cleaning the historical election result data file. 
 
