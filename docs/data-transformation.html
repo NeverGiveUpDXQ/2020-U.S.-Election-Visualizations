@@ -154,7 +154,7 @@
 <li class="chapter" data-level="6" data-path="interactive-component.html"><a href="interactive-component.html"><i class="fa fa-check"></i><b>6</b> Interactive component</a><ul>
 <li class="chapter" data-level="6.1" data-path="interactive-component.html"><a href="interactive-component.html#link-to-the-interactive-map"><i class="fa fa-check"></i><b>6.1</b> Link to the interactive map</a></li>
 <li class="chapter" data-level="6.2" data-path="interactive-component.html"><a href="interactive-component.html#descriptions"><i class="fa fa-check"></i><b>6.2</b> Descriptions</a></li>
-<li class="chapter" data-level="6.3" data-path="interactive-component.html"><a href="interactive-component.html#instructions-for-using-the-map"><i class="fa fa-check"></i><b>6.3</b> Instructions for using the map:</a></li>
+<li class="chapter" data-level="6.3" data-path="interactive-component.html"><a href="interactive-component.html#instructions-for-using-the-map"><i class="fa fa-check"></i><b>6.3</b> Instructions for using the map</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>7</b> Conclusion</a></li>
 <li class="divider"></li>
@@ -189,24 +189,21 @@
 <li>Filter column <code>party</code>. i.e. only leave republican.</li>
 <li>Check data quality &amp; revise it</li>
 </ul>
-<p>We then filter out all outliers and want to revise them. Note that it involves 2 state: <strong>District of Columbia</strong> and <strong>Minnesota</strong>. After checking data, we know that Republicans have never won D.C. and popular votes have always relatively low. So, it is reasonable. However, the share of <em>Minnesota</em> for Republican is abnormal. It is impossible that all voters chose one party.</p>
-<pre><code>## # A tibble: 14 x 3
-##     year state                 ratio
-##    &lt;dbl&gt; &lt;chr&gt;                 &lt;dbl&gt;
-##  1  1976 District of Columbia 0.168 
-##  2  1980 District of Columbia 0.152 
-##  3  1984 District of Columbia 0.139 
-##  4  1988 District of Columbia 0.148 
-##  5  1992 District of Columbia 0.0970
-##  6  1996 District of Columbia 0.0988
-##  7  2000 District of Columbia 0.0951
-##  8  2000 Minnesota            1     
-##  9  2004 District of Columbia 0.0948
-## 10  2004 Minnesota            1     
-## 11  2008 District of Columbia 0.0660
-## 12  2012 District of Columbia 0.0741
-## 13  2012 Minnesota            1     
-## 14  2016 District of Columbia 0.0430</code></pre>
+<p>We then filter out all outliers and want to revise them. Note that it involves 3 state:<strong>Utah</strong>, <strong>District of Columbia</strong> and <strong>Minnesota</strong>. After checking data, we know that Republicans have never won D.C. and popular votes have always relatively low. So, it is reasonable. However, only the share of <em>Minnesota</em> for Republican is abnormal. It is impossible that all voters chose one party.</p>
+<pre><code>## # A tibble: 27 x 4
+##     year state                ratio party     
+##    &lt;dbl&gt; &lt;chr&gt;                &lt;dbl&gt; &lt;chr&gt;     
+##  1  1976 District of Columbia 0.832 democrat  
+##  2  1976 District of Columbia 0.168 republican
+##  3  1980 District of Columbia 0.848 democrat  
+##  4  1980 District of Columbia 0.152 republican
+##  5  1980 Utah                 0.780 republican
+##  6  1980 Utah                 0.220 democrat  
+##  7  1984 District of Columbia 0.862 democrat  
+##  8  1984 District of Columbia 0.138 republican
+##  9  1988 District of Columbia 0.852 democrat  
+## 10  1988 District of Columbia 0.148 republican
+## # … with 17 more rows</code></pre>
 <p>So, then we look back raw data. We notice that in those years, party name for Dem. is <em>democratic-farmer-labor</em> rather than <em>democrat</em>.</p>
 <pre><code>## # A tibble: 30 x 3
 ##     year party                   candidatevotes
@@ -224,6 +221,10 @@
 ## # … with 20 more rows</code></pre>
 <p>After cleaning, it contains 3 columns and 561 records.</p>
 <table>
+<colgroup>
+<col width="19%" />
+<col width="80%" />
+</colgroup>
 <thead>
 <tr class="header">
 <th align="left">Column</th>
@@ -240,8 +241,8 @@
 <td align="left">State name</td>
 </tr>
 <tr class="odd">
-<td align="left">ratio</td>
-<td align="left">Share of popular votes for Rep.</td>
+<td align="left">dem_this_margin</td>
+<td align="left">candidate votes for democrat(%) - candidate votes for republican(%)</td>
 </tr>
 </tbody>
 </table>
