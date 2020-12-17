@@ -114,15 +114,10 @@
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
 <li class="chapter" data-level="2" data-path="data-sources.html"><a href="data-sources.html"><i class="fa fa-check"></i><b>2</b> Data sources</a><ul>
-<li class="chapter" data-level="2.1" data-path="data-sources.html"><a href="data-sources.html#u.s.-historical-voting-results-from-1976-to-2016"><i class="fa fa-check"></i><b>2.1</b> U.S. Historical Voting Results from 1976 to 2016</a></li>
-<li class="chapter" data-level="2.2" data-path="data-sources.html"><a href="data-sources.html#u.s.-state-level-popular-vote-results-of-2020-presidential-election"><i class="fa fa-check"></i><b>2.2</b> U.S. State Level Popular Vote Results of 2020 Presidential Election</a></li>
-<li class="chapter" data-level="2.3" data-path="data-sources.html"><a href="data-sources.html#contribution-receipts"><i class="fa fa-check"></i><b>2.3</b> Contribution Receipts</a></li>
-<li class="chapter" data-level="2.4" data-path="data-sources.html"><a href="data-sources.html#the-disbursements-data"><i class="fa fa-check"></i><b>2.4</b> The Disbursements data</a></li>
-<li class="chapter" data-level="2.5" data-path="data-sources.html"><a href="data-sources.html#other-datasets-used"><i class="fa fa-check"></i><b>2.5</b> Other Datasets Used</a><ul>
-<li class="chapter" data-level="2.5.1" data-path="data-sources.html"><a href="data-sources.html#u.s.-county-level-voting-results-of-2020-presidential-election"><i class="fa fa-check"></i><b>2.5.1</b> U.S. County Level Voting Results of 2020 Presidential Election</a></li>
-<li class="chapter" data-level="2.5.2" data-path="data-sources.html"><a href="data-sources.html#us-presidential-election-vote-shares"><i class="fa fa-check"></i><b>2.5.2</b> US Presidential Election vote shares</a></li>
-<li class="chapter" data-level="2.5.3" data-path="data-sources.html"><a href="data-sources.html#number-of-registered-voters"><i class="fa fa-check"></i><b>2.5.3</b> Number of Registered Voters</a></li>
-</ul></li>
+<li class="chapter" data-level="2.1" data-path="data-sources.html"><a href="data-sources.html#u.s.-state-level-popular-vote-results-of-2020-presidential-election"><i class="fa fa-check"></i><b>2.1</b> U.S. State Level Popular Vote Results of 2020 Presidential Election</a></li>
+<li class="chapter" data-level="2.2" data-path="data-sources.html"><a href="data-sources.html#contribution-receipts"><i class="fa fa-check"></i><b>2.2</b> Contribution Receipts</a></li>
+<li class="chapter" data-level="2.3" data-path="data-sources.html"><a href="data-sources.html#the-disbursements-data"><i class="fa fa-check"></i><b>2.3</b> The Disbursements data</a></li>
+<li class="chapter" data-level="2.4" data-path="data-sources.html"><a href="data-sources.html#other-minor-datasets-used"><i class="fa fa-check"></i><b>2.4</b> Other Minor Datasets Used</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="data-transformation.html"><a href="data-transformation.html"><i class="fa fa-check"></i><b>3</b> Data transformation</a><ul>
 <li class="chapter" data-level="3.1" data-path="data-transformation.html"><a href="data-transformation.html#election-result-data-transformation"><i class="fa fa-check"></i><b>3.1</b> Election Result Data Transformation</a></li>
@@ -178,19 +173,19 @@
             <section class="normal" id="section-">
 <div id="data-transformation" class="section level1">
 <h1><span class="header-section-number">Chapter 3</span> Data transformation</h1>
-<p>Most of our small auxiliary datasets have been pre-processed by data providing authorities. Hence, we will only focus on preprocessing the major four datastes in this and the following chapter.</p>
+<p>Most of our small auxiliary datasets have been pre-processed by data providing authorities, hence, we focused on the pre-processing of the major datasets. Please go to our <a href="https://github.com/NeverGiveUpDXQ/2020-U.S.-Election-Visualizations/blob/main/03-cleaning.Rmd">github repo chapter</a> to see code in detail.</p>
 <div id="election-result-data-transformation" class="section level2">
 <h2><span class="header-section-number">3.1</span> Election Result Data Transformation</h2>
-<p>In this step, we need to cleanup two election result data files: 1976-2016 historical election result and 2020 election popular vote share and vote margin. We began with cleaning the historical election result data file.</p>
-<p>First, to compare historical popular vote results for <strong>republicans</strong> on the state level, we cleaned this dataset in following steps:</p>
+<p>For the election results data, we cleaned up two raw data: 1976-2016 historical election result and 2020 election popular vote share and vote margin.</p>
+<p>First, to compare historical popular vote results for <em>republicans</em> on the state level, we cleaned this dataset in following steps:</p>
 <ul>
 <li>Select columns we needed. i.e. <code>year</code>, <code>state</code>, <code>party</code> and <code>candidatevotes</code>.</li>
-<li>Filter column <code>party</code>. i.e. only contains democrat and republican.</li>
-<li>Add a new column <code>ratio</code>, we define <strong>ratio = candidatevotes_xxx/(candidatevotes_democrat+candidatevotes_republican)</strong></li>
+<li>Filter column <code>party</code>. i.e. only contains democrats and republicans.</li>
+<li>Add a new column <code>ratio</code>, we define <em>ratio = candidatevotes_xxx/(candidatevotes_democrat+candidatevotes_republican)</em></li>
 <li>Filter column <code>party</code>. i.e. only leave republican.</li>
-<li>Check data quality &amp; revise it</li>
+<li>Check duplicates and fix typos</li>
 </ul>
-<p>We then filter out all outliers and want to revise them. Note that it involves 3 state:<strong>Utah</strong>, <strong>District of Columbia</strong> and <strong>Minnesota</strong>. After checking data, we know that Republicans have never won D.C. and popular votes have always relatively low. So, it is reasonable. However, only the share of <em>Minnesota</em> for Republican is abnormal. It is impossible that all voters chose one party.</p>
+<p>We then filtered all outliers which involved 3 states:<strong>Utah</strong>, <strong>District of Columbia</strong> and <strong>Minnesota</strong>. After checking data, we know that Republicans have never won D.C. and popular vote shares have always relatively low. So, it is reasonable. However, the share value of <em>Minnesota</em> for Republicans is abnormal as it is equal to 1. It is impossible that all voters chose one party.</p>
 <pre><code>## # A tibble: 27 x 4
 ##     year state                ratio party     
 ##    &lt;dbl&gt; &lt;chr&gt;                &lt;dbl&gt; &lt;chr&gt;     
@@ -205,7 +200,7 @@
 ##  9  1988 District of Columbia 0.852 democrat  
 ## 10  1988 District of Columbia 0.148 republican
 ## # … with 17 more rows</code></pre>
-<p>So, then we look back raw data. We notice that in those years, party name for Dem. is <em>democratic-farmer-labor</em> rather than <em>democrat</em>.</p>
+<p>Going back to the raw data, we noticed that in those years, party name for Dem. is <em>democratic-farmer-labor</em> rather than <em>democrat</em>.</p>
 <pre><code>## # A tibble: 30 x 3
 ##     year party                   candidatevotes
 ##    &lt;dbl&gt; &lt;chr&gt;                            &lt;dbl&gt;
@@ -251,27 +246,29 @@
 <p>Next, we cleaned up the U.S. State Level Popular Vote Results of 2020 Presidential Election in following steps:</p>
 <ul>
 <li>Select columns we need. i.e. <code>stateid</code>, <code>state</code>, <code>dem_this_margin</code>, <code>dem_votes</code>, <code>rep_votes</code>.</li>
-<li>Add a new column <code>class</code> to indicate if it is <code>States that flipped from 2016</code> or <code>Democrats won</code>, or <code>Republicans won</code>. We define a state as <code>States that flipped from 2016</code> if it is one of <strong>Arizona</strong>, <strong>Wisconsin</strong>, <strong>Michigan</strong>, <strong>Pennsylvania</strong>, <strong>Georgia</strong>. Otherwise, we compared their vote for Democrats and vote for Republicans to determine their class.</li>
+<li>Add a new column <code>class</code> to indicate if it is <code>States that flipped from 2016</code>, <code>Democrats won</code>, or <code>Republicans won</code>. We define a state as <code>States that flipped from 2016</code> if it is one of <strong>Arizona</strong>, <strong>Wisconsin</strong>, <strong>Michigan</strong>, <strong>Pennsylvania</strong>, <strong>Georgia</strong>. Otherwise, we compared their votes for Democrats and votes for Republicans to determine their class.</li>
 </ul>
 </div>
 <div id="contribution-data-transformation" class="section level2">
 <h2><span class="header-section-number">3.2</span> Contribution Data Transformation</h2>
-<p>For the contributions receipt dataset, we extracted only relevant columns as described in Data Sources Chapter. We changed the data types for several columns to factorize categorical variables like <code>committee_name</code> and to store <code>contribution_receipt_date</code> in a datetime format for later visualizations. We filtered the <code>contributor_state</code> column to only keep the 50 states of the US plus D.C. and eliminated noise from funds raised from foreign countries. Also, we unified different formats in the <code>contributor_suffix</code> column to eliminate the redundant factor levels. To better scale the contributions, we focused only on individual contributions, thus we applied the <code>entity_type == "IND"</code> to get rid of the contributions from committees, PACs, and organizations.
-To save file-reading time and to meet analysis and visualization needs, we made multiple aggregations on different dimensions. We derived a data frame <em>contribution_by_date</em> from aggregating the processed data by <code>contribution_receipt_date</code>, and the sum of <code>contribution_receipt_amount</code> was calculated for this aggregated view. Additionally, we extracted the contributors’ job titles from the column <code>contributor_occupation</code>, cleaned the texts following steps including:
-- Excluded records of uninformational or ineffective strings. For example, we got rid of records equal to “INFORMATION REQUESTED”, “-”, “NA”, “UNKNOWN”, etc.
-- Gathered column values to a single string separated by blank spaces. We saved some two-word job titles like “SELF EMPLOYED” and “REAL ESTATE” with underlines to avoid them being separated apart.
-- Inserted spaces to divide words that were sticked together. For example, records like “WRITEREDITORTEACHER” were converted to “WRITER EDITOR TEACHER” with spaces in between.
-- Split the string to a vector of single words.
-- Removed unnecessary punctuations and numbers.
-- Fixed detectable typos and abbreviations
-- Removed uninformational words stored in the <a href="https://www.rdocumentation.org/packages/tidytext/versions/0.2.6/topics/stop_words">stop words</a> dataset of package <code>tidytext</code>. For example, words like “the”, “of”, and “and” do not add any insight but will distort the frequency distribution.
-Finally, the counts for each unique word were calculated and saved in a separate .csv file.</p>
+<p>For the contributions receipt dataset, we extracted only relevant columns as described in Data Sources Chapter. We changed the data types for several columns to factorize categorical variables like <code>committee_name</code> and to store <code>contribution_receipt_date</code> in a datetime format for later visualizations. We filtered the <code>contributor_state</code> column to only keep the 50 states of the US plus D.C. and eliminated noise from funds raised from foreign countries. Also, we unified different formats in the <code>contributor_suffix</code> column to eliminate the redundant factor levels. To better scale the contributions, we focused only on individual contributions, thus we applied the <code>entity_type == "IND"</code> to get rid of the contributions from committees, PACs, and organizations.</p>
+<p>To save file-reading time and to meet analysis and visualization needs, we made multiple aggregations on different dimensions. We derived a data frame <em>contribution_by_date</em> from aggregating the processed data by <code>contribution_receipt_date</code>, and the sum of <code>contribution_receipt_amount</code> was calculated for this aggregated view. Additionally, we extracted the contributors’ job titles from the column <code>contributor_occupation</code>, cleaned the texts following steps including:</p>
+<ul>
+<li>Excluded records of uninformational or ineffective strings. For example, we got rid of records equal to “INFORMATION REQUESTED”, “-”, “NA”, “UNKNOWN”, etc.</li>
+<li>Gathered column values to a single string separated by blank spaces. We saved some two-word job titles like “SELF EMPLOYED” and “REAL ESTATE” with underlines to avoid them being separated apart.</li>
+<li>Inserted spaces to divide words that were sticked together. For example, records like “WRITEREDITORTEACHER” were converted to “WRITER EDITOR TEACHER” with spaces in between.</li>
+<li>Split the string to a vector of single words.</li>
+<li>Removed unnecessary punctuations and numbers.</li>
+<li>Fixed detectable typos and abbreviations</li>
+<li>Removed uninformational words stored in the <a href="https://www.rdocumentation.org/packages/tidytext/versions/0.2.6/topics/stop_words">stop words</a> dataset of package <code>tidytext</code>. For example, words like “the”, “of”, and “and” do not add any insight but will distort the frequency distribution.
+Finally, the counts for each unique word were calculated and saved in a separate .csv file.</li>
+</ul>
 </div>
 <div id="disbursement-data-transformation" class="section level2">
 <h2><span class="header-section-number">3.3</span> Disbursement Data Transformation</h2>
-<p>The first step we did is to extract the necessary columns that are mentioned in the previous chapter. Then we noticed that in the <code>disbursement_purpose_category</code>, there is a <code>OTHER</code> top coding is dominant the dataset, hence it would not provide us lots of interesting information to analyze. Below is the original data distribution for the <code>disbursement_purpose_category</code> column:
+<p>We first extracted the necessary columns that are mentioned in the previous chapter. Then we noticed that in the <code>disbursement_purpose_category</code>, there is a <code>OTHER</code> top coding dominates the dataset, hence it would not provide us lots of interesting information to analyze. Below is the original data distribution for the <code>disbursement_purpose_category</code> column:
 <img src="finalproj_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
-<p>But since we have another column which is the disbursement_description, we can use this information to decode this top code. We examined the frequently mentioned terms in <code>disbursement_description</code> among those marked as <code>OTHER</code> and manually categorize them into existing or new categories that would fit the record type better. Below is a conversion table that we used to convert the columns. The pattern we are looking for in the description ar based on high frequent terms as well as their word stems and abbreviations. The conversion are done based on the order of this list.</p>
+<p>But since we have another column which is the <code>disbursement_description</code>, we used this information to decode this top code. We examined the frequently mentioned terms in <code>disbursement_description</code> among those marked as <code>OTHER</code> and manually categorize them into existing or new categories that would fit the record type better. Below is a conversion table that we used to convert the columns. The pattern we are looking for in the description ar based on high frequent terms as well as their word stems and abbreviations. The conversion are done based on the order of this list.</p>
 <table>
 <caption><span id="tab:unnamed-chunk-25">Table 3.1: </span>Disbursement Description to Category Conversion Table</caption>
 <colgroup>
