@@ -157,15 +157,15 @@ To save file-reading time and to meet analysis and visualization needs, we made 
   - Removed uninformational words stored in the [stop words](https://www.rdocumentation.org/packages/tidytext/versions/0.2.6/topics/stop_words) dataset of package `tidytext`. For example, words like "the", "of", and "and" do not add any insight but will distort the frequency distribution. 
 Finally, the counts for each unique word were calculated and saved in a separate .csv file.
 
-```{r, eval=FALSE}
+```{r, echo=FALSE,eval=FALSE}
 contributions1 <- readr::read_csv(here::here("./data/raw/contribution_bind.csv"))
 
 # Extract columns
 DataDescription<- readr::read_csv(here::here("./data/DatasetDescription.csv"))
-columns <- as.vector(DataDescription[13:26,1])
+columns <- as.vector(DataDescription[13:24,1])
 
 contributions1<- contributions1 %>%
-  select(columns[1:14])
+  select(columns[1:12])
 
 # Change data types and factorize categorical variables
 contributions1$committee_name <- as.factor(contributions1$committee_name)
@@ -181,7 +181,9 @@ contributions1 <- contributions1[contributions1$contributor_state %in% state,]
 contributions1<- contributions1[contributions1$entity_type == "IND",]
 
 write.csv(contributions1, file = here::here("data", "clean", "contribution_processed.csv"),row.names=FALSE)
+```
 
+```{r,eval=FALSE,echo=FALSE}
 #Aggregations
 contribution_by_date <-contributions1[order(contributions1$contribution_receipt_date, decreasing= F),] %>% 
   select(committee_name,contribution_receipt_date,contribution_receipt_amount) %>%
