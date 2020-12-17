@@ -9,7 +9,7 @@ tab:unnamed-chunk-25
 tab:unnamed-chunk-31
 tab:unnamed-chunk-43
 fig:unnamed-chunk-44
-tab:unnamed-chunk-55
+tab:unnamed-chunk-54
 introduction
 data-sources
 u.s.-state-level-popular-vote-results-of-2020-presidential-election
@@ -48,5 +48,3 @@ link-to-the-interactive-map
 descriptions
 instructions-for-using-the-map
 conclusion
-tab:unnamed-chunk-13
-fig:unnamed-chunk-14
