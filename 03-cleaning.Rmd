@@ -162,7 +162,7 @@ contributions1 <- readr::read_csv(here::here("./data/raw/contribution_bind.csv")
 
 # Extract columns
 DataDescription<- readr::read_csv(here::here("./data/DatasetDescription.csv"))
-columns <- as.vector(DataDescription[14:26,1])
+columns <- as.vector(DataDescription[13:25,1])
 
 contributions1<- contributions1 %>%
   select(columns[1:12])
