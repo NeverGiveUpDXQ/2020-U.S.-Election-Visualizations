@@ -17,16 +17,14 @@ entity_type,Contributor entity abbr. (chr)
 entity_type_desc,Contributor entity (chr)
 contributor_name,Full name of contributor (chr)
 contributor_last_name,Last name of contributor (chr)
-contributor_suffix,Suffix of contributor (chr)
 contributor_city,City of contributor's address (chr)
 contributor_state,State of contributor's address(chr)
 contributor_zip,Zip code of contributor's address (chr)
-contributor_employer,Name of contributor's employer (chr)
 contributor_occupation,Contributor's occupation (chr)
 contribution_receipt_date,Receipt date (date)
 contribution_receipt_amount,Receipt amount (num)
 contributor_aggregate_ytd,Contributor aggregated contribution of this year (num)
-… (Omit 63 unused columns),
+… (Omit 65 unused columns),
 schedule_b-2020-11-08T16_10_30.csv,
 Column Name,Description
 committee_name,Presidential Committee Name (chr)
