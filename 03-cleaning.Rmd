@@ -33,28 +33,30 @@ history_election <- temp%>%
   dplyr::summarise(ratio = candidatevotes/sum(candidatevotes))%>%
   ungroup()
 
-# only choose republican records
-index <- temp$party == 'republican'
-history_election <- history_election[index,]
+history_election$party = temp$party
+history_election_wider <- history_election %>%
+  pivot_wider(names_from = party , values_from = ratio)
 
 # check our data
-#history_data %>%
+# history_election_wider %>%
 #    group_by(year, state) %>%
 #    summarise(n = n())%>%
 #    filter(n != 1)
 # after checking the number, we don't have any duplicate records 
 ```
 
-We then filter out all outliers and want to revise them. Note that it involves 2 state: **District of Columbia** and **Minnesota**. After checking data, we know that Republicans have never won D.C. and popular votes have always relatively low. So, it is reasonable. However, the share of *Minnesota* for Republican is abnormal. It is impossible that all voters chose one party.
+We then filter out all outliers and want to revise them. Note that it involves 3 state:**Utah**, **District of Columbia** and **Minnesota**. After checking data, we know that Republicans have never won D.C. and popular votes have always relatively low. So, it is reasonable. However, only the share of *Minnesota* for Republican is abnormal. It is impossible that all voters chose one party.
+
 
 ```{r}
 # check for outliers
-# boxplot(history_data$ratio)
+# boxplot(history_election$ratio)
 # It's impossible if share = 1
 # So, in this step, we filter those outlier `ratio`
 
 history_election %>%
-    filter(ratio %in% boxplot.stats(history_election$ratio)$out)
+  filter(ratio %in% boxplot.stats(history_election$ratio)$out)%>%
+  mutate(ratio = round(ratio,4))
 ```
 
 So, then we look back raw data. We notice that in those years, party name for Dem. is *democratic-farmer-labor* rather than *democrat*. 
@@ -80,9 +82,12 @@ history_election <- temp1%>%
   dplyr::summarise(ratio = candidatevotes/sum(candidatevotes))%>%
   ungroup()
 
-# only choose republican records
-index <- temp1$party == 'republican'
-history_election <- history_election[index,]
+history_election$party = temp1$party
+
+history_election_wider <- history_election %>%
+  pivot_wider(names_from = party , values_from = ratio)%>%
+  mutate(dem_this_margin = round(democrat-republican,3))%>%
+  select(c(year,state,dem_this_margin))
 ```
 
 ```{r}
@@ -92,8 +97,8 @@ write.csv(history_election, file = here::here("data", "clean", "1976-2016electio
 After cleaning, it contains 3 columns and 561 records.
 ```{r, echo=FALSE, results='asis'}
 knitr::kable(data.frame(
-                description = c('year','state','ratio'),
-                category = c("Which election year?","State name","Share of popular votes for Rep.")
+                description = c('year','state','dem_this_margin'),
+                category = c("Which election year?","State name","candidate votes for democrat(%) - candidate votes for republican(%)")
               ), 
              col.names = c('Column','Description'),
              row.names = F,font_size = 10)
