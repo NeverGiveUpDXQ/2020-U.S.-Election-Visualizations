@@ -17,7 +17,7 @@ The dataset downloaded from [Harvard Dataverse](https://dataverse.harvard.edu/da
 
 ```{r, echo=FALSE, results='asis'}
 DataDescription<- readr::read_csv(here::here("./data/DatasetDescription.csv"))
-knitr::kable(DataDescription[51:54, ], caption = "Major columns used",
+knitr::kable(DataDescription[49:52, ], caption = "Major columns used",
              row.names = F,font_size = 10)
 ```
 
@@ -32,7 +32,7 @@ knitr::kable(DataDescription[51:54, ], caption = "Major columns used",
 The dataset downloaded from [Cook Political](https://cookpolitical.com/2020-national-popular-vote-tracker) contains the 2020 Presidential Election State-Level Popular Vote Share and Result Margin.
 
 ```{r, echo=FALSE, results='asis'}
-knitr::kable(DataDescription[43:48, ], caption = "Major columns used",
+knitr::kable(DataDescription[41:46, ], caption = "Major columns used",
              row.names = F,font_size = 10)
 ```
 
@@ -49,10 +49,10 @@ The contribution receipts data on [fec.gov](https://www.fec.gov/) includes all r
  
 Since contributions made in the election year seem to better reflect people's support on their favorite candidate, we applied a date filter to select records with the receipt date falling between 01/01/2020 and 11/03/2020. Due to a huge data volume, we limited data exported to only the contributions with an amount over or equal to 200 dollars and raised by the committees of two final presidential candidates of 2020 Election. The filtered dataset was retrieved from [here](https://www.fec.gov/data/receipts/?recipient_committee_type=P&data_type=processed&committee_id=C00580100&committee_id=C00703975&two_year_transaction_period=2020&min_date=01%2F01%2F2020&max_date=11%2F03%2F2020&is_individual=true&min_amount=200).
 
-The exported dataset has 79 columns and 984,824 records in total. There are 302,731 entries for **Donald J. Trump for President committee** and 682,093 entries for **Biden for President committee**. 
+The exported dataset has 78 columns and 984,824 records in total. There are 302,731 entries for **Donald J. Trump for President committee** and 682,093 entries for **Biden for President committee**. 
 
 ```{r, echo=FALSE, results='asis'}
-knitr::kable(DataDescription[13:27, ], caption = "Major columns used",
+knitr::kable(DataDescription[13:25, ], caption = "Major columns used",
              row.names = F,font_size = 10)
 ```
 
@@ -75,7 +75,7 @@ The Disbursements data from [fec.gov](https://www.fec.gov/) includes the operati
 For this project, we filtered the data to focus on the spending of presidential election committees of 2020 US Election, which the disbursement dates are from 01/01/2020 to 11/03/2020, consistent with the scope of the contribution receipt dataset. The dataset with filters applied was exported from [FEC Official Database](https://www.fec.gov/data/disbursements/?spender_committee_type=P&data_type=processed&min_date=01%2F01%2F2020&max_date=11%2F03%2F2020). The retrieved dataset has 260,587 records and 78 columns.
 
 ```{r, echo=FALSE, results='asis'}
-knitr::kable(DataDescription[30:39, ], caption = "Major columns used",
+knitr::kable(DataDescription[28:37, ], caption = "Major columns used",
              row.names = F,font_size = 10)
 ```
 
