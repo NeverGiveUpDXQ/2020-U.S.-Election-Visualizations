@@ -653,30 +653,6 @@ ggplot(com_exp, aes(x = total, y = reorder(committee_name, total), color=Politic
 
 Among 5 committees that spent the most during this year, 4 of them are Democratics, and only Donald Trump is Republican. This might relate to facts that the Democratic party has received more contributions than the Republican party, and also that there was little competition inside the Republican party as Trump ran for re-election. One interesting finding is that Mike Bloomberg's Committee spend the most among all of the committees, and this is not expected since Bloomberg quit the election race very early in March 2020. According to the article from [The Guardian](https://www.theguardian.com/us-news/2019/nov/23/michael-bloomberg-refuse-donations-presidential-bid), all of those expenditures came from Bloomberg's personal fortune instead of campaign contributions. Therefore, we treated Mike Bloomberg's campaign as an outlier. Joe Biden's committee and Donald Trump's committee were as expected the next most-spending campaigns, but Biden has spent 300 Million dollars more than Trump.
 
-```{r, message=FALSE, warning=FALSE}
-# Calculate the total disbursement by committee
-disbursement_sum <- exp_df %>% 
-  filter(committee_name == 'BIDEN FOR PRESIDENT' | committee_name == 'DONALD J. TRUMP FOR PRESIDENT, INC.') %>% 
-  filter(disbursement_amount > 0)
-  
-# Generate the boxplot
-ggplot(disbursement_sum, aes(x=disbursement_amount, y= committee_name, fill=committee_name), alpha=0.8) + 
-  geom_boxplot(varwidth = TRUE) + 
-  stat_boxplot(geom ='errorbar') + 
-  scale_x_log10(breaks = trans_breaks("log10", function(x) 10^x),
-              labels = trans_format("log10", math_format(10^.x)))+
-  scale_fill_manual(name = "Candidate name", values = c("dodgerblue3", "firebrick2"), 
-                    labels = c("Joe Biden","Donald Trump")) +
-  labs(y = "Candidate", x = "Disbursement Amount (USD)",caption = "Source: fec.gov", 
-       title="Disbursement Made by Presidential Committees of 2020 US Election",
-       subtitle = "in US Dollar (log10 scaled)") +
-  theme_bw() +
-  theme(plot.title = element_text(face = "bold"),
-        plot.subtitle = element_text(face = "bold", color = "grey35"),
-        plot.caption = element_text(color = "grey68"),
-        legend.position="bottom",
-        axis.text.y = element_blank())
-```
 
 ### What They Spent Money for
 
@@ -772,6 +748,31 @@ knitr::kable(disbursement_summary, caption = "Disbursement Summary by Candidate"
              format.args = list(big.mark = ",", scientific = FALSE),
              digits = 2,align = "l",full_width = T)
 ```
+```{r, message=FALSE, warning=FALSE}
+# Calculate the total disbursement by committee
+disbursement_sum <- exp_df %>% 
+  filter(committee_name == 'BIDEN FOR PRESIDENT' | committee_name == 'DONALD J. TRUMP FOR PRESIDENT, INC.') %>% 
+  filter(disbursement_amount > 0)
+  
+# Generate the boxplot
+ggplot(disbursement_sum, aes(x=disbursement_amount, y= committee_name, fill=committee_name), alpha=0.8) + 
+  geom_boxplot(varwidth = TRUE) + 
+  stat_boxplot(geom ='errorbar') + 
+  scale_x_log10(breaks = trans_breaks("log10", function(x) 10^x),
+              labels = trans_format("log10", math_format(10^.x)))+
+  scale_fill_manual(name = "Candidate name", values = c("dodgerblue3", "firebrick2"), 
+                    labels = c("Joe Biden","Donald Trump")) +
+  labs(y = "Candidate", x = "Disbursement Amount (USD)",caption = "Source: fec.gov", 
+       title="Disbursement Made by Presidential Committees of 2020 US Election",
+       subtitle = "in US Dollar (log10 scaled)") +
+  theme_bw() +
+  theme(plot.title = element_text(face = "bold"),
+        plot.subtitle = element_text(face = "bold", color = "grey35"),
+        plot.caption = element_text(color = "grey68"),
+        legend.position="bottom",
+        axis.text.y = element_blank())
+```
+
 From the table above, it is clear that Biden spent 300 million dollars more than Trump. In the boxplot, we used the log10 scaled x-axis to reduce skewness of the disbursement distribution, but there are still many outliers on the right tail. Also, there are single expenditure records for both candidates with an amount larger than 10 million dollars. The median expemditures were similar for two candidates.
 
 
