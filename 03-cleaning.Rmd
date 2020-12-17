@@ -91,7 +91,7 @@ history_election_wider <- history_election %>%
 ```
 
 ```{r}
-write.csv(history_election, file = here::here("data", "clean", "1976-2016election.csv"),row.names=FALSE)
+write.csv(history_election_wider, file = here::here("data", "clean", "1976-2016election.csv"),row.names=FALSE)
 ```
 
 After cleaning, it contains 3 columns and 561 records.

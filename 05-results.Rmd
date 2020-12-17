@@ -6,6 +6,7 @@ editor_options:
 # Results
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(ggplot2)
 library(GGally)
 library(gridExtra)
 library(here)
@@ -20,7 +21,6 @@ library(tidyverse)
 library(usdata)
 library(statebins)
 library(usmap)
-library(ggplot2)
 library(dplyr)
 library(plyr)
 library(socviz)
@@ -52,7 +52,7 @@ flipped <- president2020[president2020$stateid %in% c('AZ', 'WI', 'MI', 'PA', 'G
 president2020<- president2020%>%
   select(stateid,state,dem_this_margin)
 
-colors = c("darkred","white","darkblue")
+colors = c("firebrick2","white","dodgerblue3")
 
 # Highchart map
 highchart() %>%
@@ -85,7 +85,6 @@ Comparing election results between 2016 and 2020, we found:
 - Joe Biden flipped 5 states that Donald Trump won in 2016, which are displayed in the plot below. 
 
 ```{r}
-
 # Highchart map: flipped states only
 highchart() %>%
   hc_title(text = "2020 Election Result Margin: Filpped States") %>%
@@ -111,7 +110,7 @@ highchart() %>%
    hc_mapNavigation(enabled = TRUE) %>%
    hc_legend(title = list(text = "Vote Share Margin of Dem."),
               enabled = TRUE) %>% 
-  hc_exporting(enabled = TRUE)
+   hc_exporting(enabled = TRUE)
 ```
 
 We filtered the five flipped states, and the changes in popular margins are: **Michigan** (0.23% Rep -> 2.78% Dem), **Pennsylvania** (0.72% Rep -> 1.16% Dem), **Wisconsin** (0.77% Rep -> 0.63% Dem), **Arizona** (3.55% Rep -> 0.31% Dem), and **Georgia** (5.13% Rep -> 0.24% Dem). Among them, Georgia had the most margin shift. 
@@ -119,7 +118,7 @@ We filtered the five flipped states, and the changes in popular margins are: **M
 ### Historical Timeline
 
 #### Trace Election Margin Shifts Over Years
-We compared how vote shares have shifted in elections from 1976 to 2016
+We compared how vote shares have shifted in elections from 1976 to 2020
 **Instructions to use the graph:**
 
 1. Play/pause clicking the play/pause button
@@ -132,46 +131,52 @@ Please refer to [the wiki here](https://github.com/TorsteinHonsi/Motion-Highchar
 # help file: https://api.highcharts.com/highcharts/labels.items
 # reference : RPubs: William Green(https://rpubs.com/wbgreen405/249838)
 
+president2020_1 <- president2020 %>%
+    mutate(year = 2020)%>%
+    select(-stateid)%>%
+    select(year,state,dem_this_margin)
+
 history_election <- readr::read_csv(here::here("./data/clean/1976-2016election.csv"))
 
-history_election_ds = history_election %>%
+election_whole <- rbind(history_election,president2020_1)
+
+election_ds = election_whole %>%
     group_by(state) %>%
     do(item = list(
-        state = last(.$state),
-        sequence = rev(round(.$ratio,2)),
-        value = last(.$ratio)
+        state = first(.$state),
+        sequence = round(.$dem_this_margin,3),
+        value = first(.$dem_this_margin)
     ))%>%
     .$item
 
 highchart(type = "map") %>% 
-  hc_add_series(data = history_election_ds,
-                name = "Popular Vote Shares for Rep.",
+  hc_add_series(data = election_ds,
+                name = "Dem. Margin",
                 mapData = usgeojson,
                 joinBy = c("name","state"),
                 borderWidth = 0.05,
                 dataLabels = list(enabled = TRUE, format = "{point.properties.postalcode}")
                 ) %>% 
-  hc_colorAxis(
-               minColor = 'white',
-               maxColor = 'darkred',
-               min = 0,
-               max = 1 ) %>%  
-  hc_title(text = "Share of Popular Votes for the Republican from 1976 to 2016") %>%
+  hc_colorAxis(stops = color_stops(n=3, colors=colors),
+               min = -0.5,
+               max = 0.5 ) %>%  
+  hc_title(text = "Presidential Election Results Map from 1976 to 2020") %>%
   hc_legend(layout = "vertical", 
             align = "right",
-            title = list(text = 'Share')) %>% 
+            title = list(text = 'Margin')) %>% 
   hc_add_theme(hc_theme_smpl()) %>%
   hc_motion(
     enabled = TRUE,
     axisLabel = "year",
-    labels = as.character(sort(unique(history_election$year),decreasing = FALSE)),
+    labels = as.character(sort(unique(election_whole$year),decreasing = FALSE)),
     magnet = list(
       round = "floor" 
     )
-  )
+  )%>% 
+  hc_exporting(enabled = TRUE)
 ```
 
-This motion map shows...
+This motion map shows that, from 1980 to 1988, red (Republican) has dominated this map. Especially in 1984, almost all states were red(except Minnesota and note that Minnesota has always been blue from 1976 to 2020). Also, from 1992, almost all states are stable, and only few states are flipped.
 
 
 However, pesidential candidates of the US winning more popular votes did not always win the election. *"It is possible the candidate with the most votes from the public won't be the winner. This is because the president is not chosen directly by the voters, but what's known as the electoral college."* (This is explained by [BBC](https://www.bbc.com/news/world-us-canada-53558176).) Thus, In this part, we compared popular vote shares vs. electoral college vote shares in US elections since 1900. 
