@@ -15,7 +15,9 @@ Among the dataset we used, only the contribution receipts dataset has missing va
 ```{r, echo = F, message=F}
 # Import data from csv
 contribution_processed <- readr::read_csv(here::here("./data/clean/contribution_processed.csv"))
-
+contribution_processed<- contribution_processed %>%
+  select(1:5,7:9,11:14)
+  
 #n_miss(contribution_processed)
 #pct_miss(contribution_processed)
 #n_complete(contribution_processed)
