@@ -75,7 +75,7 @@ The Disbursements data from [fec.gov](https://www.fec.gov/) includes the operati
 For this project, we filtered the data to focus on the spending of presidential election committees of 2020 US Election, which the disbursement dates are from 01/01/2020 to 11/03/2020, consistent with the scope of the contribution receipt dataset. The dataset with filters applied was exported from [FEC Official Database](https://www.fec.gov/data/disbursements/?spender_committee_type=P&data_type=processed&min_date=01%2F01%2F2020&max_date=11%2F03%2F2020). The retrieved dataset has 260,587 records and 78 columns.
 
 ```{r, echo=FALSE, results='asis'}
-knitr::kable(DataDescription[28:37, ], caption = "Major columns used",
+knitr::kable(DataDescription[29:37, ], caption = "Major columns used",
              row.names = F,font_size = 10)
 ```
 
@@ -108,6 +108,28 @@ This dataset is scraped from results published by from Fox News, Politico, and t
 
 This dataset is contained in the `socviz` library in R. It is a dataset of US presidential elections from 1824 to 2016, with information on the winner, runner up, and various measures of vote share.
 
+```{r, echo=FALSE, results='asis'}
+knitr::kable(DataDescription[62:63, ], caption = "Major columns used",
+             row.names = F,font_size = 10)
+```
+
 **Issues with this dataset**
 
 As claimed in the `elections_historic {socviz}` documentation, the data for 2016 are provisional as of early December 2016. So we would need to update that data to include the final result of 2016 election for this project.
+
+### Number of Registered Voters
+
+**Dataset: RegisteredVotersByState.csv**
+
+We collected the dataset from [*World Population Review*](https://worldpopulationreview.com/state-rankings/number-of-registered-voters-by-state). This dataset contains the registered voter count and percentage per state. The records are all updated after June, 2020.
+
+```{r, echo=FALSE, results='asis'}
+knitr::kable(DataDescription[55:59, ], caption = "Major columns used",
+             row.names = F,font_size = 10)
+```
+
+**Issues with this dataset**
+
+The data records in this file were not all updated on the same day. No other known issues with this dataset. 
+
+

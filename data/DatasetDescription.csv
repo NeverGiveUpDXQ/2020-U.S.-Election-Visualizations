@@ -39,15 +39,26 @@ recipient_name,Entity name of disbursement recipient (chr)
 … (Omit 70 unused columns),
 ,
 Column Name,Description
-stateid,State Postal Codes
-state,State Name 
-dem_votes,Votes for Biden
-rep_votes,Votes for Trump
-dem_percent,Vote Percentage for Biden
-rep_percent,Vote Percentage for Trump
+stateid,State Postal Codes (chr)
+state,State Name (chr)
+dem_votes,Votes for Biden (num)
+rep_votes,Votes for Trump (num)
+dem_percent,Vote Percentage for Biden (num)
+rep_percent,Vote Percentage for Trump (num)
 ,
 Column Name,Description
-year,Election Year
-state,State Name
-party,Party Name
-candidatevotes,Popular Votes
+year,Election Year (num)
+state,State Name (chr)
+party,Party Name (chr)
+candidatevotes,Popular Votes (num)
+,
+Column Name,Description
+state,State Name (chr)
+totalRegistered,Total number of people registered (num)
+Pop,Total state population (num)
+registeredPerc,Percent of peoplewho are registered voters (num)
+asOf,Last update date (date)
+,
+Column Name,Description
+ec_pct,Winner's share of elctoral college vote. (Range is 0 to 1. ) (num)
+popular_pct,Winner's share of popular vote. (Range is 0 to 1. ) (num)
