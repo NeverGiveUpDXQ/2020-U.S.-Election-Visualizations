@@ -177,22 +177,6 @@ state<- c("AL","AK","AZ","AR","CA","CO","CT","DE","DC","FL","GA","HI","ID","IL",
 
 contributions1 <- contributions1[contributions1$contributor_state %in% state,]
 
-# Update suffix
-contributions1$contributor_suffix%>%
-  unique()
-contributions1<- contributions1 %>% 
-  mutate(contributor_suffix = ifelse(contributor_suffix == "JR.", "JR", contributor_suffix))
-contributions1<- contributions1 %>% 
-  mutate(contributor_suffix = ifelse(contributor_suffix == "JR.,", "JR", contributor_suffix))
-contributions1<- contributions1 %>% 
-  mutate(contributor_suffix = ifelse(contributor_suffix == "7/18/", "", contributor_suffix))
-contributions1<- contributions1 %>% 
-  mutate(contributor_suffix = ifelse(contributor_suffix == "SR.", "SR", contributor_suffix))
-contributions1<- contributions1 %>% 
-  mutate(contributor_suffix = ifelse(contributor_suffix == "M.D.", "MD", contributor_suffix))
-contributions1<- contributions1 %>% 
-  mutate(contributor_suffix = ifelse(contributor_suffix == "ESQ.", "ESQ", contributor_suffix))
-
 #filter individual contributions
 contributions1<- contributions1[contributions1$entity_type == "IND",]
 
