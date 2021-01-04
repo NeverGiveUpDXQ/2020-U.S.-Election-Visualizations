@@ -27,6 +27,8 @@ Notes:
 
 References:
 
+
 1. Tony McGovern: US County Level Election Results with d3.v4 (https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-20/master/index.html)
 Result image:(https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-20/master/img/us_election_results.png)
 2. Observable: d3-6.0 Migration Guide (https://observablehq.com/@d3/d3v6-migration-guide#events)
+

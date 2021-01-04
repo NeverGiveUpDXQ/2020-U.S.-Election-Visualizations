@@ -118,6 +118,7 @@ highchart() %>%
 
 We filtered the five flipped states, and the changes in popular margins are: **Michigan** (0.23% Rep -> 2.78% Dem), **Pennsylvania** (0.72% Rep -> 1.16% Dem), **Wisconsin** (0.77% Rep -> 0.63% Dem), **Arizona** (3.55% Rep -> 0.31% Dem), and **Georgia** (5.13% Rep -> 0.24% Dem). Among them, Georgia had the most margin shift. 
 
+
 ### Historical Timeline
 
 #### Trace Election Margin Shifts Over Years
@@ -232,6 +233,10 @@ From the plot above, we can see:
 #### Overview: Total Contributions by State
 As an overview, we plotted the total amounts of contributions made by each state this year that were received by all presidential candidates of 2020 US election. 
 
+
+## Contribution Receipts Data
+### Contributions Overview
+
 ```{r, echo=FALSE}
 # Read the datasets
   # Contribution summary by state
@@ -272,6 +277,10 @@ statepop1 <- statepop1 %>%
 #remove(voters_state, statepop, df_trump, df_biden, df_all)
 ```
 
+
+#### Total Contributions by State
+As an overview, we plotted the total amounts of contributions made by each state this year that were received by all presidential candidates of 2020 US election. 
+
 ```{r, echo=FALSE}
 # Define highcharter theme
 thm <- hc_theme(
@@ -308,6 +317,7 @@ hc_title(text = "Total Contributions to All Presidential Candidates 2020 By Stat
      )
    ) %>%
    hc_colorAxis(minColor = "white", maxColor = "orange") %>%
+
    hc_legend(title = list(text = "US Dollar Amount"), valueDecimals = 0, valueSuffix = "%") %>%
    hc_mapNavigation(enabled = TRUE) %>%
   hc_exporting(enabled = TRUE)
@@ -388,10 +398,15 @@ p5<- statepop1 %>% arrange(desc(TRUMP_CONTRIB_PP)) %>% head(5) %>%
 grid.arrange(p3, p5, ncol=2, nrow=1,
      top = textGrob("Contributions to Presidential Candidates of 2020 US Election\nContributions Per Registered Voter Ranked by State",gp=gpar(fontsize=13, fontface = "bold")))
 
+grid.arrange(p3, p5, ncol=2, nrow=1,
+     top = textGrob("Contributions to Presidential Candidates of 2020 US Election\nContributions Per Registered Voter Ranked by State",gp=gpar(fontsize=13, fontface = "bold")))
+
 ```
+
 
 If we instead take into account the [**registered voters**](https://worldpopulationreview.com/state-rankings/number-of-registered-voters-by-state) in each state and calculate contributions per registered voter, we can see **District of Columbia** is clearly an outlier. It has the highest average contribution to Biden equal to 37 dollars per registered voter, way more than any other state. Remarkably, in the election Biden won **93%** of total votes in DC. In addition, **Wyoming** surprisingly has contributed the most to Trump on an average level. After researching online, we found that Wyoming has the lowest percentage of registered voters among all states that only [47.4% of its population registered to vote](https://worldpopulationreview.com/state-rankings/number-of-registered-voters-by-state), and this explains Wyoming's higher average contribution. Its support for Trump was reflected on the voting results that Trump won the state with a margin **over 40%**.
 In fact, Biden has won all five states (**DC, MA, DE, CA, and MD**) listed on the left of the plot above which has made the most contributions per registered voter, and his margins of victory in these states were . Trump has won four of the five states (**WY, FL, AZ, and TX**) listed on the right of the plot above except for Nevada. Trump lost Nevada by 2.4% vote share.
+
 
 
 ### Individual Contribution Distribution
@@ -481,6 +496,7 @@ ts1 <- ts %>%
   hc_plotOptions(area = list(lineWidth = 0.5)) %>% 
   hc_exporting(enabled = TRUE)
 
+
 ts1 %>%
   hc_add_annotation(
     labelOptions = list(
@@ -514,6 +530,7 @@ ts1 %>%
 We also grouped data points by receipt date and calculated the daily raisings of each candidate from January 1, 2020 to October 15, 2020, which are shown as the plot above. It is clear that Joe Biden generally raised more funds than Donald Trump. We marked on the plot the major events when there were peaks in raisings of both candidates. A small peak of Biden's raisings in the early March was prominent, and this paralleled [Biden's win in the South Carolina Democratic presidential primary](https://edition.cnn.com/2020/03/01/politics/joe-biden-south-carolina-fundraising-february-cnntv/index.html) along with [Michael Bloomberg's quit](https://www.latimes.com/politics/story/2020-03-04/michael-bloomberg-quits-presidential-race), which we learned from the news of the time.
 More notably, Biden achieved greater success in fundraising from mid-August, and Biden's daily raisings hit the 13.6M dollars on **August 20, 2020** by the time he [officially accepted the Democratic nomination](https://www.nytimes.com/2020/08/20/us/politics/Joe-Biden-accepts-democratic-nomination.html). On **September 30**, the next day of the first Presidential Debate, Joe Biden secured another huge funding of 12.2M dollars, which to some extent reflected people's choice. 
 Although Donald Trump also received more funds in the second half year, the contributions to Trump did not significantly increase as the election season approached. Trump's peak in daily raisings of 4.9M dollars was reached on **August 27, 2020** when he [officially accepted the Republican nomination](https://www.usatoday.com/story/news/politics/elections/2020/08/27/rnc-donald-trump-republican-nomination-white-house-biden/5652490002/), but the amount was much less than that raised by Biden.   
+
 
 
 ### Who Contributors Were
